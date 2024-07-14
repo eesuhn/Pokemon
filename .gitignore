@@ -1,0 +1,10 @@
+# build
+.bloop/
+.metals/
+project/
+target/
+
+# cache
+.vscode/
+.DS_Store/
+*.sw*
