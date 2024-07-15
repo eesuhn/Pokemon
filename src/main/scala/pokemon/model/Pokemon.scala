@@ -1,7 +1,7 @@
 package pokemon.model
 
 abstract class Pokemon {
-  val name: String
+  val pName: String
   val maxHP: Int
   var currentHP: Int
   var attack: Int
@@ -34,10 +34,10 @@ abstract class Pokemon {
 }
 
 class Charmander extends Pokemon {
-  val name = "Charmander"
+  val pName = "Charmander"
   val maxHP = 39
   var currentHP = maxHP
   var attack = 52
   var defense = 43
-  setMoves(List(Growl, Scratch))
+  setMoves(List(Growl, Scratch, Ember))
 }
