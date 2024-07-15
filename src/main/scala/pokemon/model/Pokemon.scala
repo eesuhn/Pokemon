@@ -31,13 +31,51 @@ abstract class Pokemon {
     currentHP -= damage
     currentHP = Math.max(currentHP, 0)
   }
+
+  /**
+    * Physical attack on target Pokemon
+    *
+    * @param move
+    * @param target
+    */
+  def physicalAttack(move: Move, target: Pokemon): Unit = {
+    val modifier = calculateModifier(move, target)
+    println(s"${pName} used ${move.moveName} on ${target.pName}")
+    println(s"\tModifier: ${modifier}")
+  }
+
+  /**
+    * Calculate modifier for the move based on target's type
+    *
+    * @param move
+    * @param target
+    * @return
+    */
+  def calculateModifier(move: Move, target: Pokemon): Double = {
+    (move, target) match {
+      case (moveType: Type, targetType: Type) =>
+        if (moveType.strongAgainst.contains(targetType.typeName)) 2.0
+        else if (moveType.weakAgainst.contains(targetType.typeName)) 0.5
+        else 1.0
+      case _ => 1.0
+    }
+  }
 }
 
-class Charmander extends Pokemon {
+class Charmander extends Pokemon with Fire {
   val pName = "Charmander"
   val maxHP = 39
   var currentHP = maxHP
   var attack = 52
   var defense = 43
   setMoves(List(Growl, Scratch, Ember))
+}
+
+class Squirtle extends Pokemon with Water {
+  val pName = "Squirtle"
+  val maxHP = 44
+  var currentHP = maxHP
+  var attack = 48
+  var defense = 65
+  setMoves(List(Tackle, WaterGun))
 }
