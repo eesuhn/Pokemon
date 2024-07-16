@@ -12,9 +12,12 @@ abstract class StatusMove extends Move {
 }
 
 abstract class PhysicalMove extends Move {
-  val damage: Int
+  val basePower: Int
 }
 
+/**
+  * Growl lowers the target's attack by 1 stage
+  */
 object Growl extends StatusMove with Normal {
   val moveName = "Growl"
   val accuracy = 100
@@ -23,6 +26,9 @@ object Growl extends StatusMove with Normal {
   val self = false
 }
 
+/**
+  * Leer lowers the target's defense by 1 stage
+  */
 object Leer extends StatusMove with Normal {
   val moveName = "Leer"
   val accuracy = 100
@@ -34,29 +40,29 @@ object Leer extends StatusMove with Normal {
 object Tackle extends PhysicalMove with Normal {
   val moveName = "Tackle"
   val accuracy = 100
-  val damage = 40
+  val basePower = 40
 }
 
 object Scratch extends PhysicalMove with Normal {
   val moveName = "Scratch"
   val accuracy = 100
-  val damage = 40
+  val basePower = 40
 }
 
 object Ember extends PhysicalMove with Fire {
   val moveName = "Ember"
   val accuracy = 100
-  val damage = 40
+  val basePower = 40
 }
 
 object WaterGun extends PhysicalMove with Water {
   val moveName = "Water Gun"
   val accuracy = 100
-  val damage = 40
+  val basePower = 40
 }
 
 object VineWhip extends PhysicalMove with Grass {
   val moveName = "Vine Whip"
   val accuracy = 100
-  val damage = 45
+  val basePower = 45
 }

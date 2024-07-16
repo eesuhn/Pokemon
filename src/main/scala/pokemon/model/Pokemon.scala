@@ -1,11 +1,14 @@
 package pokemon.model
 
+import scala.util.Random
+
 abstract class Pokemon {
   val pName: String
   val maxHP: Int
   var currentHP: Int
   var attack: Int
   var defense: Int
+  val level: Int = 1
   private var _moves: List[Move] = List()
 
   def moves: List[Move] = _moves
@@ -19,7 +22,7 @@ abstract class Pokemon {
     if (moves.length > 4) {
       throw new Exception("Pokemon can only learn 4 moves")
     }
-    _moves = moves
+    this._moves = moves
   }
 
   /**
@@ -28,8 +31,7 @@ abstract class Pokemon {
     * @param damage
     */
   def takeDamage(damage: Int): Unit = {
-    currentHP -= damage
-    currentHP = Math.max(currentHP, 0)
+    this.currentHP = Math.max(this.currentHP - damage, 0)
   }
 
   /**
@@ -39,9 +41,26 @@ abstract class Pokemon {
     * @param target
     */
   def physicalAttack(move: Move, target: Pokemon): Unit = {
-    val modifier = calculateModifier(move, target)
-    println(s"${pName} used ${move.moveName} on ${target.pName}")
-    println(s"\tModifier: ${modifier}")
+    val physicalMove: PhysicalMove = move.asInstanceOf[PhysicalMove]
+
+    if (!calculateAccuracy(physicalMove)) {
+      println(s"${pName}'s attack missed")
+      return
+    }
+
+    val modifier: Double = calculateModifier(physicalMove, target)
+    println(s"${pName} used ${physicalMove.moveName} on ${target.pName}")
+
+    val damage: Double = calculateDamage(
+      physicalMove.basePower,
+      this.attack,
+      target.defense,
+      this.level,
+      modifier
+    )
+
+    target.takeDamage(damage.toInt)
+    println(s"${target.pName} took ${damage.toInt} damage")
   }
 
   /**
@@ -60,6 +79,42 @@ abstract class Pokemon {
       case _ => 1.0
     }
   }
+
+  /**
+    * Calculate damage for the move
+    *
+    * Damage = (2 * L / 5 + 2) * A * P / D / 50 + 2
+    *
+    * @param basePower
+    * @param attack
+    * @param defense
+    * @param level
+    * @param modifier
+    * @return
+    */
+  def calculateDamage(
+    basePower: Int,
+    attack: Int,
+    defense: Int,
+    level: Int,
+    modifier: Double
+  ): Double = {
+    val damage: Double = (
+      (2 * level / 5 + 2) * attack * basePower / defense / 50 + 2
+    )
+    damage * modifier
+  }
+
+  /**
+    * Calculate if the move hits based on accuracy
+    *
+    * @param move
+    * @return
+    */
+  def calculateAccuracy(move: Move): Boolean = {
+    val random = Random
+    random.nextInt(100) < move.accuracy
+  }
 }
 
 class Charmander extends Pokemon with Fire {
@@ -68,7 +123,11 @@ class Charmander extends Pokemon with Fire {
   var currentHP = maxHP
   var attack = 52
   var defense = 43
-  setMoves(List(Growl, Scratch, Ember))
+  setMoves(List(
+    // Growl,
+    Scratch,
+    Ember
+  ))
 }
 
 class Squirtle extends Pokemon with Water {
@@ -77,5 +136,21 @@ class Squirtle extends Pokemon with Water {
   var currentHP = maxHP
   var attack = 48
   var defense = 65
-  setMoves(List(Tackle, WaterGun))
+  setMoves(List(
+    Tackle,
+    WaterGun
+  ))
+}
+
+class Bulbasaur extends Pokemon with Grass {
+  val pName = "Bulbasaur"
+  val maxHP = 45
+  var currentHP = maxHP
+  var attack = 49
+  var defense = 49
+  setMoves(List(
+    // Growl,
+    Tackle,
+    VineWhip
+  ))
 }
