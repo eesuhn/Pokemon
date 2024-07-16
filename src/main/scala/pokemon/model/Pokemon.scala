@@ -6,6 +6,7 @@ abstract class Pokemon {
   var currentHP: Int
   var attack: Int
   var defense: Int
+  val level: Int = 1
   private var _moves: List[Move] = List()
 
   def moves: List[Move] = _moves
@@ -35,13 +36,29 @@ abstract class Pokemon {
   /**
     * Physical attack on target Pokemon
     *
-    * @param move
+    * @param physicalMove
     * @param target
     */
-  def physicalAttack(move: Move, target: Pokemon): Unit = {
-    val modifier = calculateModifier(move, target)
-    println(s"${pName} used ${move.moveName} on ${target.pName}")
-    println(s"\tModifier: ${modifier}")
+  def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
+    val modifier = calculateModifier(physicalMove, target)
+    println(s"${pName} used ${physicalMove.moveName} on ${target.pName}")
+
+    val damage = calculateDamage(
+      physicalMove.basePower,
+      this.attack,
+      target.defense,
+      this.level,
+      modifier
+    )
+    println(s"\tbasePower: ${physicalMove.basePower}")
+    println(s"\tattack: ${this.attack}")
+    println(s"\tdefense: ${target.defense}")
+    println(s"\tlevel: ${this.level}")
+    println(s"\tmodifier: ${modifier}")
+    println(s"\tdamage: ${damage}")
+
+    target.takeDamage(damage.toInt)
+    println(s"${target.pName} took ${damage.toInt} damage")
   }
 
   /**
@@ -59,6 +76,31 @@ abstract class Pokemon {
         else 1.0
       case _ => 1.0
     }
+  }
+
+  /**
+    * Calculate damage for the move
+    * 
+    * Damage = (2 * L / 5 + 2) * A * P / D / 50 + 2
+    *
+    * @param basePower
+    * @param attack
+    * @param defense
+    * @param level
+    * @param modifier
+    * @return
+    */
+  def calculateDamage(
+    basePower: Int,
+    attack: Int,
+    defense: Int,
+    level: Int,
+    modifier: Double
+  ): Double = {
+    val damage = (
+      (2 * level / 5 + 2) * attack * basePower / defense / 50 + 2
+    )
+    damage * modifier
   }
 }
 

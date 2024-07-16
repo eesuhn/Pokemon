@@ -1,27 +1,14 @@
 package pokemon
 
-import pokemon.model.{Charmander, Squirtle, Bulbasaur}
+import pokemon.model.{PhysicalMove, Charmander, Squirtle, Bulbasaur}
 
 object MainApp extends App {
   val charmander = new Charmander
-  println(s"${charmander.pName} has ${charmander.currentHP} HP")
-  charmander.moves.foreach(move => {
-    println(s"\t${move.moveName}")
-  })
-
   val squirtle = new Squirtle
-  println(s"${squirtle.pName} has ${squirtle.currentHP} HP")
-  squirtle.moves.foreach(move => {
-    println(s"\t${move.moveName}")
-  })
-
   val bulbasaur = new Bulbasaur
-  println(s"${bulbasaur.pName} has ${bulbasaur.currentHP} HP")
-  bulbasaur.moves.foreach(move => {
-    println(s"\t${move.moveName}")
-  })
 
-  charmander.physicalAttack(charmander.moves(2), squirtle)
-  squirtle.physicalAttack(squirtle.moves(1), bulbasaur)
-  bulbasaur.physicalAttack(bulbasaur.moves(2), charmander)
+  charmander.physicalAttack(charmander.moves(1).asInstanceOf[PhysicalMove], squirtle)
+  println(s"Squirtle HP: ${squirtle.currentHP}")
+  // squirtle.physicalAttack(squirtle.moves(0).asInstanceOf[PhysicalMove], bulbasaur)
+  // bulbasaur.physicalAttack(bulbasaur.moves(1).asInstanceOf[PhysicalMove], charmander)
 }
