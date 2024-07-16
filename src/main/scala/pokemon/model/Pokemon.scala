@@ -22,7 +22,7 @@ abstract class Pokemon {
     if (moves.length > 4) {
       throw new Exception("Pokemon can only learn 4 moves")
     }
-    _moves = moves
+    this._moves = moves
   }
 
   /**
@@ -31,8 +31,7 @@ abstract class Pokemon {
     * @param damage
     */
   def takeDamage(damage: Int): Unit = {
-    currentHP -= damage
-    currentHP = Math.max(currentHP, 0)
+    this.currentHP = Math.max(this.currentHP - damage, 0)
   }
 
   /**
@@ -44,13 +43,13 @@ abstract class Pokemon {
   def physicalAttack(move: Move, target: Pokemon): Unit = {
     val physicalMove: PhysicalMove = move.asInstanceOf[PhysicalMove]
 
-    val modifier: Double = calculateModifier(physicalMove, target)
-    println(s"${pName} used ${physicalMove.moveName} on ${target.pName}")
-
     if (!calculateAccuracy(physicalMove)) {
       println(s"${pName}'s attack missed")
       return
     }
+
+    val modifier: Double = calculateModifier(physicalMove, target)
+    println(s"${pName} used ${physicalMove.moveName} on ${target.pName}")
 
     val damage: Double = calculateDamage(
       physicalMove.basePower,
@@ -59,12 +58,6 @@ abstract class Pokemon {
       this.level,
       modifier
     )
-    // println(s"\tbasePower: ${physicalMove.basePower}")
-    // println(s"\tattack: ${this.attack}")
-    // println(s"\tdefense: ${target.defense}")
-    // println(s"\tlevel: ${this.level}")
-    // println(s"\tmodifier: ${modifier}")
-    // println(s"\tdamage: ${damage}")
 
     target.takeDamage(damage.toInt)
     println(s"${target.pName} took ${damage.toInt} damage")
@@ -89,7 +82,7 @@ abstract class Pokemon {
 
   /**
     * Calculate damage for the move
-    * 
+    *
     * Damage = (2 * L / 5 + 2) * A * P / D / 50 + 2
     *
     * @param basePower
@@ -112,6 +105,12 @@ abstract class Pokemon {
     damage * modifier
   }
 
+  /**
+    * Calculate if the move hits based on accuracy
+    *
+    * @param move
+    * @return
+    */
   def calculateAccuracy(move: Move): Boolean = {
     val random = Random
     random.nextInt(100) < move.accuracy

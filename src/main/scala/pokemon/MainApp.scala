@@ -1,35 +1,14 @@
 package pokemon
 
-import pokemon.model.{PhysicalMove, Charmander, Squirtle, Bulbasaur}
+import pokemon.model.Game
 
 object MainApp extends App {
-  val charmander = new Charmander
-  val squirtle = new Squirtle
-  val bulbasaur = new Bulbasaur
-  var count = 0
+  val game = new Game
+  game.start("Ash", "Gary")
 
-  count += 1
-  println(count)
-  charmander.physicalAttack(charmander.moves(1), squirtle)
-  println(s"Squirtle HP: ${squirtle.currentHP}\n")
-  
-  count += 1
-  println(count)
-  charmander.physicalAttack(charmander.moves(1), squirtle)
-  println(s"Squirtle HP: ${squirtle.currentHP}\n")
-  
-  count += 1
-  println(count)
-  charmander.physicalAttack(charmander.moves(1), squirtle)
-  println(s"Squirtle HP: ${squirtle.currentHP}\n")
-  
-  count += 1
-  println(count)
-  charmander.physicalAttack(charmander.moves(1), squirtle)
-  println(s"Squirtle HP: ${squirtle.currentHP}\n")
-  
-  count += 1
-  println(count)
-  charmander.physicalAttack(charmander.moves(1), squirtle)
-  println(s"Squirtle HP: ${squirtle.currentHP}\n")
+  println(s"${game.player1.playerName}'s Pokemon:")
+  game
+    .player1
+    .deck
+    .foreach(pokemon => println(s"\t${pokemon.pName}"))
 }
