@@ -14,18 +14,30 @@ trait Normal extends Type {
 
 trait Fire extends Type {
   val typeName = "Fire"
-  val strongAgainst = List("Grass")
-  val weakAgainst = List("Water")
+  val strongAgainst = List(
+    "Grass"
+  )
+  val weakAgainst = List(
+    "Water"
+  )
 }
 
 trait Water extends Type {
   val typeName = "Water"
-  val strongAgainst = List("Fire")
-  val weakAgainst = List("Grass")
+  val strongAgainst = List(
+    "Fire"
+  )
+  val weakAgainst = List(
+    "Grass"
+  )
 }
 
 trait Grass extends Type {
   val typeName = "Grass"
-  val strongAgainst = List("Water")
-  val weakAgainst = List("Fire")
+  val strongAgainst = List(
+    "Water"
+  )
+  val weakAgainst = List(
+    "Fire"
+  )
 }

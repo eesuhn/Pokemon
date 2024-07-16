@@ -1,6 +1,6 @@
 package pokemon
 
-import pokemon.model.{Charmander, Squirtle}
+import pokemon.model.{Charmander, Squirtle, Bulbasaur}
 
 object MainApp extends App {
   val charmander = new Charmander
@@ -15,6 +15,13 @@ object MainApp extends App {
     println(s"\t${move.moveName}")
   })
 
+  val bulbasaur = new Bulbasaur
+  println(s"${bulbasaur.pName} has ${bulbasaur.currentHP} HP")
+  bulbasaur.moves.foreach(move => {
+    println(s"\t${move.moveName}")
+  })
+
   charmander.physicalAttack(charmander.moves(2), squirtle)
-  squirtle.physicalAttack(squirtle.moves(1), charmander)
+  squirtle.physicalAttack(squirtle.moves(1), bulbasaur)
+  bulbasaur.physicalAttack(bulbasaur.moves(2), charmander)
 }

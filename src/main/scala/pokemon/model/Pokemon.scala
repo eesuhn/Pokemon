@@ -68,7 +68,11 @@ class Charmander extends Pokemon with Fire {
   var currentHP = maxHP
   var attack = 52
   var defense = 43
-  setMoves(List(Growl, Scratch, Ember))
+  setMoves(List(
+    Growl,
+    Scratch,
+    Ember
+  ))
 }
 
 class Squirtle extends Pokemon with Water {
@@ -77,5 +81,21 @@ class Squirtle extends Pokemon with Water {
   var currentHP = maxHP
   var attack = 48
   var defense = 65
-  setMoves(List(Tackle, WaterGun))
+  setMoves(List(
+    Tackle,
+    WaterGun
+  ))
+}
+
+class Bulbasaur extends Pokemon with Grass {
+  val pName = "Bulbasaur"
+  val maxHP = 45
+  var currentHP = maxHP
+  var attack = 49
+  var defense = 49
+  setMoves(List(
+    Growl,
+    Tackle,
+    VineWhip
+  ))
 }

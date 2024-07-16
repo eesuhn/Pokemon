@@ -15,6 +15,9 @@ abstract class PhysicalMove extends Move {
   val damage: Int
 }
 
+/**
+  * Growl lowers the target's attack by 1 stage
+  */
 object Growl extends StatusMove with Normal {
   val moveName = "Growl"
   val accuracy = 100
@@ -23,6 +26,9 @@ object Growl extends StatusMove with Normal {
   val self = false
 }
 
+/**
+  * Leer lowers the target's defense by 1 stage
+  */
 object Leer extends StatusMove with Normal {
   val moveName = "Leer"
   val accuracy = 100
