@@ -124,7 +124,7 @@ class Charmander extends Pokemon with Fire {
   var attack = 52
   var defense = 43
   setMoves(List(
-    Growl,
+    // Growl,
     Scratch,
     Ember
   ))
@@ -149,7 +149,7 @@ class Bulbasaur extends Pokemon with Grass {
   var attack = 49
   var defense = 49
   setMoves(List(
-    Growl,
+    // Growl,
     Tackle,
     VineWhip
   ))
