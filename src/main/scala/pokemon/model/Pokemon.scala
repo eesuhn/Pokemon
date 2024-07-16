@@ -1,5 +1,7 @@
 package pokemon.model
 
+import scala.util.Random
+
 abstract class Pokemon {
   val pName: String
   val maxHP: Int
@@ -36,26 +38,33 @@ abstract class Pokemon {
   /**
     * Physical attack on target Pokemon
     *
-    * @param physicalMove
+    * @param move
     * @param target
     */
-  def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
-    val modifier = calculateModifier(physicalMove, target)
+  def physicalAttack(move: Move, target: Pokemon): Unit = {
+    val physicalMove: PhysicalMove = move.asInstanceOf[PhysicalMove]
+
+    val modifier: Double = calculateModifier(physicalMove, target)
     println(s"${pName} used ${physicalMove.moveName} on ${target.pName}")
 
-    val damage = calculateDamage(
+    if (!calculateAccuracy(physicalMove)) {
+      println(s"${pName}'s attack missed")
+      return
+    }
+
+    val damage: Double = calculateDamage(
       physicalMove.basePower,
       this.attack,
       target.defense,
       this.level,
       modifier
     )
-    println(s"\tbasePower: ${physicalMove.basePower}")
-    println(s"\tattack: ${this.attack}")
-    println(s"\tdefense: ${target.defense}")
-    println(s"\tlevel: ${this.level}")
-    println(s"\tmodifier: ${modifier}")
-    println(s"\tdamage: ${damage}")
+    // println(s"\tbasePower: ${physicalMove.basePower}")
+    // println(s"\tattack: ${this.attack}")
+    // println(s"\tdefense: ${target.defense}")
+    // println(s"\tlevel: ${this.level}")
+    // println(s"\tmodifier: ${modifier}")
+    // println(s"\tdamage: ${damage}")
 
     target.takeDamage(damage.toInt)
     println(s"${target.pName} took ${damage.toInt} damage")
@@ -97,10 +106,15 @@ abstract class Pokemon {
     level: Int,
     modifier: Double
   ): Double = {
-    val damage = (
+    val damage: Double = (
       (2 * level / 5 + 2) * attack * basePower / defense / 50 + 2
     )
     damage * modifier
+  }
+
+  def calculateAccuracy(move: Move): Boolean = {
+    val random = Random
+    random.nextInt(100) < move.accuracy
   }
 }
 
