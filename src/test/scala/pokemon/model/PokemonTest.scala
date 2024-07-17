@@ -5,6 +5,19 @@ import org.scalatest.funsuite.AnyFunSuite
 class PokemonTest extends AnyFunSuite {
 
   /**
+    * Test the creation of a Pokemon
+    */
+  test("Create a Pokemon") {
+    val charmander = new Charmander()
+    assert(charmander.pName == "Charmander")
+    assert(charmander.maxHP == 39)
+    assert(charmander.currentHP == 39)
+    assert(charmander.attack == 52)
+    assert(charmander.defense == 43)
+    assert(charmander.level == 1)
+  }
+
+  /**
     * Test the modifier value for Scratch against Squirtle
     */
   test("Scratch against Squirtle") {

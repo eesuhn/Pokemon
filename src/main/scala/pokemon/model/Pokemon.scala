@@ -4,7 +4,7 @@ import scala.util.Random
 
 abstract class Pokemon {
   val pName: String
-  val maxHP: Int
+  lazy val maxHP: Int = currentHP
   var currentHP: Int
   var attack: Int
   var defense: Int
@@ -137,8 +137,7 @@ abstract class Pokemon {
 
 class Charmander extends Pokemon {
   val pName = "Charmander"
-  val maxHP = 39
-  var currentHP = maxHP
+  var currentHP = 39
   var attack = 52
   var defense = 43
   setPTypes(List(
@@ -152,8 +151,7 @@ class Charmander extends Pokemon {
 
 class Squirtle extends Pokemon {
   val pName = "Squirtle"
-  val maxHP = 44
-  var currentHP = maxHP
+  var currentHP = 44
   var attack = 48
   var defense = 65
   setPTypes(List(
@@ -167,8 +165,7 @@ class Squirtle extends Pokemon {
 
 class Bulbasaur extends Pokemon {
   val pName = "Bulbasaur"
-  val maxHP = 45
-  var currentHP = maxHP
+  var currentHP = 45
   var attack = 49
   var defense = 49
   setPTypes(List(

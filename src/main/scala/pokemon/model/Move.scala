@@ -62,6 +62,20 @@ object Scratch extends PhysicalMove {
   val basePower = 40
 }
 
+object Pound extends PhysicalMove {
+  val moveName = "Pound"
+  val accuracy = 100
+  val moveType = Normal
+  val basePower = 40
+}
+
+object Cut extends PhysicalMove {
+  val moveName = "Cut"
+  val accuracy = 95
+  val moveType = Normal
+  val basePower = 50
+}
+
 object Ember extends PhysicalMove {
   val moveName = "Ember"
   val accuracy = 100
@@ -76,9 +90,30 @@ object WaterGun extends PhysicalMove {
   val basePower = 40
 }
 
+object Spark extends PhysicalMove {
+  val moveName = "Spark"
+  val accuracy = 100
+  val moveType = Electric
+  val basePower = 65
+}
+
 object VineWhip extends PhysicalMove {
   val moveName = "Vine Whip"
   val accuracy = 100
   val moveType = Grass
   val basePower = 45
+}
+
+object IcePunch extends PhysicalMove {
+  val moveName = "Ice Punch"
+  val accuracy = 100
+  val moveType = Ice
+  val basePower = 75
+}
+
+object DoubleKick extends PhysicalMove {
+  val moveName = "Double Kick"
+  val accuracy = 100
+  val moveType = Normal
+  val basePower = 30
 }
