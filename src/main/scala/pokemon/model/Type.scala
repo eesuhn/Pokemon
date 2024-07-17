@@ -1,43 +1,79 @@
 package pokemon.model
 
-trait Type {
-  val typeName: String
-  val strongAgainst: List[String]
-  val weakAgainst: List[String]
+abstract class Type {
+  val name: String
+  val attackStrongAgainst: List[Type]
+  val attackWeakAgainst: List[Type]
 }
 
-trait Normal extends Type {
-  val typeName = "Normal"
-  val strongAgainst = List()
-  val weakAgainst = List()
+object Normal extends Type {
+  val name = "Normal"
+  val attackStrongAgainst: List[Type] = List()
+  val attackWeakAgainst: List[Type] = List()
 }
 
-trait Fire extends Type {
-  val typeName = "Fire"
-  val strongAgainst = List(
-    "Grass"
+object Fire extends Type {
+  val name = "Fire"
+  val attackStrongAgainst: List[Type] = List(
+    Grass,
+    Ice
   )
-  val weakAgainst = List(
-    "Water"
-  )
-}
-
-trait Water extends Type {
-  val typeName = "Water"
-  val strongAgainst = List(
-    "Fire"
-  )
-  val weakAgainst = List(
-    "Grass"
+  val attackWeakAgainst: List[Type] = List(
+    Fire,
+    Water
   )
 }
 
-trait Grass extends Type {
-  val typeName = "Grass"
-  val strongAgainst = List(
-    "Water"
+object Water extends Type {
+  val name = "Water"
+  val attackStrongAgainst: List[Type] = List(
+    Fire
   )
-  val weakAgainst = List(
-    "Fire"
+  val attackWeakAgainst: List[Type] = List(
+    Water,
+    Grass
   )
+}
+
+object Electric extends Type {
+  val name = "Electric"
+  val attackStrongAgainst: List[Type] = List(
+    Water
+  )
+  val attackWeakAgainst: List[Type] = List(
+    Electric,
+    Grass
+  )
+}
+
+object Grass extends Type {
+  val name = "Grass"
+  val attackStrongAgainst: List[Type] = List(
+    Water
+  )
+  val attackWeakAgainst: List[Type] = List(
+    Fire,
+    Grass
+  )
+}
+
+object Ice extends Type {
+  val name = "Ice"
+  val attackStrongAgainst: List[Type] = List(
+    Grass
+  )
+  val attackWeakAgainst: List[Type] = List(
+    Fire,
+    Water,
+    Ice
+  )
+}
+
+object Fighting extends Type {
+  val name = "Fighting"
+  val attackStrongAgainst: List[Type] = List(
+    Normal,
+    Ice
+  )
+  val attackWeakAgainst: List[Type] = List()
 }
