@@ -5,12 +5,20 @@ abstract class Move {
   val accuracy: Int
 }
 
+/**
+  * StatusMove is a move that affects the target's stats
+  * based on the move's status and adjustment
+  */
 abstract class StatusMove extends Move {
   val status: String
   val adjustment: Int
   val self: Boolean
 }
 
+/**
+  * PhysicalMove is a move that deals damage to the target
+  * based on the user's attack and the target's defense
+  */
 abstract class PhysicalMove extends Move {
   val basePower: Int
 }
