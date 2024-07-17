@@ -1,15 +1,12 @@
 package pokemon
 
-import pokemon.model.Game
-import pokemon.util.Reader
+import pokemon.model.Layout
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
 import scalafx.Includes._
-import javafx.{scene => jfxs}
 
 object MainApp extends JFXApp {
-  val loader = Reader.resourceLayout("RootLayout.fxml")
-  val rootLayout = loader.getRoot[jfxs.layout.BorderPane]
+  val rootLayout = Layout.rootLayout()
 
   stage = new JFXApp.PrimaryStage {
     title = "Pokemon"
@@ -18,11 +15,5 @@ object MainApp extends JFXApp {
     }
   }
 
-  showGameLayout()
-
-  def showGameLayout(): Unit = {
-    val loader = Reader.resourceLayout("GameLayout.fxml")
-    val gameLayout = loader.getRoot[jfxs.layout.AnchorPane]
-    this.rootLayout.setCenter(gameLayout)
-  }
+  Layout.showGameLayout()
 }
