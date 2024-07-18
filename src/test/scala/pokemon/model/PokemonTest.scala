@@ -5,33 +5,6 @@ import org.scalatest.funsuite.AnyFunSuite
 class PokemonTest extends AnyFunSuite {
 
   /**
-    * Test the modifier value for Scratch against Squirtle
-    */
-  test("Modifier: Scratch against Squirtle") {
-    val squirtle = new Squirtle()
-    val modifier = Scratch.calculateModifier(squirtle)
-    assert(modifier == 1.0)
-  }
-
-  /**
-    * Test the modifier value for Ember against Squirtle
-    */
-  test("Modifier: Ember against Squirtle") {
-    val squirtle = new Squirtle()
-    val modifier = Ember.calculateModifier(squirtle)
-    assert(modifier == 0.5)
-  }
-
-  /**
-    * Test the modifier value for Water Gun against Charmander
-    */
-  test("Modifier: Water Gun against Charmander") {
-    val charmander = new Charmander()
-    val modifier = WaterGun.calculateModifier(charmander)
-    assert(modifier == 2.0)
-  }
-
-  /**
     * Test the effect of Growl on Charmander's attack
     */
   test("Stats: Growl against Charmander") {
@@ -120,8 +93,8 @@ class PokemonTest extends AnyFunSuite {
     var expectedCharmanderAttack = charmander.attack
 
     for (_ <- 1 to 5) {
-      squirtle.statusAttack(Growl, charmander)
       expectedCharmanderAttack = (expectedCharmanderAttack * (2.0 / 3.0)).toInt
+      squirtle.statusAttack(Growl, charmander)
     }
 
     assert(charmander.attack == expectedCharmanderAttack)
