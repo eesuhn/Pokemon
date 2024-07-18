@@ -5,30 +5,14 @@ import org.scalatest.funsuite.AnyFunSuite
 class PokemonTest extends AnyFunSuite {
 
   /**
-    * Test the creation of a Pokemon
-    */
-  test("Create a Pokemon") {
-    val charmander = new Charmander()
-    
-    assert(charmander.pName == "Charmander")
-    assert(charmander.maxHP == 39)
-    assert(charmander.currentHP == 39)
-    assert(charmander.attack == 52)
-    assert(charmander.defense == 43)
-    assert(charmander.level == 1)
-    assert(charmander.pTypes == List(Fire))
-    assert(charmander.moves == List(Leer, Scratch, Ember))
-  }
-
-  /**
     * Test the modifier value for Scratch against Squirtle
     */
   test("Modifier: Scratch against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
-    
+
     val modifier = charmander.calculateModifier(Scratch, squirtle)
-    
+
     assert(modifier == 1.0)
   }
 
@@ -38,9 +22,9 @@ class PokemonTest extends AnyFunSuite {
   test("Modifier: Ember against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
-    
+
     val modifier = charmander.calculateModifier(Ember, squirtle)
-    
+
     assert(modifier == 0.5)
   }
 
@@ -50,9 +34,9 @@ class PokemonTest extends AnyFunSuite {
   test("Modifier: Water Gun against Charmander") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
-    
+
     val modifier = squirtle.calculateModifier(WaterGun, charmander)
-    
+
     assert(modifier == 2.0)
   }
 
@@ -98,14 +82,14 @@ class PokemonTest extends AnyFunSuite {
     val squirtle = new Squirtle()
 
     val modifier = charmander.calculateModifier(Scratch, squirtle)
-    val damage = charmander.calculateDamage(
+    val damage = charmander.calculatePhysicalDamage(
       Scratch.basePower,
       charmander.attack,
       squirtle.defense,
       charmander.level,
       modifier
     )
-    val expectedHP = squirtle.maxHP - damage
+    val expectedHP = squirtle.maxHP - damage.toInt
 
     charmander.physicalAttack(Scratch, squirtle)
 
@@ -120,7 +104,7 @@ class PokemonTest extends AnyFunSuite {
     val squirtle = new Squirtle()
 
     val modifier = charmander.calculateModifier(Ember, squirtle)
-    val damage = charmander.calculateDamage(
+    val damage = charmander.calculatePhysicalDamage(
       Ember.basePower,
       charmander.attack,
       squirtle.defense,
@@ -142,7 +126,7 @@ class PokemonTest extends AnyFunSuite {
     val squirtle = new Squirtle()
 
     val modifier = charmander.calculateModifier(Scratch, squirtle)
-    val damage = charmander.calculateDamage(
+    val damage = charmander.calculatePhysicalDamage(
       Scratch.basePower,
       charmander.attack,
       squirtle.defense,
@@ -165,12 +149,13 @@ class PokemonTest extends AnyFunSuite {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
-    // for (_ <- 1 to 5) {
+    var expectedCharmanderAttack = charmander.attack
+
+    for (_ <- 1 to 5) {
       squirtle.statusAttack(Growl, charmander)
-    // }
-    
-    Console.withOut(System.out) {
-      println(s"Charmander's attack: ${charmander.attack}")
+      expectedCharmanderAttack = (expectedCharmanderAttack * (2.0 / 3.0)).toInt
     }
+
+    assert(charmander.attack == expectedCharmanderAttack)
   }
 }

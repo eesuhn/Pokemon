@@ -62,7 +62,7 @@ abstract class Pokemon {
     // }
 
     val modifier: Double = calculateModifier(physicalMove, target)
-    val damage: Double = calculateDamage(
+    val damage: Double = calculatePhysicalDamage(
       physicalMove.basePower,
       this.attack,
       target.defense,
@@ -103,7 +103,7 @@ abstract class Pokemon {
         s || move.moveType.attackStrongAgainst.contains(t),
         w || move.moveType.attackWeakAgainst.contains(t))
       }
-    
+
     if (strong && weak) 1.0
     else if (strong) 2.0
     else if (weak) 0.5
@@ -122,7 +122,7 @@ abstract class Pokemon {
     * @param modifier
     * @return
     */
-  def calculateDamage(
+  def calculatePhysicalDamage(
     basePower: Int,
     attack: Int,
     defense: Int,

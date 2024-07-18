@@ -12,15 +12,15 @@ abstract class Move {
 
 /**
   * StatusMove is a move that affects the target's stats
-  * based on the move's status and adjustment
+  * based on the move's status and stage
   */
 abstract class StatusMove extends Move {
   val status: List[Stat]
-  val adjustment: Int
+  val stage: Int
   val self: Boolean
 
   def applyEffect(pokemon: Pokemon): Unit = {
-    val modifier = calculateStage(adjustment)
+    val modifier = calculateStage(stage)
 
     status.foreach {
       case Attack => pokemon.attack = (pokemon.attack * modifier).toInt
@@ -28,9 +28,9 @@ abstract class StatusMove extends Move {
     }
   }
 
-  def calculateStage(adjustment: Double): Double = {
-    if (adjustment < 0) 2.0 / (2.0 - adjustment)
-    else if (adjustment > 0) (2.0 + adjustment) / 2.0
+  def calculateStage(stage: Int): Double = {
+    if (stage < 0) 2.0 / (2.0 - stage)
+    else if (stage > 0) (2.0 + stage) / 2.0
     else throw new Exception("Adjustment cannot be 0")
   }
 }
@@ -53,7 +53,7 @@ object Growl extends StatusMove {
   val status = List(
     Attack
   )
-  val adjustment = -1
+  val stage = -1
   val self = false
 }
 
@@ -67,7 +67,7 @@ object Leer extends StatusMove {
   val status = List(
     Defense
   )
-  val adjustment = -1
+  val stage = -1
   val self = false
 }
 
