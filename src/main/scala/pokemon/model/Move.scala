@@ -24,13 +24,13 @@ abstract class StatusMove extends Move {
 
     status.foreach {
       case Attack => pokemon.attack = (pokemon.attack * modifier).toInt
-      case Defense => pokemon.defense = (pokemon.attack * modifier).toInt
+      case Defense => pokemon.defense = (pokemon.defense * modifier).toInt
     }
   }
 
-  def calculateStage(adjustment: Int): Double = {
-    if (adjustment < 0) 2 / (2 - adjustment)
-    else if (adjustment > 0) (2 + adjustment) / 2
+  def calculateStage(adjustment: Double): Double = {
+    if (adjustment < 0) 2.0 / (2.0 - adjustment)
+    else if (adjustment > 0) (2.0 + adjustment) / 2.0
     else throw new Exception("Adjustment cannot be 0")
   }
 }

@@ -64,11 +64,12 @@ class PokemonTest extends AnyFunSuite {
     val squirtle = new Squirtle()
 
     val charmanderAttack = charmander.attack
-    val expectedCharmanderAttack = charmanderAttack * (2 / 3)
+    val expectedCharmanderAttack = (charmanderAttack * (2.0 / 3.0)).toInt
 
     squirtle.statusAttack(Growl, charmander)
 
     assert(charmander.attack == expectedCharmanderAttack)
+    assert(charmander.attack.isInstanceOf[Int])
     assert(charmander.defense == 43)
   }
 
@@ -80,12 +81,13 @@ class PokemonTest extends AnyFunSuite {
     val squirtle = new Squirtle()
 
     val squirtleDefense = squirtle.defense
-    val expectedSquirtleDefense = squirtleDefense * (2 / 3)
+    val expectedSquirtleDefense = (squirtleDefense * (2.0 / 3.0)).toInt
 
     charmander.statusAttack(Leer, squirtle)
 
-    assert(squirtle.attack == 48)
     assert(squirtle.defense == expectedSquirtleDefense)
+    assert(squirtle.defense.isInstanceOf[Int])
+    assert(squirtle.attack == 48)
   }
 
   /**
@@ -130,5 +132,45 @@ class PokemonTest extends AnyFunSuite {
     charmander.physicalAttack(Ember, squirtle)
 
     assert(squirtle.currentHP == expectedHP)
+  }
+
+  /**
+    * Test 5 attacks of Scratch on Squirtle
+    */
+  test("HP after 5 attacks: Scratch against Squirtle") {
+    val charmander = new Charmander()
+    val squirtle = new Squirtle()
+
+    val modifier = charmander.calculateModifier(Scratch, squirtle)
+    val damage = charmander.calculateDamage(
+      Scratch.basePower,
+      charmander.attack,
+      squirtle.defense,
+      charmander.level,
+      modifier
+    )
+    val expectedHP = squirtle.maxHP - (damage * 5).toInt
+
+    for (_ <- 1 to 5) {
+      charmander.physicalAttack(Scratch, squirtle)
+    }
+
+    assert(squirtle.currentHP == expectedHP)
+  }
+
+  /**
+    * Test 5 attacks of Growl on Charmander
+    */
+  test("Stats after 5 attacks: Growl against Charmander") {
+    val charmander = new Charmander()
+    val squirtle = new Squirtle()
+
+    // for (_ <- 1 to 5) {
+      squirtle.statusAttack(Growl, charmander)
+    // }
+    
+    Console.withOut(System.out) {
+      println(s"Charmander's attack: ${charmander.attack}")
+    }
   }
 }

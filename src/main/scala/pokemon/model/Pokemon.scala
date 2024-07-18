@@ -62,8 +62,6 @@ abstract class Pokemon {
     // }
 
     val modifier: Double = calculateModifier(physicalMove, target)
-    println(s"${pName} used ${physicalMove.moveName} on ${target.pName}")
-
     val damage: Double = calculateDamage(
       physicalMove.basePower,
       this.attack,
@@ -73,7 +71,6 @@ abstract class Pokemon {
     )
 
     target.takeDamage(damage.toInt)
-    println(s"${target.pName} took ${damage.toInt} damage")
   }
 
   /**
@@ -83,6 +80,11 @@ abstract class Pokemon {
     * @param target
     */
   def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
+    // if (!calculateAccuracy(statusMove)) {
+    //   println(s"${pName}'s attack missed")
+    //   return
+    // }
+
     if (statusMove.self) statusMove.applyEffect(this)
     else statusMove.applyEffect(target)
   }
