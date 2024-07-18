@@ -1,5 +1,9 @@
 package pokemon.model
 
+sealed trait Stat
+case object Attack extends Stat
+case object Defense extends Stat
+
 abstract class Move {
   val moveName: String
   val accuracy: Int
@@ -11,9 +15,24 @@ abstract class Move {
   * based on the move's status and adjustment
   */
 abstract class StatusMove extends Move {
-  val status: String
+  val status: List[Stat]
   val adjustment: Int
   val self: Boolean
+
+  def applyEffect(pokemon: Pokemon): Unit = {
+    val modifier = calculateStage(adjustment)
+
+    status.foreach {
+      case Attack => pokemon.attack = (pokemon.attack * modifier).toInt
+      case Defense => pokemon.defense = (pokemon.attack * modifier).toInt
+    }
+  }
+
+  def calculateStage(adjustment: Int): Double = {
+    if (adjustment < 0) 2 / (2 - adjustment)
+    else if (adjustment > 0) (2 + adjustment) / 2
+    else throw new Exception("Adjustment cannot be 0")
+  }
 }
 
 /**
@@ -31,7 +50,9 @@ object Growl extends StatusMove {
   val moveName = "Growl"
   val accuracy = 100
   val moveType = Normal
-  val status = "attack"
+  val status = List(
+    Attack
+  )
   val adjustment = -1
   val self = false
 }
@@ -43,7 +64,9 @@ object Leer extends StatusMove {
   val moveName = "Leer"
   val accuracy = 100
   val moveType = Normal
-  val status = "defense"
+  val status = List(
+    Defense
+  )
   val adjustment = -1
   val self = false
 }

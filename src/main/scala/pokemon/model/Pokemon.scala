@@ -51,12 +51,10 @@ abstract class Pokemon {
   /**
     * Physical attack on target Pokemon
     *
-    * @param move
+    * @param physicalMove
     * @param target
     */
-  def physicalAttack(move: Move, target: Pokemon): Unit = {
-    val physicalMove: PhysicalMove = move.asInstanceOf[PhysicalMove]
-
+  def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
     if (!calculateAccuracy(physicalMove)) {
       println(s"${pName}'s attack missed")
       return
@@ -75,6 +73,17 @@ abstract class Pokemon {
 
     target.takeDamage(damage.toInt)
     println(s"${target.pName} took ${damage.toInt} damage")
+  }
+
+  /**
+    * Status attack on target Pokemon
+    *
+    * @param statusMove
+    * @param target
+    */
+  def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
+    if (statusMove.self) statusMove.applyEffect(this)
+    else statusMove.applyEffect(target)
   }
 
   /**
@@ -144,6 +153,7 @@ class Charmander extends Pokemon {
     Fire
   ))
   setMoves(List(
+    Leer,
     Scratch,
     Ember
   ))
@@ -158,6 +168,7 @@ class Squirtle extends Pokemon {
     Water
   ))
   setMoves(List(
+    Growl,
     Tackle,
     WaterGun
   ))
@@ -172,6 +183,7 @@ class Bulbasaur extends Pokemon {
     Grass
   ))
   setMoves(List(
+    Growl,
     Tackle,
     VineWhip
   ))
