@@ -8,11 +8,8 @@ class PokemonTest extends AnyFunSuite {
     * Test the modifier value for Scratch against Squirtle
     */
   test("Modifier: Scratch against Squirtle") {
-    val charmander = new Charmander()
     val squirtle = new Squirtle()
-
-    val modifier = charmander.calculateModifier(Scratch, squirtle)
-
+    val modifier = Scratch.calculateModifier(squirtle)
     assert(modifier == 1.0)
   }
 
@@ -20,11 +17,8 @@ class PokemonTest extends AnyFunSuite {
     * Test the modifier value for Ember against Squirtle
     */
   test("Modifier: Ember against Squirtle") {
-    val charmander = new Charmander()
     val squirtle = new Squirtle()
-
-    val modifier = charmander.calculateModifier(Ember, squirtle)
-
+    val modifier = Ember.calculateModifier(squirtle)
     assert(modifier == 0.5)
   }
 
@@ -33,10 +27,7 @@ class PokemonTest extends AnyFunSuite {
     */
   test("Modifier: Water Gun against Charmander") {
     val charmander = new Charmander()
-    val squirtle = new Squirtle()
-
-    val modifier = squirtle.calculateModifier(WaterGun, charmander)
-
+    val modifier = WaterGun.calculateModifier(charmander)
     assert(modifier == 2.0)
   }
 
@@ -53,7 +44,6 @@ class PokemonTest extends AnyFunSuite {
     squirtle.statusAttack(Growl, charmander)
 
     assert(charmander.attack == expectedCharmanderAttack)
-    assert(charmander.attack.isInstanceOf[Int])
     assert(charmander.defense == 43)
   }
 
@@ -70,25 +60,17 @@ class PokemonTest extends AnyFunSuite {
     charmander.statusAttack(Leer, squirtle)
 
     assert(squirtle.defense == expectedSquirtleDefense)
-    assert(squirtle.defense.isInstanceOf[Int])
     assert(squirtle.attack == 48)
   }
 
   /**
     * Test the effect of Scratch on Squirtle's HP
     */
-  test("HP after attack: Scratch against Squirtle") {
+  test("Attack: Scratch against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
-    val modifier = charmander.calculateModifier(Scratch, squirtle)
-    val damage = charmander.calculatePhysicalDamage(
-      Scratch.basePower,
-      charmander.attack,
-      squirtle.defense,
-      charmander.level,
-      modifier
-    )
+    val damage = Scratch.calculatePhysicalDamage(charmander, squirtle)
     val expectedHP = squirtle.maxHP - damage.toInt
 
     charmander.physicalAttack(Scratch, squirtle)
@@ -99,18 +81,11 @@ class PokemonTest extends AnyFunSuite {
   /**
     * Test the effect of Ember on Squirtle's HP
     */
-  test("HP after attack: Ember against Squirtle") {
+  test("Attack: Ember against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
-    val modifier = charmander.calculateModifier(Ember, squirtle)
-    val damage = charmander.calculatePhysicalDamage(
-      Ember.basePower,
-      charmander.attack,
-      squirtle.defense,
-      charmander.level,
-      modifier
-    )
+    val damage = Ember.calculatePhysicalDamage(charmander, squirtle)
     val expectedHP = squirtle.maxHP - damage.toInt
 
     charmander.physicalAttack(Ember, squirtle)
@@ -121,18 +96,11 @@ class PokemonTest extends AnyFunSuite {
   /**
     * Test 5 attacks of Scratch on Squirtle
     */
-  test("HP after 5 attacks: Scratch against Squirtle") {
+  test("5 physical attacks: Scratch against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
-    val modifier = charmander.calculateModifier(Scratch, squirtle)
-    val damage = charmander.calculatePhysicalDamage(
-      Scratch.basePower,
-      charmander.attack,
-      squirtle.defense,
-      charmander.level,
-      modifier
-    )
+    val damage = Scratch.calculatePhysicalDamage(charmander, squirtle)
     val expectedHP = squirtle.maxHP - (damage * 5).toInt
 
     for (_ <- 1 to 5) {
@@ -145,7 +113,7 @@ class PokemonTest extends AnyFunSuite {
   /**
     * Test 5 attacks of Growl on Charmander
     */
-  test("Stats after 5 attacks: Growl against Charmander") {
+  test("5 status attacks: Growl against Charmander") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 

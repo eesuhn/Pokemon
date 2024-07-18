@@ -50,100 +50,35 @@ abstract class Pokemon {
   }
 
   /**
-    * Physical attack on target Pokemon
-    *
-    * @param physicalMove
-    * @param target
-    */
-  def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
-    // if (!calculateAccuracy(physicalMove)) {
-    //   println(s"${pName}'s attack missed")
-    //   return
-    // }
-
-    val modifier: Double = calculateModifier(physicalMove, target)
-    val damage: Double = calculatePhysicalDamage(
-      physicalMove.basePower,
-      this.attack,
-      target.defense,
-      this.level,
-      modifier
-    )
-
-    target.takeDamage(damage.toInt)
-  }
-
-  /**
     * Status attack on target Pokemon
     *
     * @param statusMove
     * @param target
     */
   def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
-    // if (!calculateAccuracy(statusMove)) {
-    //   println(s"${pName}'s attack missed")
-    //   return
-    // }
+    if (!statusMove.calculateAccuracy()) {
+      println(s"${pName}'s attack missed")
+      return
+    }
 
     if (statusMove.self) statusMove.applyEffect(this)
     else statusMove.applyEffect(target)
   }
 
   /**
-    * Calculate modifier for the move based on target's type
+    * Physical attack on target Pokemon
     *
-    * @param move
+    * @param physicalMove
     * @param target
-    * @return 1.0 if both or neither strong/weak, 2.0 if strong, 0.5 if weak
     */
-  def calculateModifier(move: Move, target: Pokemon): Double = {
-    val (strong, weak) = target
-      .pTypes
-      .foldLeft((false, false)) { case ((s, w), t) => (
-        s || move.moveType.attackStrongAgainst.contains(t),
-        w || move.moveType.attackWeakAgainst.contains(t))
-      }
+  def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
+    if (!physicalMove.calculateAccuracy()) {
+      println(s"${pName}'s attack missed")
+      return
+    }
 
-    if (strong && weak) 1.0
-    else if (strong) 2.0
-    else if (weak) 0.5
-    else 1.0
-  }
-
-  /**
-    * Calculate damage for the move
-    *
-    * Damage = (2 * L / 5 + 2) * A * P / D / 50 + 2
-    *
-    * @param basePower
-    * @param attack
-    * @param defense
-    * @param level
-    * @param modifier
-    * @return
-    */
-  def calculatePhysicalDamage(
-    basePower: Int,
-    attack: Int,
-    defense: Int,
-    level: Int,
-    modifier: Double
-  ): Double = {
-    val damage: Double = (
-      (2 * level / 5 + 2) * attack * basePower / defense / 50 + 2
-    )
-    damage * modifier
-  }
-
-  /**
-    * Calculate if the move hits based on accuracy
-    *
-    * @param move
-    * @return
-    */
-  def calculateAccuracy(move: Move): Boolean = {
-    val random = Random
-    random.nextInt(100) < move.accuracy
+    val damage: Double = physicalMove.calculatePhysicalDamage(this, target)
+    target.takeDamage(damage.toInt)
   }
 }
 

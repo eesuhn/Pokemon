@@ -1,5 +1,7 @@
 package pokemon.model
 
+import scala.util.Random
+
 sealed trait Stat
 case object Attack extends Stat
 case object Defense extends Stat
@@ -8,6 +10,16 @@ abstract class Move {
   val moveName: String
   val accuracy: Int
   val moveType: Type
+
+  /**
+    * Calculate if the move hits based on accuracy
+    *
+    * @return
+    */
+  def calculateAccuracy(): Boolean = {
+    val random = Random
+    random.nextInt(100) < this.accuracy
+  }
 }
 
 /**
@@ -20,7 +32,7 @@ abstract class StatusMove extends Move {
   val self: Boolean
 
   def applyEffect(pokemon: Pokemon): Unit = {
-    val modifier = calculateStage(stage)
+    val modifier = calculateStage()
 
     status.foreach {
       case Attack => pokemon.attack = (pokemon.attack * modifier).toInt
@@ -28,9 +40,9 @@ abstract class StatusMove extends Move {
     }
   }
 
-  def calculateStage(stage: Int): Double = {
-    if (stage < 0) 2.0 / (2.0 - stage)
-    else if (stage > 0) (2.0 + stage) / 2.0
+  def calculateStage(): Double = {
+    if (this.stage < 0) 2.0 / (2.0 - this.stage)
+    else if (this.stage > 0) (2.0 + this.stage) / 2.0
     else throw new Exception("Adjustment cannot be 0")
   }
 }
@@ -41,6 +53,43 @@ abstract class StatusMove extends Move {
   */
 abstract class PhysicalMove extends Move {
   val basePower: Int
+
+  /**
+    * Calculate modifier for the move based on target's type
+    *
+    * @param target
+    * @return 1.0 if both or neither strong/weak, 2.0 if strong, 0.5 if weak
+    */
+  def calculateModifier(target: Pokemon): Double = {
+    val (strong, weak) = target
+      .pTypes
+      .foldLeft((false, false)) { case ((s, w), t) => (
+        s || this.moveType.attackStrongAgainst.contains(t),
+        w || this.moveType.attackWeakAgainst.contains(t))
+      }
+
+    if (strong && weak) 1.0
+    else if (strong) 2.0
+    else if (weak) 0.5
+    else 1.0
+  }
+
+  /**
+    * Calculate damage for the move
+    *
+    * Damage = (2 * L / 5 + 2) * A * P / D / 50 + 2
+    *
+    * @param attacker
+    * @param target
+    * @return
+    */
+  def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): Double = {
+    val modifier = calculateModifier(target)
+    val damage: Double = (
+      (2 * attacker.level / 5 + 2) * attacker.attack * basePower / target.defense / 50 + 2
+    )
+    damage * modifier
+  }
 }
 
 /**
