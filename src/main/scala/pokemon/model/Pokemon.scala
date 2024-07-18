@@ -4,14 +4,15 @@ import scala.util.Random
 
 abstract class Pokemon {
   val pName: String
-  lazy val maxHP: Int = currentHP
-  var currentHP: Int
   var attack: Int
   var defense: Int
-  val level: Int = 1
+  var level: Int = 1
+  var maxHP: Int = initHP
+  var currentHP: Int = initHP
   private var _pTypes: List[Type] = List()
   private var _moves: List[Move] = List()
 
+  def initHP: Int
   def pTypes: List[Type] = _pTypes
   def moves: List[Move] = _moves
 
@@ -20,7 +21,7 @@ abstract class Pokemon {
     *
     * @param types
     */
-  def setPTypes(types: List[Type]): Unit = {
+  def pTypes(types: List[Type]): Unit = {
     if (types.length > 2) {
       throw new Exception("Pokemon can have at most 2 types")
     }
@@ -32,7 +33,7 @@ abstract class Pokemon {
     *
     * @param moves
     */
-  def setMoves(moves: List[Move]): Unit = {
+  def moves(moves: List[Move]): Unit = {
     if (moves.length > 4) {
       throw new Exception("Pokemon can learn at most 4 moves")
     }
@@ -55,10 +56,10 @@ abstract class Pokemon {
     * @param target
     */
   def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
-    if (!calculateAccuracy(physicalMove)) {
-      println(s"${pName}'s attack missed")
-      return
-    }
+    // if (!calculateAccuracy(physicalMove)) {
+    //   println(s"${pName}'s attack missed")
+    //   return
+    // }
 
     val modifier: Double = calculateModifier(physicalMove, target)
     println(s"${pName} used ${physicalMove.moveName} on ${target.pName}")
@@ -146,13 +147,13 @@ abstract class Pokemon {
 
 class Charmander extends Pokemon {
   val pName = "Charmander"
-  var currentHP = 39
   var attack = 52
   var defense = 43
-  setPTypes(List(
+  override def initHP: Int = 39
+  pTypes(List(
     Fire
   ))
-  setMoves(List(
+  moves(List(
     Leer,
     Scratch,
     Ember
@@ -161,13 +162,13 @@ class Charmander extends Pokemon {
 
 class Squirtle extends Pokemon {
   val pName = "Squirtle"
-  var currentHP = 44
   var attack = 48
   var defense = 65
-  setPTypes(List(
+  override def initHP: Int = 44
+  pTypes(List(
     Water
   ))
-  setMoves(List(
+  moves(List(
     Growl,
     Tackle,
     WaterGun
@@ -176,13 +177,13 @@ class Squirtle extends Pokemon {
 
 class Bulbasaur extends Pokemon {
   val pName = "Bulbasaur"
-  var currentHP = 45
   var attack = 49
   var defense = 49
-  setPTypes(List(
+  override def initHP: Int = 45
+  pTypes(List(
     Grass
   ))
-  setMoves(List(
+  moves(List(
     Growl,
     Tackle,
     VineWhip

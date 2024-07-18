@@ -16,12 +16,14 @@ class PokemonTest extends AnyFunSuite {
     assert(charmander.attack == 52)
     assert(charmander.defense == 43)
     assert(charmander.level == 1)
+    assert(charmander.pTypes == List(Fire))
+    assert(charmander.moves == List(Leer, Scratch, Ember))
   }
 
   /**
     * Test the modifier value for Scratch against Squirtle
     */
-  test("Scratch against Squirtle") {
+  test("Modifier: Scratch against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
     
@@ -33,7 +35,7 @@ class PokemonTest extends AnyFunSuite {
   /**
     * Test the modifier value for Ember against Squirtle
     */
-  test("Ember against Squirtle") {
+  test("Modifier: Ember against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
     
@@ -45,7 +47,7 @@ class PokemonTest extends AnyFunSuite {
   /**
     * Test the modifier value for Water Gun against Charmander
     */
-  test("Water Gun against Charmander") {
+  test("Modifier: Water Gun against Charmander") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
     
@@ -57,7 +59,7 @@ class PokemonTest extends AnyFunSuite {
   /**
     * Test the effect of Growl on Charmander's attack
     */
-  test("Growl against Charmander") {
+  test("Stats: Growl against Charmander") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
@@ -73,7 +75,7 @@ class PokemonTest extends AnyFunSuite {
   /**
     * Test the effect of Leer on Squirtle's defense
     */
-  test("Leer against Squirtle") {
+  test("Stats: Leer against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
@@ -84,5 +86,49 @@ class PokemonTest extends AnyFunSuite {
 
     assert(squirtle.attack == 48)
     assert(squirtle.defense == expectedSquirtleDefense)
+  }
+
+  /**
+    * Test the effect of Scratch on Squirtle's HP
+    */
+  test("HP after attack: Scratch against Squirtle") {
+    val charmander = new Charmander()
+    val squirtle = new Squirtle()
+
+    val modifier = charmander.calculateModifier(Scratch, squirtle)
+    val damage = charmander.calculateDamage(
+      Scratch.basePower,
+      charmander.attack,
+      squirtle.defense,
+      charmander.level,
+      modifier
+    )
+    val expectedHP = squirtle.maxHP - damage
+
+    charmander.physicalAttack(Scratch, squirtle)
+
+    assert(squirtle.currentHP == expectedHP)
+  }
+
+  /**
+    * Test the effect of Ember on Squirtle's HP
+    */
+  test("HP after attack: Ember against Squirtle") {
+    val charmander = new Charmander()
+    val squirtle = new Squirtle()
+
+    val modifier = charmander.calculateModifier(Ember, squirtle)
+    val damage = charmander.calculateDamage(
+      Ember.basePower,
+      charmander.attack,
+      squirtle.defense,
+      charmander.level,
+      modifier
+    )
+    val expectedHP = squirtle.maxHP - damage.toInt
+
+    charmander.physicalAttack(Ember, squirtle)
+
+    assert(squirtle.currentHP == expectedHP)
   }
 }
