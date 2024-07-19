@@ -17,9 +17,6 @@ class Game {
     this.player2.generateDeck()
   }
 
-  /**
-    * Decide which player goes first
-    */
   def decideFirstPlayer(): Unit = {
     val rand = Random
     this.currentPlayer = if (rand.nextBoolean()) this.player1 else this.player2

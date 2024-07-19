@@ -7,7 +7,7 @@ import javafx.{scene => jfxs}
 object Layout {
 
   /**
-    * Load a resource layout, within "view" folder
+    * Load a resource layout from "view" folder
     *
     * @param path
     * @return
@@ -21,19 +21,11 @@ object Layout {
     loader
   }
 
-  /**
-    * Load the root layout
-    *
-    * @return
-    */
   def rootLayout(): jfxs.layout.BorderPane = {
     val loader = resourceLayout("RootLayout.fxml")
     loader.getRoot[jfxs.layout.BorderPane]
   }
 
-  /**
-    * Show the game layout
-    */
   def showGameLayout(): Unit = {
     val loader = resourceLayout("GameLayout.fxml")
     val gameLayout = loader.getRoot[jfxs.layout.AnchorPane]
