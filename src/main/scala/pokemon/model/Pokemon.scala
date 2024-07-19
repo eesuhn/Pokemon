@@ -7,7 +7,7 @@ abstract class Pokemon {
   var attack: Attack
   var defense: Defense
   var accuracy: Accuracy = Accuracy(100)
-  private var _level: Int = 1
+  private var _level: Int = 5
   private var _baseHP: Int = initHP
   private var _currentHP: Int = initHP
   private var _pTypes: List[Type] = List()

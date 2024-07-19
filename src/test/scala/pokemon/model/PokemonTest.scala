@@ -11,6 +11,10 @@ class PokemonTest extends AnyFunSuite {
     val damage = Scratch.calculatePhysicalDamage(charmander, squirtle)
     val expectedHP = squirtle.baseHP - damage.toInt
 
+    Console.withOut(System.out) {
+      println(s"Damage: $damage")
+    }
+
     charmander.physicalAttack(Scratch, squirtle)
 
     assert(squirtle.currentHP == expectedHP)
@@ -33,7 +37,7 @@ class PokemonTest extends AnyFunSuite {
     val squirtle = new Squirtle()
 
     val damage = Scratch.calculatePhysicalDamage(charmander, squirtle)
-    val expectedHP = squirtle.baseHP - (damage * 5).toInt
+    val expectedHP = Math.max(squirtle.baseHP - (damage * 5).toInt, 0)
 
     for (_ <- 1 to 5) {
       charmander.physicalAttack(Scratch, squirtle)
