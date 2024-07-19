@@ -9,7 +9,7 @@ class MoveTest extends AnyFunSuite {
     val squirtle = new Squirtle()
 
     val damage = Ember.calculatePhysicalDamage(charmander, squirtle)
-    
+
     Console.withOut(System.out) {
       println(s"Ember damage: $damage")
     }

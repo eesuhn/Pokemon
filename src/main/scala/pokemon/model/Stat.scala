@@ -6,7 +6,7 @@ abstract class Stat {
   private var currentStage: Int = 0
 
   protected def initValue: Int
-  
+
   def value: Int = _value
 
   /**
@@ -21,7 +21,7 @@ abstract class Stat {
 
   /**
     * Change the stage of the stat
-    * 
+    *
     * Limit the stage between -6 and 6
     *
     * @param stage
@@ -32,7 +32,7 @@ abstract class Stat {
 
   /**
     * Calculate the stage adjustment
-    * 
+    *
     * - If stage < 0, return 2.0 / (2.0 - stage)
     * - If stage > 0, return (2.0 + stage) / 2.0
     *

@@ -2,12 +2,12 @@ package pokemon.model
 
 /**
   * Represents the type for move or Pokemon
-  * 
+  *
   * Move[Main]: Move's type determines how much damage it deals to a Pokemon
-  * 
+  *
   * - strongAgainst: List of types that the move is strong against
   * - weakAgainst: List of types that the move is weak against
-  * 
+  *
   * Pokemon: Pokemon's type determines how much damage it takes from a move
   */
 abstract class Type {

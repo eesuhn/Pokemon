@@ -40,7 +40,7 @@ abstract class PhysicalMove extends Move {
 
   /**
     * Calculate modifier for the move based on target's type
-    * 
+    *
     * - 1.0 if both or neither strong/weak
     * - 2.0 if strong
     * - 0.5 if weak
