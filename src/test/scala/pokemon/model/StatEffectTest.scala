@@ -44,9 +44,9 @@ class StatEffectTest extends AnyFunSuite {
     val squirtle = new Squirtle()
 
     var expectedSquirtleDefense = squirtle.defense.value
+    expectedSquirtleDefense = (expectedSquirtleDefense * (2.0 / 7.0)).toInt
 
-    for (_ <- 1 to 6) {
-      expectedSquirtleDefense = (expectedSquirtleDefense * (2.0 / 3.0)).toInt
+    for (_ <- 1 to 5) {
       charmander.statusAttack(Leer, squirtle)
     }
 

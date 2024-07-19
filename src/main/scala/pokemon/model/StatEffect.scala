@@ -9,46 +9,25 @@ abstract class StatEffect {
     * @param pokemon
     */
   def applyEffect(pokemon: Pokemon): Unit
-
-  /**
-    * Calculate the stage adjustment
-    * 
-    * If stage < 0, return 2.0 / (2.0 - stage)
-    * 
-    * If stage > 0, return (2.0 + stage) / 2.0
-    *
-    * @return
-    */
-  def calculateStage(): Double = {
-    if (this.stage < 0) 2.0 / (2.0 - this.stage)
-    else if (this.stage > 0) (2.0 + this.stage) / 2.0
-    else throw new Exception("Adjustment cannot be 0")
-  }
 }
 
 class AttackEffect(
   val stage: Int,
   ) extends StatEffect {
 
-  override def applyEffect(pokemon: Pokemon): Unit = {
-    pokemon.attack.value = (pokemon.attack.value * super.calculateStage()).toInt
-  }
+  override def applyEffect(pokemon: Pokemon): Unit = pokemon.attack.value(this.stage)
 }
 
 class DefenseEffect(
   val stage: Int,
   ) extends StatEffect {
 
-  override def applyEffect(pokemon: Pokemon): Unit = {
-    pokemon.defense.value = (pokemon.defense.value * super.calculateStage()).toInt
-  }
+  override def applyEffect(pokemon: Pokemon): Unit = pokemon.defense.value(this.stage)
 }
 
 class AccuracyEffect(
   val stage: Int,
   ) extends StatEffect {
 
-  override def applyEffect(pokemon: Pokemon): Unit = {
-    pokemon.accuracy.value = (pokemon.accuracy.value * super.calculateStage()).toInt
-  }
+  override def applyEffect(pokemon: Pokemon): Unit = pokemon.accuracy.value(this.stage)
 }
