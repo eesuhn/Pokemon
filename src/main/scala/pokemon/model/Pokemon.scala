@@ -6,7 +6,8 @@ abstract class Pokemon {
   val pName: String
   var attack: Int
   var defense: Int
-  var level: Int = 1
+  var pAccuracy: Int = 100  // TODO
+  var level: Int = 1  // TODO
   var maxHP: Int = initHP
   var currentHP: Int = initHP
   private var _pTypes: List[Type] = List()
@@ -56,13 +57,13 @@ abstract class Pokemon {
     * @param target
     */
   def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
-    if (!statusMove.calculateAccuracy()) {
+    if (!statusMove.calculateMoveAccuracy()) {
       println(s"${pName}'s attack missed")
       return
     }
 
-    if (statusMove.self) statusMove.applyEffect(this)
-    else statusMove.applyEffect(target)
+    if (statusMove.self) statusMove.applyEffects(this)
+    else statusMove.applyEffects(target)
   }
 
   /**
@@ -72,7 +73,7 @@ abstract class Pokemon {
     * @param target
     */
   def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
-    if (!physicalMove.calculateAccuracy()) {
+    if (!physicalMove.calculateMoveAccuracy()) {
       println(s"${pName}'s attack missed")
       return
     }

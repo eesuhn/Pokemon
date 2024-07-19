@@ -2,13 +2,9 @@ package pokemon.model
 
 import scala.util.Random
 
-sealed trait Stat
-case object Attack extends Stat
-case object Defense extends Stat
-
 abstract class Move {
   val moveName: String
-  val accuracy: Int
+  val mAccuracy: Int
   val moveType: Type
 
   /**
@@ -16,9 +12,9 @@ abstract class Move {
     *
     * @return
     */
-  def calculateAccuracy(): Boolean = {
+  def calculateMoveAccuracy(): Boolean = {
     val random = Random
-    random.nextInt(100) < this.accuracy
+    random.nextInt(100) < this.mAccuracy
   }
 }
 
@@ -27,23 +23,16 @@ abstract class Move {
   * based on the move's status and stage
   */
 abstract class StatusMove extends Move {
-  val status: List[Stat]
-  val stage: Int
+  val effects: List[StatEffect]
   val self: Boolean
 
-  def applyEffect(pokemon: Pokemon): Unit = {
-    val modifier = calculateStage()
-
-    status.foreach {
-      case Attack => pokemon.attack = (pokemon.attack * modifier).toInt
-      case Defense => pokemon.defense = (pokemon.defense * modifier).toInt
-    }
-  }
-
-  def calculateStage(): Double = {
-    if (this.stage < 0) 2.0 / (2.0 - this.stage)
-    else if (this.stage > 0) (2.0 + this.stage) / 2.0
-    else throw new Exception("Adjustment cannot be 0")
+  /**
+    * Apply effects of the move to the target Pokemon
+    *
+    * @param pokemon
+    */
+  def applyEffects(pokemon: Pokemon): Unit = {
+    effects.foreach(_.applyEffect(pokemon))
   }
 }
 
@@ -97,12 +86,11 @@ abstract class PhysicalMove extends Move {
   */
 object Growl extends StatusMove {
   val moveName = "Growl"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Normal
-  val status = List(
-    Attack
+  val effects = List(
+    new AttackEffect(-1)
   )
-  val stage = -1
   val self = false
 }
 
@@ -111,81 +99,80 @@ object Growl extends StatusMove {
   */
 object Leer extends StatusMove {
   val moveName = "Leer"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Normal
-  val status = List(
-    Defense
+  val effects = List(
+    new DefenseEffect(-1)
   )
-  val stage = -1
   val self = false
 }
 
 object Tackle extends PhysicalMove {
   val moveName = "Tackle"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Normal
   val basePower = 40
 }
 
 object Scratch extends PhysicalMove {
   val moveName = "Scratch"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Normal
   val basePower = 40
 }
 
 object Pound extends PhysicalMove {
   val moveName = "Pound"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Normal
   val basePower = 40
 }
 
 object Cut extends PhysicalMove {
   val moveName = "Cut"
-  val accuracy = 95
+  val mAccuracy = 95
   val moveType = Normal
   val basePower = 50
 }
 
 object Ember extends PhysicalMove {
   val moveName = "Ember"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Fire
   val basePower = 40
 }
 
 object WaterGun extends PhysicalMove {
   val moveName = "Water Gun"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Water
   val basePower = 40
 }
 
 object Spark extends PhysicalMove {
   val moveName = "Spark"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Electric
   val basePower = 65
 }
 
 object VineWhip extends PhysicalMove {
   val moveName = "Vine Whip"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Grass
   val basePower = 45
 }
 
 object IcePunch extends PhysicalMove {
   val moveName = "Ice Punch"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Ice
   val basePower = 75
 }
 
 object DoubleKick extends PhysicalMove {
   val moveName = "Double Kick"
-  val accuracy = 100
+  val mAccuracy = 100
   val moveType = Normal
   val basePower = 30
 }
