@@ -4,7 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class Player(
   val playerName: String
-) {
+  ) {
   var deck: ArrayBuffer[Pokemon] = ArrayBuffer.empty[Pokemon]
   var activePokemon: Pokemon = _
 

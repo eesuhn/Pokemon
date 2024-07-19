@@ -4,14 +4,16 @@ import scala.util.Random
 
 abstract class Pokemon {
   val pName: String
-  val maxHP: Int
-  var currentHP: Int
-  var attack: Int
-  var defense: Int
-  val level: Int = 1
+  var attack: Attack
+  var defense: Defense
+  var accuracy: Accuracy = Accuracy(100)
+  var level: Int = 1
+  var maxHP: Int = initHP
+  var currentHP: Int = initHP
   private var _pTypes: List[Type] = List()
   private var _moves: List[Move] = List()
 
+  def initHP: Int
   def pTypes: List[Type] = _pTypes
   def moves: List[Move] = _moves
 
@@ -20,7 +22,7 @@ abstract class Pokemon {
     *
     * @param types
     */
-  def setPTypes(types: List[Type]): Unit = {
+  def pTypes(types: List[Type]): Unit = {
     if (types.length > 2) {
       throw new Exception("Pokemon can have at most 2 types")
     }
@@ -32,7 +34,7 @@ abstract class Pokemon {
     *
     * @param moves
     */
-  def setMoves(moves: List[Move]): Unit = {
+  def moves(moves: List[Move]): Unit = {
     if (moves.length > 4) {
       throw new Exception("Pokemon can learn at most 4 moves")
     }
@@ -49,102 +51,48 @@ abstract class Pokemon {
   }
 
   /**
-    * Physical attack on target Pokemon
+    * Status attack on target Pokemon
     *
-    * @param move
+    * @param statusMove
     * @param target
     */
-  def physicalAttack(move: Move, target: Pokemon): Unit = {
-    val physicalMove: PhysicalMove = move.asInstanceOf[PhysicalMove]
-
-    if (!calculateAccuracy(physicalMove)) {
+  def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
+    if (!statusMove.calculateMoveAccuracy()) {
       println(s"${pName}'s attack missed")
       return
     }
 
-    val modifier: Double = calculateModifier(physicalMove, target)
-    println(s"${pName} used ${physicalMove.moveName} on ${target.pName}")
-
-    val damage: Double = calculateDamage(
-      physicalMove.basePower,
-      this.attack,
-      target.defense,
-      this.level,
-      modifier
-    )
-
-    target.takeDamage(damage.toInt)
-    println(s"${target.pName} took ${damage.toInt} damage")
+    if (statusMove.self) statusMove.applyEffects(this)
+    else statusMove.applyEffects(target)
   }
 
   /**
-    * Calculate modifier for the move based on target's type
+    * Physical attack on target Pokemon
     *
-    * @param move
+    * @param physicalMove
     * @param target
-    * @return 1.0 if both or neither strong/weak, 2.0 if strong, 0.5 if weak
     */
-  def calculateModifier(move: Move, target: Pokemon): Double = {
-    val (strong, weak) = target
-      .pTypes
-      .foldLeft((false, false)) { case ((s, w), t) => (
-        s || move.moveType.attackStrongAgainst.contains(t),
-        w || move.moveType.attackWeakAgainst.contains(t))
-      }
-    
-    if (strong && weak) 1.0
-    else if (strong) 2.0
-    else if (weak) 0.5
-    else 1.0
-  }
+  def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
+    if (!physicalMove.calculateMoveAccuracy()) {
+      println(s"${pName}'s attack missed")
+      return
+    }
 
-  /**
-    * Calculate damage for the move
-    *
-    * Damage = (2 * L / 5 + 2) * A * P / D / 50 + 2
-    *
-    * @param basePower
-    * @param attack
-    * @param defense
-    * @param level
-    * @param modifier
-    * @return
-    */
-  def calculateDamage(
-    basePower: Int,
-    attack: Int,
-    defense: Int,
-    level: Int,
-    modifier: Double
-  ): Double = {
-    val damage: Double = (
-      (2 * level / 5 + 2) * attack * basePower / defense / 50 + 2
-    )
-    damage * modifier
-  }
-
-  /**
-    * Calculate if the move hits based on accuracy
-    *
-    * @param move
-    * @return
-    */
-  def calculateAccuracy(move: Move): Boolean = {
-    val random = Random
-    random.nextInt(100) < move.accuracy
+    val damage: Double = physicalMove.calculatePhysicalDamage(this, target)
+    target.takeDamage(damage.toInt)
   }
 }
 
 class Charmander extends Pokemon {
   val pName = "Charmander"
-  val maxHP = 39
-  var currentHP = maxHP
-  var attack = 52
-  var defense = 43
-  setPTypes(List(
+  var attack = Attack(52)
+  var defense = Defense(43)
+  override def initHP: Int = 39
+  pTypes(List(
     Fire
   ))
-  setMoves(List(
+  moves(List(
+    Leer,
     Scratch,
     Ember
   ))
@@ -152,14 +100,14 @@ class Charmander extends Pokemon {
 
 class Squirtle extends Pokemon {
   val pName = "Squirtle"
-  val maxHP = 44
-  var currentHP = maxHP
-  var attack = 48
-  var defense = 65
-  setPTypes(List(
+  var attack = Attack(48)
+  var defense = Defense(65)
+  override def initHP: Int = 44
+  pTypes(List(
     Water
   ))
-  setMoves(List(
+  moves(List(
+    Growl,
     Tackle,
     WaterGun
   ))
@@ -167,14 +115,14 @@ class Squirtle extends Pokemon {
 
 class Bulbasaur extends Pokemon {
   val pName = "Bulbasaur"
-  val maxHP = 45
-  var currentHP = maxHP
-  var attack = 49
-  var defense = 49
-  setPTypes(List(
+  var attack = Attack(49)
+  var defense = Defense(49)
+  override def initHP: Int = 45
+  pTypes(List(
     Grass
   ))
-  setMoves(List(
+  moves(List(
+    Growl,
     Tackle,
     VineWhip
   ))
