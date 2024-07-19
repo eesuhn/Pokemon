@@ -5,11 +5,12 @@ abstract class Stat {
   private var _value: Int = initValue
   private var currentStage: Int = 0
 
-  def initValue: Int
+  protected def initValue: Int
+  
   def value: Int = _value
 
   /**
-    * Update the staga, and then update the value
+    * Update the stage, and then update the value
     *
     * @param stage
     */
@@ -20,32 +21,30 @@ abstract class Stat {
 
   /**
     * Change the stage of the stat
+    * 
+    * Limit the stage between -6 and 6
     *
     * @param stage
     */
-  def changeStage(stage: Int): Unit = {
+  private def changeStage(stage: Int): Unit = {
     this.currentStage = Math.min(Math.max(this.currentStage + stage, -6), 6)
   }
 
   /**
     * Calculate the stage adjustment
     * 
-    * If stage < 0, return 2.0 / (2.0 - stage)
-    * 
-    * If stage > 0, return (2.0 + stage) / 2.0
+    * - If stage < 0, return 2.0 / (2.0 - stage)
+    * - If stage > 0, return (2.0 + stage) / 2.0
     *
     * @return
     */
-  def calculateStage(stage: Int): Double = {
+  private def calculateStage(stage: Int): Double = {
     if (stage < 0) 2.0 / (2.0 - stage)
     else if (stage > 0) (2.0 + stage) / 2.0
     else 1.0
   }
 
-  /**
-    * Update the value of the stat
-    */
-  def updateValue(): Unit = {
+  private def updateValue(): Unit = {
     this._value = (this._baseValue * this.calculateStage(this.currentStage)).toInt
   }
 }

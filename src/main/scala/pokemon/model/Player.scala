@@ -8,9 +8,6 @@ class Player(
   var deck: ArrayBuffer[Pokemon] = ArrayBuffer.empty[Pokemon]
   var activePokemon: Pokemon = _
 
-  /**
-    * Generate a deck of Pokemon
-    */
   def generateDeck(): Unit = {
     val charmander = new Charmander
     val squirtle = new Squirtle
@@ -34,11 +31,6 @@ class Player(
     if (this.deck.size == 1) this.activePokemon = pokemon
   }
 
-  /**
-    * Switch active Pokemon
-    *
-    * @param pokemon
-    */
   def switchActivePokemon(pokemon: Pokemon): Unit = {
     if (!this.deck.contains(pokemon)) {
       throw new Exception("Player does not have this Pokemon")

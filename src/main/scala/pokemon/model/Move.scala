@@ -4,17 +4,12 @@ import scala.util.Random
 
 abstract class Move {
   val moveName: String
-  val mAccuracy: Int
+  val accuracy: Int
   val moveType: Type
 
-  /**
-    * Calculate if the move hits based on accuracy
-    *
-    * @return
-    */
   def calculateMoveAccuracy(): Boolean = {
     val random = Random
-    random.nextInt(100) < this.mAccuracy
+    random.nextInt(100) <= this.accuracy
   }
 }
 
@@ -32,7 +27,7 @@ abstract class StatusMove extends Move {
     * @param pokemon
     */
   def applyEffects(pokemon: Pokemon): Unit = {
-    effects.foreach(_.applyEffect(pokemon))
+    this.effects.foreach(_.applyEffect(pokemon))
   }
 }
 
@@ -45,16 +40,20 @@ abstract class PhysicalMove extends Move {
 
   /**
     * Calculate modifier for the move based on target's type
+    * 
+    * - 1.0 if both or neither strong/weak
+    * - 2.0 if strong
+    * - 0.5 if weak
     *
     * @param target
-    * @return 1.0 if both or neither strong/weak, 2.0 if strong, 0.5 if weak
+    * @return
     */
-  def calculateModifier(target: Pokemon): Double = {
+  private def calculateModifier(target: Pokemon): Double = {
     val (strong, weak) = target
       .pTypes
       .foldLeft((false, false)) { case ((s, w), t) => (
-        s || this.moveType.attackStrongAgainst.contains(t),
-        w || this.moveType.attackWeakAgainst.contains(t))
+        s || this.moveType.strongAgainst.contains(t),
+        w || this.moveType.weakAgainst.contains(t))
       }
 
     if (strong && weak) 1.0
@@ -66,7 +65,7 @@ abstract class PhysicalMove extends Move {
   /**
     * Calculate damage for the move
     *
-    * Damage = (2 * L / 5 + 2) * A * P / D / 50 + 2
+    * Damage = (2 * Level / 5 + 2) * Attack * Power / Defense / 50 + 2
     *
     * @param attacker
     * @param target
@@ -81,98 +80,92 @@ abstract class PhysicalMove extends Move {
   }
 }
 
-/**
-  * Growl lowers the target's attack by 1 stage
-  */
 object Growl extends StatusMove {
   val moveName = "Growl"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Normal
   val effects = List(
-    new AttackEffect(-1)
+    AttackEffect(-1)
   )
   val self = false
 }
 
-/**
-  * Leer lowers the target's defense by 1 stage
-  */
 object Leer extends StatusMove {
   val moveName = "Leer"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Normal
   val effects = List(
-    new DefenseEffect(-1)
+    DefenseEffect(-1)
   )
   val self = false
 }
 
 object Tackle extends PhysicalMove {
   val moveName = "Tackle"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Normal
   val basePower = 40
 }
 
 object Scratch extends PhysicalMove {
   val moveName = "Scratch"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Normal
   val basePower = 40
 }
 
 object Pound extends PhysicalMove {
   val moveName = "Pound"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Normal
   val basePower = 40
 }
 
 object Cut extends PhysicalMove {
   val moveName = "Cut"
-  val mAccuracy = 95
+  val accuracy = 95
   val moveType = Normal
   val basePower = 50
 }
 
 object Ember extends PhysicalMove {
   val moveName = "Ember"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Fire
   val basePower = 40
 }
 
 object WaterGun extends PhysicalMove {
   val moveName = "Water Gun"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Water
   val basePower = 40
 }
 
 object Spark extends PhysicalMove {
   val moveName = "Spark"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Electric
   val basePower = 65
 }
 
 object VineWhip extends PhysicalMove {
   val moveName = "Vine Whip"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Grass
   val basePower = 45
 }
 
 object IcePunch extends PhysicalMove {
   val moveName = "Ice Punch"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Ice
   val basePower = 75
 }
 
 object DoubleKick extends PhysicalMove {
   val moveName = "Double Kick"
-  val mAccuracy = 100
+  val accuracy = 100
   val moveType = Normal
   val basePower = 30
 }

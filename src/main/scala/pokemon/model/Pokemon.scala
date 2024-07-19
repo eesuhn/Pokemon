@@ -7,13 +7,17 @@ abstract class Pokemon {
   var attack: Attack
   var defense: Defense
   var accuracy: Accuracy = Accuracy(100)
-  var level: Int = 1
-  var maxHP: Int = initHP
-  var currentHP: Int = initHP
+  private var _level: Int = 1
+  private var _baseHP: Int = initHP
+  private var _currentHP: Int = initHP
   private var _pTypes: List[Type] = List()
   private var _moves: List[Move] = List()
 
-  def initHP: Int
+  protected def initHP: Int
+
+  def level: Int = _level
+  def baseHP: Int = _baseHP
+  def currentHP: Int = _currentHP
   def pTypes: List[Type] = _pTypes
   def moves: List[Move] = _moves
 
@@ -22,7 +26,7 @@ abstract class Pokemon {
     *
     * @param types
     */
-  def pTypes(types: List[Type]): Unit = {
+  protected def pTypes(types: List[Type]): Unit = {
     if (types.length > 2) {
       throw new Exception("Pokemon can have at most 2 types")
     }
@@ -34,7 +38,7 @@ abstract class Pokemon {
     *
     * @param moves
     */
-  def moves(moves: List[Move]): Unit = {
+  protected def moves(moves: List[Move]): Unit = {
     if (moves.length > 4) {
       throw new Exception("Pokemon can learn at most 4 moves")
     }
@@ -47,37 +51,15 @@ abstract class Pokemon {
     * @param damage
     */
   def takeDamage(damage: Int): Unit = {
-    this.currentHP = Math.max(this.currentHP - damage, 0)
+    this._currentHP = Math.max(this.currentHP - damage, 0)
   }
 
-  /**
-    * Status attack on target Pokemon
-    *
-    * @param statusMove
-    * @param target
-    */
   def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
-    if (!statusMove.calculateMoveAccuracy()) {
-      println(s"${pName}'s attack missed")
-      return
-    }
-
     if (statusMove.self) statusMove.applyEffects(this)
     else statusMove.applyEffects(target)
   }
 
-  /**
-    * Physical attack on target Pokemon
-    *
-    * @param physicalMove
-    * @param target
-    */
   def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
-    if (!physicalMove.calculateMoveAccuracy()) {
-      println(s"${pName}'s attack missed")
-      return
-    }
-
     val damage: Double = physicalMove.calculatePhysicalDamage(this, target)
     target.takeDamage(damage.toInt)
   }
