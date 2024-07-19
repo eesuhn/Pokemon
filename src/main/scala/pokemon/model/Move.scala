@@ -75,7 +75,7 @@ abstract class PhysicalMove extends Move {
   def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): Double = {
     val modifier = calculateModifier(target)
     val damage: Double = (
-      (2 * attacker.level / 5 + 2) * attacker.attack * basePower / target.defense / 50 + 2
+      (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / target.defense.value / 50 + 2
     )
     damage * modifier
   }

@@ -31,7 +31,7 @@ class AttackEffect(
   ) extends StatEffect {
 
   override def applyEffect(pokemon: Pokemon): Unit = {
-    pokemon.attack = (pokemon.attack * super.calculateStage()).toInt
+    pokemon.attack.value = (pokemon.attack.value * super.calculateStage()).toInt
   }
 }
 
@@ -40,7 +40,7 @@ class DefenseEffect(
   ) extends StatEffect {
 
   override def applyEffect(pokemon: Pokemon): Unit = {
-    pokemon.defense = (pokemon.defense * super.calculateStage()).toInt
+    pokemon.defense.value = (pokemon.defense.value * super.calculateStage()).toInt
   }
 }
 
@@ -49,6 +49,6 @@ class AccuracyEffect(
   ) extends StatEffect {
 
   override def applyEffect(pokemon: Pokemon): Unit = {
-    pokemon.pAccuracy = (pokemon.pAccuracy * super.calculateStage()).toInt
+    pokemon.accuracy.value = (pokemon.accuracy.value * super.calculateStage()).toInt
   }
 }

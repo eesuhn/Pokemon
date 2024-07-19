@@ -4,10 +4,10 @@ import scala.util.Random
 
 abstract class Pokemon {
   val pName: String
-  var attack: Int
-  var defense: Int
-  var pAccuracy: Int = 100  // TODO
-  var level: Int = 1  // TODO
+  var attack: Attack
+  var defense: Defense
+  var accuracy: Accuracy = Accuracy(100)
+  var level: Int = 1
   var maxHP: Int = initHP
   var currentHP: Int = initHP
   private var _pTypes: List[Type] = List()
@@ -85,8 +85,8 @@ abstract class Pokemon {
 
 class Charmander extends Pokemon {
   val pName = "Charmander"
-  var attack = 52
-  var defense = 43
+  var attack = Attack(52)
+  var defense = Defense(43)
   override def initHP: Int = 39
   pTypes(List(
     Fire
@@ -100,8 +100,8 @@ class Charmander extends Pokemon {
 
 class Squirtle extends Pokemon {
   val pName = "Squirtle"
-  var attack = 48
-  var defense = 65
+  var attack = Attack(48)
+  var defense = Defense(65)
   override def initHP: Int = 44
   pTypes(List(
     Water
@@ -115,8 +115,8 @@ class Squirtle extends Pokemon {
 
 class Bulbasaur extends Pokemon {
   val pName = "Bulbasaur"
-  var attack = 49
-  var defense = 49
+  var attack = Attack(49)
+  var defense = Defense(49)
   override def initHP: Int = 45
   pTypes(List(
     Grass

@@ -11,13 +11,13 @@ class StatEffectTest extends AnyFunSuite {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
-    val charmanderAttack = charmander.attack
+    val charmanderAttack = charmander.attack.value
     val expectedCharmanderAttack = (charmanderAttack * (2.0 / 3.0)).toInt
 
     squirtle.statusAttack(Growl, charmander)
 
-    assert(charmander.attack == expectedCharmanderAttack)
-    assert(charmander.defense == 43)
+    assert(charmander.attack.value == expectedCharmanderAttack)
+    assert(charmander.defense.value == 43)
   }
 
   /**
@@ -27,13 +27,13 @@ class StatEffectTest extends AnyFunSuite {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
-    val squirtleDefense = squirtle.defense
+    val squirtleDefense = squirtle.defense.value
     val expectedSquirtleDefense = (squirtleDefense * (2.0 / 3.0)).toInt
 
     charmander.statusAttack(Leer, squirtle)
 
-    assert(squirtle.defense == expectedSquirtleDefense)
-    assert(squirtle.attack == 48)
+    assert(squirtle.defense.value == expectedSquirtleDefense)
+    assert(squirtle.attack.value == 48)
   }
 
   /**
@@ -43,13 +43,13 @@ class StatEffectTest extends AnyFunSuite {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
-    var expectedSquirtleDefense = squirtle.defense
+    var expectedSquirtleDefense = squirtle.defense.value
 
     for (_ <- 1 to 6) {
       expectedSquirtleDefense = (expectedSquirtleDefense * (2.0 / 3.0)).toInt
       charmander.statusAttack(Leer, squirtle)
     }
 
-    assert(squirtle.defense == expectedSquirtleDefense)
+    assert(squirtle.defense.value == expectedSquirtleDefense)
   }
 }
