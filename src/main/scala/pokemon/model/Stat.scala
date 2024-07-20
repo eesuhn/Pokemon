@@ -10,7 +10,7 @@ abstract class Stat {
   def value: Int = _value
 
   /**
-    * Update the stage, and then update the value
+    * Update the stage count, which update the value of the stat
     *
     * @param stage
     */

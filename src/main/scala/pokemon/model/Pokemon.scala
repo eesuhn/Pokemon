@@ -101,7 +101,8 @@ class Bulbasaur extends Pokemon {
   var defense = Defense(49)
   override def initHP: Int = 45
   pTypes(List(
-    Grass
+    Grass,
+    Poison
   ))
   moves(List(
     Growl,
