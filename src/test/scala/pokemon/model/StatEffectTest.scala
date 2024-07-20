@@ -4,10 +4,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class StatEffectTest extends AnyFunSuite {
 
-  /**
-    * Test the effect of Growl on Charmander's attack
-    */
-  test("Stats: Growl against Charmander") {
+  test("Stat: Growl against Charmander") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
@@ -20,10 +17,7 @@ class StatEffectTest extends AnyFunSuite {
     assert(charmander.defense.value == 43)
   }
 
-  /**
-    * Test the effect of Leer on Squirtle's defense
-    */
-  test("Stats: Leer against Squirtle") {
+  test("Stat: Leer against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
@@ -36,17 +30,15 @@ class StatEffectTest extends AnyFunSuite {
     assert(squirtle.attack.value == 48)
   }
 
-  /**
-    * Test 5 attacks of Leer on Squirtle
-    */
-  test("5 status attacks: Leer against Squirtle") {
+  test("Stat: 5 Leer against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
+    val testCount = 5
 
     var expectedSquirtleDefense = squirtle.defense.value
-    expectedSquirtleDefense = (expectedSquirtleDefense * (2.0 / 7.0)).toInt
+    expectedSquirtleDefense = (expectedSquirtleDefense * (2.0 / (2.0 + testCount))).toInt
 
-    for (_ <- 1 to 5) {
+    for (_ <- 1 to testCount) {
       charmander.statusAttack(Leer, squirtle)
     }
 
