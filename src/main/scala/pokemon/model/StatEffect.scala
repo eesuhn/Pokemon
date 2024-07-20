@@ -1,7 +1,7 @@
 package pokemon.model
 
 abstract class StatEffect {
-  protected val _stage: Int = stage
+  private val _stage: Int = stage
 
   protected def stage: Int
   protected def stat(pokemon: Pokemon): Stat
