@@ -6,11 +6,11 @@ abstract class Stat {
   private var currentStage: Int = 0
 
   protected def initValue: Int
-  
+
   def value: Int = _value
 
   /**
-    * Update the stage, and then update the value
+    * Update the stage count, which update the value of the stat
     *
     * @param stage
     */
@@ -21,7 +21,7 @@ abstract class Stat {
 
   /**
     * Change the stage of the stat
-    * 
+    *
     * Limit the stage between -6 and 6
     *
     * @param stage
@@ -32,7 +32,7 @@ abstract class Stat {
 
   /**
     * Calculate the stage adjustment
-    * 
+    *
     * - If stage < 0, return 2.0 / (2.0 - stage)
     * - If stage > 0, return (2.0 + stage) / 2.0
     *
@@ -52,3 +52,4 @@ abstract class Stat {
 case class Attack(initValue: Int) extends Stat
 case class Defense(initValue: Int) extends Stat
 case class Accuracy(initValue: Int) extends Stat
+case class Speed(initValue: Int) extends Stat

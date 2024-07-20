@@ -1,30 +1,34 @@
 package pokemon.model
 
 abstract class StatEffect {
-  protected val _stage: Int = initStage
+  private val _stage: Int = stage
 
-  protected def initStage: Int
+  protected def stage: Int
+  protected def stat(pokemon: Pokemon): Stat
 
-  def applyEffect(pokemon: Pokemon): Unit
+  def applyEffect(pokemon: Pokemon): Unit = stat(pokemon).value(_stage)
 }
 
 case class AttackEffect(
-  initStage: Int,
+  stage: Int,
   ) extends StatEffect {
-
-  override def applyEffect(pokemon: Pokemon): Unit = pokemon.attack.value(this._stage)
+  override protected def stat(pokemon: Pokemon): Stat = pokemon.attack
 }
 
 case class DefenseEffect(
-  initStage: Int,
+  stage: Int,
   ) extends StatEffect {
-
-  override def applyEffect(pokemon: Pokemon): Unit = pokemon.defense.value(this._stage)
+  override protected def stat(pokemon: Pokemon): Stat = pokemon.defense
 }
 
 case class AccuracyEffect(
-  initStage: Int,
+  stage: Int,
   ) extends StatEffect {
+  override protected def stat(pokemon: Pokemon): Stat = pokemon.accuracy
+}
 
-  override def applyEffect(pokemon: Pokemon): Unit = pokemon.accuracy.value(this._stage)
+case class SpeedEffect(
+  stage: Int,
+  ) extends StatEffect {
+  override protected def stat(pokemon: Pokemon): Stat = pokemon.speed
 }
