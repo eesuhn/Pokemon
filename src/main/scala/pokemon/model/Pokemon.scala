@@ -56,7 +56,7 @@ abstract class Pokemon {
   }
 
   private def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
-    if (statusMove.self) statusMove.applyEffects(this)
+    if (statusMove.targetSelf) statusMove.applyEffects(this)
     else statusMove.applyEffects(target)
   }
 
@@ -90,7 +90,7 @@ class Charmander extends Pokemon {
     Fire
   ))
   moves(List(
-    Leer,
+    Growl,
     Scratch,
     Ember
   ))
@@ -140,6 +140,204 @@ class Geodude extends Pokemon {
   ))
   moves(List(
     Tackle,
+    Pound,
     RockTomb
+  ))
+}
+
+class Pikachu extends Pokemon {
+  val pName = "Pikachu"
+  val attack = Attack(55)
+  val defense = Defense(40)
+  val speed = Speed(90)
+  override def initHP: Int = 35
+  pTypes(List(
+    Electric
+  ))
+  moves(List(
+    Growl,
+    Charm,
+    Spark
+  ))
+}
+
+class Breloom extends Pokemon {
+  val pName = "Breloom"
+  val attack = Attack(130)
+  val defense = Defense(80)
+  val speed = Speed(70)
+  override def initHP: Int = 60
+  pTypes(List(
+    Grass,
+    Fighting
+  ))
+  moves(List(
+    Tackle,
+    Growth,
+    VineWhip
+  ))
+}
+
+class Regice extends Pokemon {
+  val pName = "Regice"
+  val attack = Attack(50)
+  val defense = Defense(100)
+  val speed = Speed(50)
+  override def initHP: Int = 80
+  pTypes(List(
+    Ice
+  ))
+  moves(List(
+    Harden,
+    Cut,
+    IcyWind
+  ))
+}
+
+class Hitmonchan extends Pokemon {
+  val pName = "Hitmonchan"
+  val attack = Attack(105)
+  val defense = Defense(79)
+  val speed = Speed(76)
+  override def initHP: Int = 50
+  pTypes(List(
+    Fighting
+  ))
+  moves(List(
+    Tackle,
+    Agility,
+    DoubleKick
+  ))
+}
+
+class Nidorino extends Pokemon {
+  val pName = "Nidorino"
+  val attack = Attack(72)
+  val defense = Defense(57)
+  val speed = Speed(65)
+  override def initHP: Int = 61
+  pTypes(List(
+    Poison
+  ))
+  moves(List(
+    Leer,
+    Tackle,
+    PoisonFang
+  ))
+}
+
+class Dustox extends Pokemon {
+  val pName = "Dustox"
+  val attack = Attack(50)
+  val defense = Defense(70)
+  val speed = Speed(65)
+  override def initHP: Int = 60
+  pTypes(List(
+    Bug,
+    Poison
+  ))
+  moves(List(
+    Tackle,
+    PoisonSting,
+    StringShot
+  ))
+}
+
+class Mewtwo extends Pokemon {
+  val pName = "Mewtwo"
+  val attack = Attack(110)
+  val defense = Defense(90)
+  val speed = Speed(130)
+  override def initHP: Int = 106
+  pTypes(List(
+    Psychic
+  ))
+  moves(List(
+    AncientPower,
+    PsychoCut,
+    Agility
+  ))
+}
+
+class Scyther extends Pokemon {
+  val pName = "Scyther"
+  val attack = Attack(110)
+  val defense = Defense(80)
+  val speed = Speed(105)
+  override def initHP: Int = 70
+  pTypes(List(
+    Bug,
+    Grass
+  ))
+  moves(List(
+    Tackle,
+    VineWhip,
+    QuiverDance
+  ))
+}
+
+class Heracross extends Pokemon {
+  val pName = "Heracross"
+  val attack = Attack(125)
+  val defense = Defense(75)
+  val speed = Speed(85)
+  override def initHP: Int = 80
+  pTypes(List(
+    Bug,
+    Fighting
+  ))
+  moves(List(
+    Tackle,
+    DoubleKick,
+    QuiverDance
+  ))
+}
+
+class Onix extends Pokemon {
+  val pName = "Onix"
+  val attack = Attack(45)
+  val defense = Defense(160)
+  val speed = Speed(70)
+  override def initHP: Int = 35
+  pTypes(List(
+    Rock
+  ))
+  moves(List(
+    Tackle,
+    RockTomb,
+    Harden
+  ))
+}
+
+class Snorlax extends Pokemon {
+  val pName = "Snorlax"
+  val attack = Attack(110)
+  val defense = Defense(65)
+  val speed = Speed(30)
+  override def initHP: Int = 160
+  pTypes(List(
+    Normal
+  ))
+  moves(List(
+    BodySlam,
+    Growl,
+    Screech
+  ))
+}
+
+class Blaziken extends Pokemon {
+  val pName = "Blaziken"
+  val attack = Attack(120)
+  val defense = Defense(70)
+  val speed = Speed(80)
+  override def initHP: Int = 80
+  pTypes(List(
+    Fire,
+    Fighting
+  ))
+  moves(List(
+    BlazeKick,
+    BulkUp,
+    DoubleKick
   ))
 }

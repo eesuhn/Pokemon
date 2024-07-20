@@ -20,7 +20,7 @@ abstract class Move {
   */
 trait StatusMove extends Move {
   def effects: List[StatEffect]
-  def self: Boolean
+  def targetSelf: Boolean
 
   /**
     * Apply effects of the move to the target Pokemon
@@ -89,7 +89,7 @@ object Growl extends StatusMove {
   override def effects = List(
     AttackEffect(-1)
   )
-  override def self = false
+  override def targetSelf = false
 }
 
 object Leer extends StatusMove {
@@ -100,7 +100,7 @@ object Leer extends StatusMove {
   override def effects = List(
     DefenseEffect(-1)
   )
-  override def self = false
+  override def targetSelf = false
 }
 
 object Meditate extends StatusMove {
@@ -111,7 +111,7 @@ object Meditate extends StatusMove {
   override def effects = List(
     AttackEffect(1)
   )
-  override def self = true
+  override def targetSelf = true
 }
 
 object Harden extends StatusMove {
@@ -122,7 +122,7 @@ object Harden extends StatusMove {
   override def effects = List(
     DefenseEffect(1)
   )
-  override def self = true
+  override def targetSelf = true
 }
 
 object SwordsDance extends StatusMove {
@@ -133,7 +133,7 @@ object SwordsDance extends StatusMove {
   override def effects = List(
     AttackEffect(2)
   )
-  override def self = true
+  override def targetSelf = true
 }
 
 object Charm extends StatusMove {
@@ -144,7 +144,7 @@ object Charm extends StatusMove {
   override def effects = List(
     AttackEffect(-2)
   )
-  override def self = false
+  override def targetSelf = false
 }
 
 object Screech extends StatusMove {
@@ -155,7 +155,7 @@ object Screech extends StatusMove {
   override def effects = List(
     DefenseEffect(-2)
   )
-  override def self = false
+  override def targetSelf = false
 }
 
 object StringShot extends StatusMove {
@@ -166,7 +166,7 @@ object StringShot extends StatusMove {
   override def effects = List(
     SpeedEffect(-2)
   )
-  override def self = false
+  override def targetSelf = false
 }
 
 object Agility extends StatusMove {
@@ -177,7 +177,7 @@ object Agility extends StatusMove {
   override def effects = List(
     SpeedEffect(2)
   )
-  override def self = true
+  override def targetSelf = true
 }
 
 object ShellSmash extends StatusMove {
@@ -190,7 +190,7 @@ object ShellSmash extends StatusMove {
     SpeedEffect(2),
     DefenseEffect(-1)
   )
-  override def self = true
+  override def targetSelf = true
 }
 
 object QuiverDance extends StatusMove {
@@ -203,7 +203,7 @@ object QuiverDance extends StatusMove {
     DefenseEffect(1),
     SpeedEffect(1)
   )
-  override def self = true
+  override def targetSelf = true
 }
 
 object Tackle extends PhysicalMove {
@@ -254,12 +254,16 @@ object WaterGun extends PhysicalMove {
   override def basePower = 40
 }
 
-object Spark extends PhysicalMove {
+object Spark extends PhysicalMove with StatusMove {
   val moveName = "Spark"
   val moveDesc = "The user throws an electrically charged tackle at the target."
   val accuracy = 100
   val moveType = Electric
   override def basePower = 65
+  override def effects = List(
+    SpeedEffect(1)
+  )
+  override def targetSelf = true
 }
 
 object VineWhip extends PhysicalMove {
@@ -279,7 +283,7 @@ object IcePunch extends PhysicalMove with StatusMove {
   override def effects = List(
     SpeedEffect(-1)
   )
-  override def self = false
+  override def targetSelf = false
 }
 
 object DoubleKick extends PhysicalMove {
@@ -287,7 +291,7 @@ object DoubleKick extends PhysicalMove {
   val moveDesc = "The target is quickly kicked twice in succession using both feet."
   val accuracy = 100
   val moveType = Fighting
-  override def basePower = 30
+  override def basePower = 60
 }
 
 object PoisonFang extends PhysicalMove with StatusMove {
@@ -299,7 +303,19 @@ object PoisonFang extends PhysicalMove with StatusMove {
   override def effects = List(
     DefenseEffect(-1)
   )
-  override def self = false
+  override def targetSelf = false
+}
+
+object PoisonSting extends PhysicalMove with StatusMove {
+  val moveName = "Poison Sting"
+  val moveDesc = "The user stabs the target with a poisonous stinger. Lower opponent's Defense stat by 2 stages."
+  val accuracy = 100
+  val moveType = Poison
+  override def basePower = 15
+  override def effects = List(
+    DefenseEffect(-2)
+  )
+  override def targetSelf = false
 }
 
 object HeartStamp extends PhysicalMove {
@@ -327,5 +343,82 @@ object RockTomb extends PhysicalMove with StatusMove {
   override def effects = List(
     SpeedEffect(-1)
   )
-  override def self = false
+  override def targetSelf = false
+}
+
+object Growth extends StatusMove {
+  val moveName = "Growth"
+  val moveDesc = "The user's body grows all at once, raising the Attack stats."
+  val accuracy = 100
+  val moveType = Normal
+  override def effects = List(
+    AttackEffect(1)
+  )
+  override def targetSelf = true
+}
+
+object IcyWind extends PhysicalMove with StatusMove {
+  val moveName = "Icy Wind"
+  val moveDesc = "The user attacks with a gust of chilled air. Lower opponent's Speed stat by 1 stage."
+  val accuracy = 95
+  val moveType = Ice
+  override def basePower = 55
+  override def effects = List(
+    SpeedEffect(-1)
+  )
+  override def targetSelf = false
+}
+
+object AncientPower extends PhysicalMove with StatusMove {
+  val moveName = "Ancient Power"
+  val moveDesc = "The user attacks with a prehistoric power. Raise all stats."
+  val accuracy = 100
+  val moveType = Rock
+  override def basePower = 60
+  override def effects = List(
+    AttackEffect(1),
+    DefenseEffect(1),
+    SpeedEffect(1)
+  )
+  override def targetSelf = true
+}
+
+object PsychoCut extends PhysicalMove {
+  val moveName = "Psycho Cut"
+  val moveDesc = "The user tears at the target with blades formed by psychic power."
+  val accuracy = 100
+  val moveType = Psychic
+  override def basePower = 70
+}
+
+object BodySlam extends PhysicalMove with StatusMove {
+  val moveName = "Body Slam"
+  val moveDesc = "The user drops onto the target with its full body weight."
+  val accuracy = 100
+  val moveType = Normal
+  override def basePower = 85
+  override def effects = List(
+    SpeedEffect(-1)
+  )
+  override def targetSelf = false
+}
+
+object BlazeKick extends PhysicalMove {
+  val moveName = "Blaze Kick"
+  val moveDesc = "The user launches a kick that lands a critical hit more easily."
+  val accuracy = 90
+  val moveType = Fire
+  override def basePower = 85
+}
+
+object BulkUp extends StatusMove {
+  val moveName = "Bulk Up"
+  val moveDesc = "The user tenses its muscles to bulk up its body, raising both its Attack and Defense stats."
+  val accuracy = 100
+  val moveType = Fighting
+  override def effects = List(
+    AttackEffect(1),
+    DefenseEffect(1)
+  )
+  override def targetSelf = true
 }
