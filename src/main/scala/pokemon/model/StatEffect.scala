@@ -26,3 +26,9 @@ case class AccuracyEffect(
   ) extends StatEffect {
   override protected def stat(pokemon: Pokemon): Stat = pokemon.accuracy
 }
+
+case class SpeedEffect(
+  stage: Int,
+  ) extends StatEffect {
+  override protected def stat(pokemon: Pokemon): Stat = pokemon.speed
+}

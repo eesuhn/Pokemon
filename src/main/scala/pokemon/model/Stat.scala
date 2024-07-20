@@ -52,3 +52,4 @@ abstract class Stat {
 case class Attack(initValue: Int) extends Stat
 case class Defense(initValue: Int) extends Stat
 case class Accuracy(initValue: Int) extends Stat
+case class Speed(initValue: Int) extends Stat

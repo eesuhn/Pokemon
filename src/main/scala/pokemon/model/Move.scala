@@ -158,6 +158,54 @@ object Screech extends StatusMove {
   val self = false
 }
 
+object StringShot extends StatusMove {
+  val moveName = "String Shot"
+  val moveDesc = "The opposing Pokemon are bound with silk blown from the user's mouth that harshly lowers the Speed stat by 2 stages."
+  val accuracy = 95
+  val moveType = Bug
+  val effects = List(
+    SpeedEffect(-2)
+  )
+  val self = false
+}
+
+object Agility extends StatusMove {
+  val moveName = "Agility"
+  val moveDesc = "The user relaxes and lightens its body to move faster. Sharply raises the Speed stat by 2 stages."
+  val accuracy = 100
+  val moveType = Psychic
+  val effects = List(
+    SpeedEffect(2)
+  )
+  val self = true
+}
+
+object ShellSmash extends StatusMove {
+  val moveName = "Shell Smash"
+  val moveDesc = "The user breaks its shell, which lowers Defense but sharply raises Attack and Speed stats."
+  val accuracy = 100
+  val moveType = Normal
+  val effects = List(
+    AttackEffect(2),
+    SpeedEffect(2),
+    DefenseEffect(-1)
+  )
+  val self = true
+}
+
+object QuiverDance extends StatusMove {
+  val moveName = "Quiver Dance"
+  val moveDesc = "The user lightly performs a beautiful, mystic dance. It boosts the user's Atk, Def, and Speed stats."
+  val accuracy = 100
+  val moveType = Bug
+  val effects = List(
+    AttackEffect(1),
+    DefenseEffect(1),
+    SpeedEffect(1)
+  )
+  val self = true
+}
+
 object Tackle extends PhysicalMove {
   val moveName = "Tackle"
   val moveDesc = "A physical attack in which the user charges and slams into the target with its whole body."
