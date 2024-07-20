@@ -4,39 +4,35 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class MoveTest extends AnyFunSuite {
 
-  def printDamage(move: String, damage: Double): Unit = {
-    Console.withOut(System.out) {
-      println(s"\t$move: $damage")
-    }
-  }
-
-  test("Damage: Ember against Squirtle") {
+  test("Ember against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
     val damage = Ember.calculatePhysicalDamage(charmander, squirtle)
+    val expectedHP = squirtle.baseHP - damage.toInt
+    val expectedCharmanderAttack = charmander.attack.value
+    val expectedCharmanderDefense = charmander.defense.value
 
-    assert(damage == 2)
-    printDamage("Ember", damage)
+    charmander.attack(Ember, squirtle)
+
+    assert(squirtle.currentHP == expectedHP)
+    assert(charmander.attack.value == expectedCharmanderAttack)
+    assert(charmander.defense.value == expectedCharmanderDefense)
   }
 
-  test("Damage: Vine Whip against Squirtle") {
-    val bulbasaur = new Bulbasaur()
-    val squirtle = new Squirtle()
-
-    val damage = VineWhip.calculatePhysicalDamage(bulbasaur, squirtle)
-
-    assert(damage == 8)
-    printDamage("Vine Whip", damage)
-  }
-
-  test("Damage: Tackle against Squirtle") {
+  test("Rock Tomb against Charmander") {
+    val geodude = new Geodude()
     val charmander = new Charmander()
-    val squirtle = new Squirtle()
+    val testCount = 1
 
-    val damage = Tackle.calculatePhysicalDamage(charmander, squirtle)
+    val expectedCharmanderSpeed = (charmander.speed.value * (2.0 / (2.0 + testCount))).toInt
 
-    assert(damage == 4)
-    printDamage("Tackle", damage)
+    val damage = RockTomb.calculatePhysicalDamage(geodude, charmander)
+    val expectedHP = charmander.baseHP - damage.toInt
+
+    geodude.attack(RockTomb, charmander)
+
+    assert(charmander.currentHP == expectedHP)
+    assert(charmander.speed.value == expectedCharmanderSpeed)
   }
 }

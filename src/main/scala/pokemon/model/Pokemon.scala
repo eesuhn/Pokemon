@@ -55,14 +55,28 @@ abstract class Pokemon {
     this._currentHP = Math.max(this.currentHP - damage, 0)
   }
 
-  def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
+  private def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
     if (statusMove.self) statusMove.applyEffects(this)
     else statusMove.applyEffects(target)
   }
 
-  def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
+  private def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
     val damage: Double = physicalMove.calculatePhysicalDamage(this, target)
     target.takeDamage(damage.toInt)
+  }
+
+  /**
+    * Attack the target Pokemon with the move
+    * 
+    * - PhysicalMove: Calculate damage based on the user's attack and the target's defense
+    * - StatusMove: Apply effects of the move to the target Pokemon
+    *
+    * @param move
+    * @param target
+    */
+  def attack(move: Move, target: Pokemon): Unit = {
+    if (move.isInstanceOf[PhysicalMove]) physicalAttack(move.asInstanceOf[PhysicalMove], target)
+    if (move.isInstanceOf[StatusMove]) statusAttack(move.asInstanceOf[StatusMove], target)
   }
 }
 
@@ -112,5 +126,20 @@ class Bulbasaur extends Pokemon {
     Growl,
     Tackle,
     VineWhip
+  ))
+}
+
+class Geodude extends Pokemon {
+  val pName = "Geodude"
+  val attack = Attack(80)
+  val defense = Defense(100)
+  val speed = Speed(20)
+  override def initHP: Int = 40
+  pTypes(List(
+    Rock
+  ))
+  moves(List(
+    Tackle,
+    RockTomb
   ))
 }
