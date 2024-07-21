@@ -67,16 +67,29 @@ abstract class Pokemon {
 
   /**
     * Attack the target Pokemon with the move
-    * 
+    *
+    * Consider accuracy for both move and Pokemon
+    *
     * - PhysicalMove: Calculate damage based on the user's attack and the target's defense
     * - StatusMove: Apply effects of the move to the target Pokemon
     *
     * @param move
     * @param target
     */
-  def attack(move: Move, target: Pokemon): Unit = {
+  def attack(move: Move, target: Pokemon): Boolean = {
+    if (!calculatePokemonAccuracy() ||
+        !move.calculateMoveAccuracy()) {
+      return false
+    }
+
     if (move.isInstanceOf[PhysicalMove]) physicalAttack(move.asInstanceOf[PhysicalMove], target)
     if (move.isInstanceOf[StatusMove]) statusAttack(move.asInstanceOf[StatusMove], target)
+    true
+  }
+
+  private def calculatePokemonAccuracy(): Boolean = {
+    val random = new Random()
+    random.nextInt(100) <= this.accuracy.value
   }
 }
 
@@ -173,7 +186,7 @@ class Breloom extends Pokemon {
   ))
   moves(List(
     Tackle,
-    Growth,
+    Smokescreen,
     VineWhip
   ))
 }
@@ -356,5 +369,21 @@ class Toxicroak extends Pokemon {
     Growth,
     BulkUp,
     DoubleKick
+  ))
+}
+
+class Marshtomp extends Pokemon {
+  val pName = "Marshtomp"
+  val attack = Attack(85)
+  val defense = Defense(70)
+  val speed = Speed(50)
+  override def initHP: Int = 70
+  pTypes(List(
+    Water
+  ))
+  moves(List(
+    WaterGun,
+    MuddyWater,
+    Leer
   ))
 }

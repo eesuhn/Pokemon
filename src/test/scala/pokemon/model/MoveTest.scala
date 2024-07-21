@@ -43,21 +43,6 @@ class MoveTest extends AnyFunSuite {
     val damage = PsychoCut.calculatePhysicalDamage(mewtwo, toxicroak)
     val expectedHP = toxicroak.baseHP - damage.toInt
 
-    val expectedDamage = (
-      ((2 * mewtwo.level / 5 + 2)
-      * mewtwo.attack.value
-      * PsychoCut.basePower
-      / toxicroak.defense.value
-      / 50
-      + 2
-      ) * 4
-    )
-
-    Console.withOut(System.out) {
-      println(s"\tDamage: $damage")
-      println(s"\tExpected Damage: $expectedDamage")
-    }
-
     mewtwo.attack(PsychoCut, toxicroak)
 
     assert(toxicroak.currentHP == expectedHP)
@@ -70,23 +55,22 @@ class MoveTest extends AnyFunSuite {
     val damage = XScissor.calculatePhysicalDamage(scyther, toxicroak)
     val expectedHP = toxicroak.baseHP - damage.toInt
 
-    val expectedDamage = (
-      ((2 * scyther.level / 5 + 2)
-      * scyther.attack.value
-      * XScissor.basePower
-      / toxicroak.defense.value
-      / 50
-      + 2
-      ) * 0.25
-    )
-
-    Console.withOut(System.out) {
-      println(s"\tDamage: $damage")
-      println(s"\tExpected Damage: $expectedDamage")
-    }
-
     scyther.attack(XScissor, toxicroak)
 
     assert(toxicroak.currentHP == expectedHP)
+  }
+
+  test ("Smookescreen against Pikachu") {
+    val breloom = new Breloom()
+    val pikachu = new Pikachu()
+    val testCount = 5
+
+    val expectedPikachuAccuracy = (pikachu.accuracy.value * (2.0 / (2.0 + testCount))).toInt
+
+    for (_ <- 1 to testCount) {
+      breloom.attack(Smokescreen, pikachu)
+    }
+
+    assert(pikachu.accuracy.value == expectedPikachuAccuracy)
   }
 }

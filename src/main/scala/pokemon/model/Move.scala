@@ -419,3 +419,26 @@ object BulkUp extends StatusMove {
   )
   override def targetSelf = true
 }
+
+object Smokescreen extends StatusMove {
+  val moveName = "Smokescreen"
+  val moveDesc = "The user releases an obscuring cloud of smoke or ink. Lower opponent's Accuracy stat by 1 stage."
+  val accuracy = 100
+  val moveType = Normal
+  override def effects = List(
+    AccuracyEffect(-1)
+  )
+  override def targetSelf = false
+}
+
+object MuddyWater extends PhysicalMove with StatusMove {
+  val moveName = "Muddy Water"
+  val moveDesc = "The user attacks by shooting muddy water at the opposing Pokemon. Lower opponent's Accuracy stat by 1 stage."
+  val accuracy = 85
+  val moveType = Water
+  override def basePower = 90
+  override def effects = List(
+    AccuracyEffect(-1)
+  )
+  override def targetSelf = false
+}
