@@ -387,3 +387,20 @@ class Marshtomp extends Pokemon {
     Leer
   ))
 }
+
+class Slowpoke extends Pokemon {
+  val pName = "Slowpoke"
+  val attack = Attack(65)
+  val defense = Defense(65)
+  val speed = Speed(15)
+  override def initHP: Int = 90
+  pTypes(List(
+    Water,
+    Psychic
+  ))
+  moves(List(
+    WaterGun,
+    ShellSmash,
+    Growl
+  ))
+}

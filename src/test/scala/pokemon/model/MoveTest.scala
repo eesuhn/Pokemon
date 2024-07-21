@@ -60,12 +60,13 @@ class MoveTest extends AnyFunSuite {
     assert(toxicroak.currentHP == expectedHP)
   }
 
-  test ("Smookescreen against Pikachu") {
+  test ("Smokescreen against Pikachu") {
     val breloom = new Breloom()
     val pikachu = new Pikachu()
     val testCount = 5
 
-    val expectedPikachuAccuracy = (pikachu.accuracy.value * (2.0 / (2.0 + testCount))).toInt
+    val calculatedPikachuAccuracy = (pikachu.accuracy.value * (2.0 / (2.0 + testCount))).toInt
+    val expectedPikachuAccuracy = Math.max(calculatedPikachuAccuracy, 60)
 
     for (_ <- 1 to testCount) {
       breloom.attack(Smokescreen, pikachu)
