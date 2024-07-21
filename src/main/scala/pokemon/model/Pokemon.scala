@@ -2,6 +2,38 @@ package pokemon.model
 
 import scala.util.Random
 
+object Pokedex {
+  private var subclasses: List[Class[_ <: Pokemon]] = List.empty
+
+  def registerSubclass[T <: Pokemon](subclass: List[Class[_ <: Pokemon]]): Unit = {
+    subclasses = subclass ::: subclasses
+  }
+
+  def getSubclasses: List[Class[_ <: Pokemon]] = subclasses
+
+  registerSubclass(List(
+    classOf[Charmander],
+    classOf[Squirtle],
+    classOf[Bulbasaur],
+    classOf[Geodude],
+    classOf[Pikachu],
+    classOf[Breloom],
+    classOf[Regice],
+    classOf[Hitmonchan],
+    classOf[Nidorino],
+    classOf[Dustox],
+    classOf[Mewtwo],
+    classOf[Scyther],
+    classOf[Heracross],
+    classOf[Onix],
+    classOf[Snorlax],
+    classOf[Blaziken],
+    classOf[Toxicroak],
+    classOf[Marshtomp],
+    classOf[Slowpoke]
+  ))
+}
+
 abstract class Pokemon {
   val pName: String
   val attack: Attack
@@ -29,7 +61,7 @@ abstract class Pokemon {
     */
   protected def pTypes(types: List[Type]): Unit = {
     if (types.length > 2) {
-      throw new Exception("Pokemon can have at most 2 types")
+      throw new Exception(s"Pokemon $pName can have at most 2 types")
     }
     this._pTypes = types
   }
@@ -41,7 +73,7 @@ abstract class Pokemon {
     */
   protected def moves(moves: List[Move]): Unit = {
     if (moves.length > 4) {
-      throw new Exception("Pokemon can learn at most 4 moves")
+      throw new Exception(s"Pokemon $pName can learn at most 4 moves")
     }
     this._moves = moves
   }

@@ -25,7 +25,7 @@ class Player(
     */
   def addPokemon(pokemon: Pokemon): Unit = {
     if (this.deck.size > 3) {
-      throw new Exception("Player can only have 3 Pokemon")
+      throw new Exception(s"Player $playerName can only have 3 Pokemon")
     }
     this.deck += pokemon
     if (this.deck.size == 1) this.activePokemon = pokemon
@@ -33,7 +33,7 @@ class Player(
 
   def switchActivePokemon(pokemon: Pokemon): Unit = {
     if (!this.deck.contains(pokemon)) {
-      throw new Exception("Player does not have this Pokemon")
+      throw new Exception(s"Player $playerName does not have this Pokemon")
     }
     this.activePokemon = pokemon
   }
