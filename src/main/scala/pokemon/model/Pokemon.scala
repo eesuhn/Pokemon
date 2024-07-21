@@ -1,37 +1,18 @@
 package pokemon.model
 
+import pokemon.macros.Macros
 import scala.util.Random
 
 object Pokedex {
   private var subclasses: List[Class[_ <: Pokemon]] = List.empty
 
-  def registerSubclass[T <: Pokemon](subclass: List[Class[_ <: Pokemon]]): Unit = {
-    subclasses = subclass ::: subclasses
+  def registerPokemon(newSubclasses: List[Class[_ <: Pokemon]]): Unit = {
+    subclasses = newSubclasses ::: subclasses
   }
 
   def getSubclasses: List[Class[_ <: Pokemon]] = subclasses
 
-  registerSubclass(List(
-    classOf[Charmander],
-    classOf[Squirtle],
-    classOf[Bulbasaur],
-    classOf[Geodude],
-    classOf[Pikachu],
-    classOf[Breloom],
-    classOf[Regice],
-    classOf[Hitmonchan],
-    classOf[Nidorino],
-    classOf[Dustox],
-    classOf[Mewtwo],
-    classOf[Scyther],
-    classOf[Heracross],
-    classOf[Onix],
-    classOf[Snorlax],
-    classOf[Blaziken],
-    classOf[Toxicroak],
-    classOf[Marshtomp],
-    classOf[Slowpoke]
-  ))
+  registerPokemon(Macros.registerSubclasses[Pokemon]("pokemon.model"))
 }
 
 abstract class Pokemon {
