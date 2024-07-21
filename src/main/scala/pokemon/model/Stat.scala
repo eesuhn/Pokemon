@@ -6,6 +6,7 @@ abstract class Stat {
   private var currentStage: Int = 0
 
   protected def initValue: Int
+  protected def minValue: Int = 0
 
   def value: Int = _value
 
@@ -44,12 +45,26 @@ abstract class Stat {
     else 1.0
   }
 
+  /**
+    * Update the value of the stat
+    *
+    * Hard limit the value to minValue
+    */
   private def updateValue(): Unit = {
-    this._value = (this._baseValue * this.calculateStage(this.currentStage)).toInt
+    val calculated = (this._baseValue * this.calculateStage(this.currentStage)).toInt
+    this._value = Math.max(calculated, minValue)
   }
 }
 
-case class Attack(initValue: Int) extends Stat
-case class Defense(initValue: Int) extends Stat
-case class Accuracy(initValue: Int) extends Stat
-case class Speed(initValue: Int) extends Stat
+case class Attack(initValue: Int) extends Stat {
+  override protected def minValue: Int = 20
+}
+case class Defense(initValue: Int) extends Stat {
+  override protected def minValue: Int = 20
+}
+case class Accuracy(initValue: Int) extends Stat {
+  override protected def minValue: Int = 60
+}
+case class Speed(initValue: Int) extends Stat {
+  override protected def minValue: Int = 10
+}

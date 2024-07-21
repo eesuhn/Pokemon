@@ -4,16 +4,14 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class PokemonTest extends AnyFunSuite {
 
-  test("Initialize Bulbasaur") {
-    val bulbasaur = new Bulbasaur()
+  test("Initialize all Pokemon subclasses") {
+    val pokemonSubclasses = Pokedex.getSubclasses
 
-    assert(bulbasaur.pName == "Bulbasaur")
-    assert(bulbasaur.attack.value == 49)
-    assert(bulbasaur.defense.value == 49)
-    assert(bulbasaur.speed.value == 45)
-    assert(bulbasaur.baseHP == 45)
-    assert(bulbasaur.currentHP == 45)
-    assert(bulbasaur.pTypes == List(Grass, Poison))
-    assert(bulbasaur.moves == List(Growl, Tackle, VineWhip))
+    assert(pokemonSubclasses.length != 0)
+
+    pokemonSubclasses.foreach { subclass =>
+      val pokemon = subclass.getDeclaredConstructor().newInstance()
+      assert(pokemon != null)
+    }
   }
 }

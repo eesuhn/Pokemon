@@ -35,4 +35,43 @@ class MoveTest extends AnyFunSuite {
     assert(charmander.currentHP == expectedHP)
     assert(charmander.speed.value == expectedCharmanderSpeed)
   }
+
+  test("Psycho Cut against Toxicroak") {
+    val mewtwo = new Mewtwo()
+    val toxicroak = new Toxicroak()
+
+    val damage = PsychoCut.calculatePhysicalDamage(mewtwo, toxicroak)
+    val expectedHP = toxicroak.baseHP - damage.toInt
+
+    mewtwo.attack(PsychoCut, toxicroak)
+
+    assert(toxicroak.currentHP == expectedHP)
+  }
+
+  test("X-Scissor against Toxicroak") {
+    val scyther = new Scyther()
+    val toxicroak = new Toxicroak()
+
+    val damage = XScissor.calculatePhysicalDamage(scyther, toxicroak)
+    val expectedHP = toxicroak.baseHP - damage.toInt
+
+    scyther.attack(XScissor, toxicroak)
+
+    assert(toxicroak.currentHP == expectedHP)
+  }
+
+  test ("Smokescreen against Pikachu") {
+    val breloom = new Breloom()
+    val pikachu = new Pikachu()
+    val testCount = 5
+
+    val calculatedPikachuAccuracy = (pikachu.accuracy.value * (2.0 / (2.0 + testCount))).toInt
+    val expectedPikachuAccuracy = Math.max(calculatedPikachuAccuracy, 60)
+
+    for (_ <- 1 to testCount) {
+      breloom.attack(Smokescreen, pikachu)
+    }
+
+    assert(pikachu.accuracy.value == expectedPikachuAccuracy)
+  }
 }

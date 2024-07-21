@@ -2,6 +2,38 @@ package pokemon.model
 
 import scala.util.Random
 
+object Pokedex {
+  private var subclasses: List[Class[_ <: Pokemon]] = List.empty
+
+  def registerSubclass[T <: Pokemon](subclass: List[Class[_ <: Pokemon]]): Unit = {
+    subclasses = subclass ::: subclasses
+  }
+
+  def getSubclasses: List[Class[_ <: Pokemon]] = subclasses
+
+  registerSubclass(List(
+    classOf[Charmander],
+    classOf[Squirtle],
+    classOf[Bulbasaur],
+    classOf[Geodude],
+    classOf[Pikachu],
+    classOf[Breloom],
+    classOf[Regice],
+    classOf[Hitmonchan],
+    classOf[Nidorino],
+    classOf[Dustox],
+    classOf[Mewtwo],
+    classOf[Scyther],
+    classOf[Heracross],
+    classOf[Onix],
+    classOf[Snorlax],
+    classOf[Blaziken],
+    classOf[Toxicroak],
+    classOf[Marshtomp],
+    classOf[Slowpoke]
+  ))
+}
+
 abstract class Pokemon {
   val pName: String
   val attack: Attack
@@ -29,7 +61,7 @@ abstract class Pokemon {
     */
   protected def pTypes(types: List[Type]): Unit = {
     if (types.length > 2) {
-      throw new Exception("Pokemon can have at most 2 types")
+      throw new Exception(s"Pokemon $pName can have at most 2 types")
     }
     this._pTypes = types
   }
@@ -41,7 +73,7 @@ abstract class Pokemon {
     */
   protected def moves(moves: List[Move]): Unit = {
     if (moves.length > 4) {
-      throw new Exception("Pokemon can learn at most 4 moves")
+      throw new Exception(s"Pokemon $pName can learn at most 4 moves")
     }
     this._moves = moves
   }
@@ -67,16 +99,29 @@ abstract class Pokemon {
 
   /**
     * Attack the target Pokemon with the move
-    * 
+    *
+    * Consider accuracy for both move and Pokemon
+    *
     * - PhysicalMove: Calculate damage based on the user's attack and the target's defense
     * - StatusMove: Apply effects of the move to the target Pokemon
     *
     * @param move
     * @param target
     */
-  def attack(move: Move, target: Pokemon): Unit = {
+  def attack(move: Move, target: Pokemon): Boolean = {
+    if (!calculatePokemonAccuracy() ||
+        !move.calculateMoveAccuracy()) {
+      return false
+    }
+
     if (move.isInstanceOf[PhysicalMove]) physicalAttack(move.asInstanceOf[PhysicalMove], target)
     if (move.isInstanceOf[StatusMove]) statusAttack(move.asInstanceOf[StatusMove], target)
+    true
+  }
+
+  private def calculatePokemonAccuracy(): Boolean = {
+    val random = new Random()
+    random.nextInt(100) <= this.accuracy.value
   }
 }
 
@@ -173,7 +218,7 @@ class Breloom extends Pokemon {
   ))
   moves(List(
     Tackle,
-    Growth,
+    Smokescreen,
     VineWhip
   ))
 }
@@ -270,7 +315,7 @@ class Scyther extends Pokemon {
     Grass
   ))
   moves(List(
-    Tackle,
+    XScissor,
     VineWhip,
     QuiverDance
   ))
@@ -339,5 +384,55 @@ class Blaziken extends Pokemon {
     BlazeKick,
     BulkUp,
     DoubleKick
+  ))
+}
+
+class Toxicroak extends Pokemon {
+  val pName = "Toxicroak"
+  val attack = Attack(106)
+  val defense = Defense(65)
+  val speed = Speed(85)
+  override def initHP: Int = 83
+  pTypes(List(
+    Poison,
+    Fighting
+  ))
+  moves(List(
+    Growth,
+    BulkUp,
+    DoubleKick
+  ))
+}
+
+class Marshtomp extends Pokemon {
+  val pName = "Marshtomp"
+  val attack = Attack(85)
+  val defense = Defense(70)
+  val speed = Speed(50)
+  override def initHP: Int = 70
+  pTypes(List(
+    Water
+  ))
+  moves(List(
+    WaterGun,
+    MuddyWater,
+    Leer
+  ))
+}
+
+class Slowpoke extends Pokemon {
+  val pName = "Slowpoke"
+  val attack = Attack(65)
+  val defense = Defense(65)
+  val speed = Speed(15)
+  override def initHP: Int = 90
+  pTypes(List(
+    Water,
+    Psychic
+  ))
+  moves(List(
+    WaterGun,
+    ShellSmash,
+    Growl
   ))
 }
