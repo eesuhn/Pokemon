@@ -42,25 +42,22 @@ trait PhysicalMove extends Move {
   /**
     * Calculate modifier for the move based on target's type
     *
-    * - 1.0 if both or neither strong/weak
-    * - 2.0 if strong
-    * - 0.5 if weak
+    * - *2 if move is strong against target type
+    * - *0.5 if move is weak against target type
     *
     * @param target
     * @return
     */
   private def calculateModifier(target: Pokemon): Double = {
-    val (strong, weak) = target
+    target
       .pTypes
-      .foldLeft((false, false)) { case ((s, w), t) => (
-        s || this.moveType.strongAgainst.contains(t),
-        w || this.moveType.weakAgainst.contains(t))
+      .foldLeft(1.0) { (modifier, t) =>
+        modifier * (
+          if (this.moveType.strongAgainst.contains(t)) 2.0
+          else if (this.moveType.weakAgainst.contains(t)) 0.5
+          else 1.0
+        )
       }
-
-    if (strong && weak) 1.0
-    else if (strong) 2.0
-    else if (weak) 0.5
-    else 1.0
   }
 
   /**

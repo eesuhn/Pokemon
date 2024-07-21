@@ -270,7 +270,7 @@ class Scyther extends Pokemon {
     Grass
   ))
   moves(List(
-    Tackle,
+    XScissor,
     VineWhip,
     QuiverDance
   ))
@@ -337,6 +337,23 @@ class Blaziken extends Pokemon {
   ))
   moves(List(
     BlazeKick,
+    BulkUp,
+    DoubleKick
+  ))
+}
+
+class Toxicroak extends Pokemon {
+  val pName = "Toxicroak"
+  val attack = Attack(106)
+  val defense = Defense(65)
+  val speed = Speed(85)
+  override def initHP: Int = 83
+  pTypes(List(
+    Poison,
+    Fighting
+  ))
+  moves(List(
+    Growth,
     BulkUp,
     DoubleKick
   ))

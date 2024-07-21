@@ -35,4 +35,58 @@ class MoveTest extends AnyFunSuite {
     assert(charmander.currentHP == expectedHP)
     assert(charmander.speed.value == expectedCharmanderSpeed)
   }
+
+  test("Psycho Cut against Toxicroak") {
+    val mewtwo = new Mewtwo()
+    val toxicroak = new Toxicroak()
+
+    val damage = PsychoCut.calculatePhysicalDamage(mewtwo, toxicroak)
+    val expectedHP = toxicroak.baseHP - damage.toInt
+
+    val expectedDamage = (
+      ((2 * mewtwo.level / 5 + 2)
+      * mewtwo.attack.value
+      * PsychoCut.basePower
+      / toxicroak.defense.value
+      / 50
+      + 2
+      ) * 4
+    )
+
+    Console.withOut(System.out) {
+      println(s"\tDamage: $damage")
+      println(s"\tExpected Damage: $expectedDamage")
+    }
+
+    mewtwo.attack(PsychoCut, toxicroak)
+
+    assert(toxicroak.currentHP == expectedHP)
+  }
+
+  test("X-Scissor against Toxicroak") {
+    val scyther = new Scyther()
+    val toxicroak = new Toxicroak()
+
+    val damage = XScissor.calculatePhysicalDamage(scyther, toxicroak)
+    val expectedHP = toxicroak.baseHP - damage.toInt
+
+    val expectedDamage = (
+      ((2 * scyther.level / 5 + 2)
+      * scyther.attack.value
+      * XScissor.basePower
+      / toxicroak.defense.value
+      / 50
+      + 2
+      ) * 0.25
+    )
+
+    Console.withOut(System.out) {
+      println(s"\tDamage: $damage")
+      println(s"\tExpected Damage: $expectedDamage")
+    }
+
+    scyther.attack(XScissor, toxicroak)
+
+    assert(toxicroak.currentHP == expectedHP)
+  }
 }
