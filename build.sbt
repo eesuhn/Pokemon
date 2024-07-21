@@ -24,6 +24,6 @@ lazy val root = (project in file("."))
       "org.scalatest" %% "scalatest" % "3.2.9" % Test,
       "org.reflections" % "reflections" % "0.10.2"
     ),
-    unmanagedResourceDirectories in Compile += baseDirectory.value / "src/main/resources"
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "resources"
   )
   .dependsOn(macros)
