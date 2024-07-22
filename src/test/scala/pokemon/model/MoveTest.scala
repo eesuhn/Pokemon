@@ -1,6 +1,7 @@
 package pokemon.model
 
 import org.scalatest.funsuite.AnyFunSuite
+import scala.collection.mutable.ListBuffer
 
 class MoveTest extends AnyFunSuite {
 
@@ -9,7 +10,32 @@ class MoveTest extends AnyFunSuite {
 
     assert(moves.nonEmpty)
 
-    moves.foreach { move => assert(move != null)}
+    val failedInitializations = ListBuffer.empty[(Move, Throwable)]
+
+    moves.foreach { move =>
+      try {
+        assert(move != null)
+      } catch {
+        case e: Throwable =>
+          failedInitializations += ((move, e))
+      }
+    }
+
+    if (failedInitializations.nonEmpty) {
+      val failureMessages = failedInitializations.map { case (move, exception) =>
+        s"""
+          |Failed to instantiate ${move.getClass.getSimpleName}:
+          |  Exception: ${exception.getClass.getName}
+          |""".stripMargin
+      }.mkString
+
+      fail(
+        s"""
+          |${failedInitializations.size} out of ${moves.size} Move objects failed to initialize:
+          |$failureMessages
+          |""".stripMargin
+      )
+    }
   }
 
   test("Ember against Squirtle") {

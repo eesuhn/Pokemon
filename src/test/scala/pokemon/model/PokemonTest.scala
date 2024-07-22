@@ -1,23 +1,21 @@
 package pokemon.model
 
 import org.scalatest.funsuite.AnyFunSuite
-import java.lang.reflect.Modifier
 import scala.collection.mutable.ListBuffer
 
 class PokemonTest extends AnyFunSuite {
 
   test("Initialize all Pokemon subclasses") {
-    val pokemonSubclasses = PokemonRegistry.pokemons
+    val pokemons = PokemonRegistry.pokemons
 
-    assert(pokemonSubclasses.nonEmpty)
+    assert(pokemons.nonEmpty)
 
     // Restrict to only non-abstract classes
-    // val instantiableClasses = pokemonSubclasses.filter(c => !Modifier.isAbstract(c.getModifiers))
+    // val instantiableClasses = pokemons.filter(c => !Modifier.isAbstract(c.getModifiers))
 
-    val instantiableClasses = pokemonSubclasses
     val failedInitializations = ListBuffer.empty[(Class[_], Throwable)]
 
-    instantiableClasses.foreach { subclass =>
+    pokemons.foreach { subclass =>
       try {
         val pokemon = subclass.getDeclaredConstructor().newInstance()
         assert(pokemon != null)
@@ -37,7 +35,7 @@ class PokemonTest extends AnyFunSuite {
 
       fail(
         s"""
-          |${failedInitializations.size} out of ${instantiableClasses.size} Pokemon subclasses failed to initialize:
+          |${failedInitializations.size} out of ${pokemons.size} Pokemon subclasses failed to initialize:
           |$failureMessages
           |""".stripMargin
       )

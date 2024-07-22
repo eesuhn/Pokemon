@@ -27,8 +27,8 @@ object Macros {
         val baseType = weakTypeOf[T]
         val subclasses = c.mirror.staticPackage(packageName).typeSignature.members
           .filter(_.isClass)
-          .filter(sym => 
-            sym.asClass.baseClasses.contains(baseType.typeSymbol) && 
+          .filter(sym =>
+            sym.asClass.baseClasses.contains(baseType.typeSymbol) &&
             sym.asClass != baseType.typeSymbol
           )
           .map(_.asClass)
