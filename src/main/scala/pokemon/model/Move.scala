@@ -1,6 +1,19 @@
 package pokemon.model
 
+import pokemon.macros.Macros
 import scala.util.Random
+
+object MoveRegistry {
+  private var _moves: List[Move] = List.empty
+
+  def registerMoves(newMoves: List[Move]): Unit = {
+    this._moves = newMoves ::: this._moves
+  }
+
+  def moves: List[Move] = this._moves
+
+  registerMoves(Macros.registerInstances[Move]("pokemon.model"))
+}
 
 abstract class Move {
   val moveName: String

@@ -7,11 +7,14 @@ import scala.collection.mutable.ListBuffer
 class PokemonTest extends AnyFunSuite {
 
   test("Initialize all Pokemon subclasses") {
-    val pokemonSubclasses = Pokedex.getSubclasses
+    val pokemonSubclasses = PokemonRegistry.pokemons
 
     assert(pokemonSubclasses.nonEmpty)
 
-    val instantiableClasses = pokemonSubclasses.filter(c => !Modifier.isAbstract(c.getModifiers))
+    // Restrict to only non-abstract classes
+    // val instantiableClasses = pokemonSubclasses.filter(c => !Modifier.isAbstract(c.getModifiers))
+
+    val instantiableClasses = pokemonSubclasses
     val failedInitializations = ListBuffer.empty[(Class[_], Throwable)]
 
     instantiableClasses.foreach { subclass =>

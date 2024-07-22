@@ -4,6 +4,14 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class MoveTest extends AnyFunSuite {
 
+  test("Check all Move objects") {
+    val moves = MoveRegistry.moves
+
+    assert(moves.nonEmpty)
+
+    moves.foreach { move => assert(move != null)}
+  }
+
   test("Ember against Squirtle") {
     val charmander = new Charmander()
     val squirtle = new Squirtle()

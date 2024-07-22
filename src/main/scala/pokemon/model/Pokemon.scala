@@ -3,14 +3,14 @@ package pokemon.model
 import pokemon.macros.Macros
 import scala.util.Random
 
-object Pokedex {
-  private var subclasses: List[Class[_ <: Pokemon]] = List.empty
+object PokemonRegistry {
+  private var _pokemons: List[Class[_ <: Pokemon]] = List.empty
 
-  def registerPokemon(newSubclasses: List[Class[_ <: Pokemon]]): Unit = {
-    subclasses = newSubclasses ::: subclasses
+  def registerPokemon(newPokemons: List[Class[_ <: Pokemon]]): Unit = {
+    this._pokemons = newPokemons ::: this._pokemons
   }
 
-  def getSubclasses: List[Class[_ <: Pokemon]] = subclasses
+  def pokemons: List[Class[_ <: Pokemon]] = this._pokemons
 
   registerPokemon(Macros.registerSubclasses[Pokemon]("pokemon.model"))
 }
@@ -415,5 +415,21 @@ class Slowpoke extends Pokemon {
     WaterGun,
     ShellSmash,
     Growl
+  ))
+}
+
+class Exploud extends Pokemon {
+  val pName = "Exploud"
+  val attack = Attack(91)
+  val defense = Defense(63)
+  val speed = Speed(68)
+  override def initHP: Int = 104
+  pTypes(List(
+    Normal
+  ))
+  moves(List(
+    Growth,
+    Screech,
+    Scratch
   ))
 }
