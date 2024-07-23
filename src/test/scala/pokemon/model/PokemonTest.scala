@@ -18,6 +18,7 @@ class PokemonTest extends AnyFunSuite {
     pokemons.foreach { subclass =>
       try {
         val pokemon = subclass.getDeclaredConstructor().newInstance()
+        println(pokemon.pName)
         assert(pokemon != null)
       } catch {
         case e: Throwable =>
