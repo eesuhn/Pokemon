@@ -22,6 +22,9 @@ object ResourceUtil {
   }
 
   def resouceImage(path: String): Image = {
-    new Image(MainApp.getClass.getResourceAsStream(path))
+    val resource = MainApp.getClass.getResourceAsStream(path)
+    if (resource == null) throw new Exception(s"Cannot load resource: $path")
+
+    new Image(resource)
   }
 }

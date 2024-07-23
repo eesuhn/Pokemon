@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" prefHeight="540.0" prefWidth="960.0" minHeight="540.0" minWidth="960.0" maxHeight="540.0" maxWidth="960.0" fx:controller="pokemon.view.GameController">
+<AnchorPane maxHeight="750.0" maxWidth="960.0" minHeight="750.0" minWidth="960.0" prefHeight="750.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.GameController">
   <children>
     <ImageView fx:id="battleBg" fitHeight="540.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleDialogOne" fitHeight="210.0" fitWidth="520.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleDialogTwo" fitHeight="210.0" fitWidth="440.0" layoutY="540.0" layoutX="520.0" pickOnBounds="true" preserveRatio="true" />
   </children>
 </AnchorPane>
