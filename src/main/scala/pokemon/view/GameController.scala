@@ -15,14 +15,14 @@ class GameController(
   val pokemonLeftPane: AnchorPane,
   val pokemonRightPane: AnchorPane,
   val pokemonLeft: ImageView,
-  val pokemonRight: ImageView,
+  val pokemonRight: ImageView
 ) {
 
   battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
   battleDialogOne.image = ResourceUtil.resouceImage("misc/battle-dialog-one.png")
   battleDialogTwo.image = ResourceUtil.resouceImage("misc/battle-dialog-two.png")
 
-  setupPokemon(pokemonLeft, "pokes/Charmander-back.gif", pokemonLeftPane)
+  setupPokemon(pokemonLeft, "pokes/Mewtwo-back.gif", pokemonLeftPane)
   setupPokemon(pokemonRight, "pokes/Snorlax-front.gif", pokemonRightPane)
 
   private def setupPokemon(imageView: ImageView, imagePath: String, anchorPane: AnchorPane): Unit = {
@@ -30,7 +30,7 @@ class GameController(
     imageView.image = image
     imageView.preserveRatio = true
     imageView.smooth = true
-    
+
     Platform.runLater {
       positionPokemon(imageView, anchorPane)
     }
@@ -44,7 +44,7 @@ class GameController(
 
   /**
     * Position Pokemon image within the AnchorPane
-    * 
+    *
     * - Center horizontally
     * - Anchor to bottom
     *
