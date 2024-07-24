@@ -1,9 +1,6 @@
 package pokemon.view
 
-import pokemon.util.ResourceUtil
-import scalafx.Includes._
-import scalafx.application.Platform
-import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.image.ImageView
 import scalafx.scene.layout.AnchorPane
 import scalafxml.core.macros.sfxml
 
@@ -18,60 +15,16 @@ class GameController(
   val pokemonRight: ImageView
 ) {
 
-  battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
-  battleDialogOne.image = ResourceUtil.resouceImage("misc/battle-dialog-one-left.png")
-  battleDialogTwo.image = ResourceUtil.resouceImage("misc/battle-dialog-one-right.png")
+  val gameView = new GameView(battleBg, battleDialogOne, battleDialogTwo)
+  val pokemonLeftView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
+  val pokemonRightView = new GamePokemonView(pokemonRight, pokemonRightPane)
 
-  setupPokemon(pokemonLeft, "pokes/Mewtwo-back.gif", pokemonLeftPane)
-  setupPokemon(pokemonRight, "pokes/Snorlax-front.gif", pokemonRightPane)
+  gameView.setup()
+  pokemonLeftView.setup("pokes/Mewtwo-back.gif")
+  pokemonRightView.setup("pokes/Snorlax-front.gif")
 
-  private def setupPokemon(imageView: ImageView, imagePath: String, anchorPane: AnchorPane): Unit = {
-    val image = ResourceUtil.resouceImage(imagePath)
-    imageView.image = image
-    imageView.preserveRatio = true
-    imageView.smooth = true
-
-    Platform.runLater {
-      positionPokemon(imageView, anchorPane)
-    }
-
-    imageView.image.onChange { (_, _, newImage) =>
-      if (newImage != null) {
-        positionPokemon(imageView, anchorPane)
-      }
-    }
-  }
-
-  /**
-    * Position Pokemon image within the AnchorPane
-    *
-    * - Center horizontally
-    * - Anchor to bottom
-    *
-    * @param imageView
-    * @param anchorPane
-    */
-  private def positionPokemon(imageView: ImageView, anchorPane: AnchorPane): Unit = {
-    val newImage = imageView.image.value
-
-    if (newImage != null) {
-      val imageWidth = newImage.width.value
-      val imageHeight = newImage.height.value
-      val paneWidth = anchorPane.width.value
-      val paneHeight = anchorPane.height.value
-
-      // Scale factor to fit image within the pane
-      // val scale = Math.min(paneWidth / imageWidth, paneHeight / imageHeight)
-
-      imageView.fitWidth = imageWidth
-      imageView.fitHeight = imageHeight
-
-      // Center horizontally
-      val leftAnchor = (paneWidth - imageView.fitWidth.value) / 2
-      AnchorPane.setLeftAnchor(imageView, leftAnchor)
-
-      // Anchor to bottom
-      AnchorPane.setBottomAnchor(imageView, 0.0)
-    }
-  }
+  def handleDialogBtn1(): Unit = DialogController.handleDialogBtn1()
+  def handleDialogBtn2(): Unit = DialogController.handleDialogBtn2()
+  def handleDialogBtn3(): Unit = DialogController.handleDialogBtn3()
+  def handleDialogBtn4(): Unit = DialogController.handleDialogBtn4()
 }

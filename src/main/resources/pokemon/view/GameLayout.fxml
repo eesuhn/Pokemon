@@ -29,10 +29,10 @@
     </Pane>
     <Pane layoutX="560.0" layoutY="540.0" prefHeight="180.0" prefWidth="400.0">
       <GridPane alignment="CENTER" hgap="20" layoutX="32.0" layoutY="32.0" vgap="10">
-        <Button styleClass="battle-button" text="Attack" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Button styleClass="battle-button" text="Bag" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Button styleClass="battle-button" text="Pokémon" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Button styleClass="battle-button" text="Run" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button fx:id="dialogBtn1" onAction="#handleDialogBtn1" styleClass="battle-button" text="Attack" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Button fx:id="dialogBtn2" onAction="#handleDialogBtn2" styleClass="battle-button" text="Bag" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Button fx:id="dialogBtn3" onAction="#handleDialogBtn3" styleClass="battle-button" text="Pokémon" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Button fx:id="dialogBtn4" onAction="#handleDialogBtn4" styleClass="battle-button" text="Run" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       </GridPane>
     </Pane>
   </children>
