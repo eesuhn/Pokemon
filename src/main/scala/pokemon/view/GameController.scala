@@ -1,11 +1,12 @@
 package pokemon.view
 
-import pokemon.util.ResourceUtil
+import scalafx.scene.image.ImageView
+import scalafx.scene.layout.{AnchorPane, GridPane}
+import scalafx.scene.control.Label
 import scalafx.Includes._
 import scalafx.application.Platform
-import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.AnchorPane
 import scalafxml.core.macros.sfxml
+import javafx.scene.{Node => JFXNode}
 
 @sfxml
 class GameController(
@@ -15,63 +16,27 @@ class GameController(
   val pokemonLeftPane: AnchorPane,
   val pokemonRightPane: AnchorPane,
   val pokemonLeft: ImageView,
-  val pokemonRight: ImageView
+  val pokemonRight: ImageView,
+  val buttonGrid: GridPane,
+  val dialogBtn1: Label,
+  val dialogBtn2: Label,
+  val dialogBtn3: Label,
+  val dialogBtn4: Label
 ) {
 
-  battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
-  battleDialogOne.image = ResourceUtil.resouceImage("misc/battle-dialog-one.png")
-  battleDialogTwo.image = ResourceUtil.resouceImage("misc/battle-dialog-two.png")
+  val gameView = new GameView(battleBg, battleDialogOne, battleDialogTwo)
+  val pokemonLeftView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
+  val pokemonRightView = new GamePokemonView(pokemonRight, pokemonRightPane)
 
-  setupPokemon(pokemonLeft, "pokes/Mewtwo-back.gif", pokemonLeftPane)
-  setupPokemon(pokemonRight, "pokes/Snorlax-front.gif", pokemonRightPane)
+  gameView.setup()
+  pokemonLeftView.setup("pokes/Mewtwo-back.gif")
+  pokemonRightView.setup("pokes/Snorlax-front.gif")
 
-  private def setupPokemon(imageView: ImageView, imagePath: String, anchorPane: AnchorPane): Unit = {
-    val image = ResourceUtil.resouceImage(imagePath)
-    imageView.image = image
-    imageView.preserveRatio = true
-    imageView.smooth = true
+  DialogController.initialize(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4)
 
-    Platform.runLater {
-      positionPokemon(imageView, anchorPane)
-    }
-
-    imageView.image.onChange { (_, _, newImage) =>
-      if (newImage != null) {
-        positionPokemon(imageView, anchorPane)
-      }
-    }
-  }
-
-  /**
-    * Position Pokemon image within the AnchorPane
-    *
-    * - Center horizontally
-    * - Anchor to bottom
-    *
-    * @param imageView
-    * @param anchorPane
-    */
-  private def positionPokemon(imageView: ImageView, anchorPane: AnchorPane): Unit = {
-    val newImage = imageView.image.value
-
-    if (newImage != null) {
-      val imageWidth = newImage.width.value
-      val imageHeight = newImage.height.value
-      val paneWidth = anchorPane.width.value
-      val paneHeight = anchorPane.height.value
-
-      // Scale factor to fit image within the pane
-      // val scale = Math.min(paneWidth / imageWidth, paneHeight / imageHeight)
-
-      imageView.fitWidth = imageWidth
-      imageView.fitHeight = imageHeight
-
-      // Center horizontally
-      val leftAnchor = (paneWidth - imageView.fitWidth.value) / 2
-      AnchorPane.setLeftAnchor(imageView, leftAnchor)
-
-      // Anchor to bottom
-      AnchorPane.setBottomAnchor(imageView, 0.0)
-    }
+  Platform.runLater {
+    val scene = buttonGrid.scene.value
+    scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
+    buttonGrid.requestFocus()
   }
 }

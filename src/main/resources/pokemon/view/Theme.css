@@ -1,0 +1,21 @@
+@font-face {
+	font-family: 'Minecraft Regular';
+	src: url('../font/MinecraftRegular.otf');
+}
+
+@font-face {
+	font-family: 'Minecraft Bold';
+	src: url('../font/MinecraftBold.otf');
+}
+
+/* GameLayout */
+.battle-button {
+	-fx-background-color: transparent;
+	-fx-text-fill: black;
+	-fx-font-size: 30px;
+	-fx-font-family: 'Minecraft Regular';
+	-fx-alignment: center-left;
+	/* -fx-padding: 0 0 0 0; */  /* top right bottom left */
+	-fx-padding: 6 12;  /* vertical horizontal */
+	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
+}
