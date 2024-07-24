@@ -19,13 +19,3 @@
 	-fx-padding: 6 12;  /* vertical horizontal */
 	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
 }
-
-.battle-button:hover {
-	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.6), 4, 0, 0, 1);
-	-fx-cursor: hand;
-}
-
-.battle-button:pressed {
-	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.2), 4, 0, 0, 1);
-	-fx-cursor: hand;
-}
