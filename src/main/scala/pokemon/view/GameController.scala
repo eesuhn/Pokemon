@@ -17,7 +17,11 @@ class GameController(
   val pokemonRightPane: AnchorPane,
   val pokemonLeft: ImageView,
   val pokemonRight: ImageView,
-  val buttonGrid: GridPane
+  val buttonGrid: GridPane,
+  val dialogBtn1: Label,
+  val dialogBtn2: Label,
+  val dialogBtn3: Label,
+  val dialogBtn4: Label
 ) {
 
   val gameView = new GameView(battleBg, battleDialogOne, battleDialogTwo)
@@ -28,15 +32,11 @@ class GameController(
   pokemonLeftView.setup("pokes/Mewtwo-back.gif")
   pokemonRightView.setup("pokes/Snorlax-front.gif")
 
-  lazy val buttons: Array[Label] = buttonGrid.children.collect {
-    case node: JFXNode if node.isInstanceOf[javafx.scene.control.Label] =>
-      new Label(node.asInstanceOf[javafx.scene.control.Label])
-  }.toArray
+  DialogController.initialize(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4)
 
   Platform.runLater {
     val scene = buttonGrid.scene.value
-    scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event, buttons)
+    scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
     buttonGrid.requestFocus()
-    DialogController.updateSelectedButton(buttons)
   }
 }
