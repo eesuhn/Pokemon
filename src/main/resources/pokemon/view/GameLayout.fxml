@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="750.0" maxWidth="960.0" minHeight="750.0" minWidth="960.0" prefHeight="750.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.GameController">
+<AnchorPane maxHeight="720.0" maxWidth="960.0" minHeight="720.0" minWidth="960.0" prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.GameController">
   <children>
     <ImageView fx:id="battleBg" fitHeight="540.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true" />
-    <ImageView fx:id="battleDialogOne" fitHeight="210.0" fitWidth="520.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
-    <ImageView fx:id="battleDialogTwo" fitHeight="210.0" fitWidth="440.0" layoutX="520.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleDialogOne" fitHeight="180.0" fitWidth="560.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleDialogTwo" fitHeight="180.0" fitWidth="400.0" layoutX="560.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
     <Pane maxHeight="540.0" maxWidth="960.0" minHeight="540.0" minWidth="960.0" prefHeight="540.0" prefWidth="960.0">
       <children>
         <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="250" prefWidth="250">
@@ -25,9 +25,9 @@
         </AnchorPane>
       </children>
     </Pane>
-    <Pane layoutY="540.0" prefHeight="210.0" prefWidth="520.0">
+    <Pane layoutY="540.0" prefHeight="180.0" prefWidth="560.0">
     </Pane>
-    <Pane layoutX="520.0" layoutY="540.0" prefHeight="210.0" prefWidth="440.0">
+    <Pane layoutX="560.0" layoutY="540.0" prefHeight="180.0" prefWidth="400.0">
       <GridPane alignment="CENTER" hgap="20" layoutX="48.0" layoutY="46.0" vgap="20">
         <Button styleClass="battle-button" text="Attack" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <Button styleClass="battle-button" text="Bag" GridPane.columnIndex="1" GridPane.rowIndex="0" />

@@ -19,8 +19,8 @@ class GameController(
 ) {
 
   battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
-  battleDialogOne.image = ResourceUtil.resouceImage("misc/battle-dialog-one.png")
-  battleDialogTwo.image = ResourceUtil.resouceImage("misc/battle-dialog-two.png")
+  battleDialogOne.image = ResourceUtil.resouceImage("misc/battle-dialog-one-left.png")
+  battleDialogTwo.image = ResourceUtil.resouceImage("misc/battle-dialog-one-right.png")
 
   setupPokemon(pokemonLeft, "pokes/Mewtwo-back.gif", pokemonLeftPane)
   setupPokemon(pokemonRight, "pokes/Snorlax-front.gif", pokemonRightPane)
