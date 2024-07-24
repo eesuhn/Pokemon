@@ -16,7 +16,7 @@
 	-fx-font-family: 'Minecraft Regular';
 	-fx-alignment: center-left;
 	/* -fx-padding: 0 0 0 0; */  /* top right bottom left */
-	-fx-padding: 10 14;  /* vertical horizontal */
+	-fx-padding: 6 12;  /* vertical horizontal */
 	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
 }
 

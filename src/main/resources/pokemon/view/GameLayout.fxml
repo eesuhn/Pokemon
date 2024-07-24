@@ -28,7 +28,7 @@
     <Pane layoutY="540.0" prefHeight="180.0" prefWidth="560.0">
     </Pane>
     <Pane layoutX="560.0" layoutY="540.0" prefHeight="180.0" prefWidth="400.0">
-      <GridPane alignment="CENTER" hgap="20" layoutX="48.0" layoutY="46.0" vgap="20">
+      <GridPane alignment="CENTER" hgap="20" layoutX="32.0" layoutY="32.0" vgap="10">
         <Button styleClass="battle-button" text="Attack" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <Button styleClass="battle-button" text="Bag" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         <Button styleClass="battle-button" text="Pokémon" GridPane.columnIndex="0" GridPane.rowIndex="1" />
