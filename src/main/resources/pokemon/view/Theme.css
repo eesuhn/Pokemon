@@ -1,0 +1,21 @@
+/* GameLayout */
+.battle-button {
+	-fx-background-color: transparent;
+	-fx-text-fill: black;
+	-fx-font-size: 22px;
+	-fx-font-weight: bold;
+	-fx-alignment: center-left;
+	/* -fx-padding: 0 0 0 0; */  /* top right bottom left */
+	-fx-padding: 10 14;  /* vertical horizontal */
+	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
+}
+
+.battle-button:hover {
+	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.6), 4, 0, 0, 1);
+	-fx-cursor: hand;
+}
+
+.battle-button:pressed {
+	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.2), 4, 0, 0, 1);
+	-fx-cursor: hand;
+}
