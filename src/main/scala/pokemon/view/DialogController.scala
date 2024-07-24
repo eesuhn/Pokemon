@@ -7,6 +7,7 @@ import scalafx.scene.input.KeyCode
 object DialogController {
 
   private var _buttons: Array[Label] = _
+  private var _dialogBtns: Array[DialogBtn] = _
 
   private var _currentSelection = 0
   private val _selectedButtonStyle = """
@@ -21,10 +22,17 @@ object DialogController {
   ): Unit = {
 
     this._buttons = Array(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4)
-    setButtonTexts("Attack", "Bag", "Pokémon", "Run")
+    setDefaultDialogBtns()
     updateSelectedButton()
   }
 
+  /**
+    * Handle key press event of arrow keys and Enter
+    * 
+    * - Navigate to opposite when end is reached
+    *
+    * @param event
+    */
   def handleKeyPress(event: KeyEvent): Unit = {
     event.code match {
       case KeyCode.UP =>
@@ -48,39 +56,44 @@ object DialogController {
     }
   }
 
-  private def setButtonTexts(
-    text1: String,
-    text2: String,
-    text3: String,
-    text4: String
-  ): Unit = {
-
-    this._buttons(0).text = text1
-    this._buttons(1).text = text2
-    this._buttons(2).text = text3
-    this._buttons(3).text = text4
+  private def updateButtonTexts(): Unit = {
+    this._buttons.zip(this._dialogBtns).foreach { case (button, dialogBtn) =>
+      button.text = dialogBtn.text
+    }
   }
 
-  private def executeCurrentSelection(): Unit = this._currentSelection match {
-    case 0 => handleDialogBtn1()
-    case 1 => handleDialogBtn2()
-    case 2 => handleDialogBtn3()
-    case 3 => handleDialogBtn4()
+  /**
+    * Set the dialog buttons for the dialog controller
+    *
+    * - Must be exactly 4
+    *
+    * @param dialogBtns
+    */
+  def setDialogBtns(dialogBtns: Array[DialogBtn]): Unit = {
+    if (dialogBtns.length != 4) throw new Exception("Must provide exactly 4 DialogBtn")
+    this._dialogBtns = dialogBtns
+    updateButtonTexts()
   }
 
-  private def handleDialogBtn1(): Unit = {
-    println("Dialog button 1 clicked")
+  private def setDefaultDialogBtns(): Unit = {
+    this._dialogBtns = Array(
+      new DialogBtn("Attack", () => println("Attack action")),
+      new DialogBtn("Bag", () => println("Bag action")),
+      new DialogBtn("Pokémon", () => println("Pokémon action")),
+      new DialogBtn("Run", () => println("Run action"))
+    )
+    updateButtonTexts()
   }
 
-  private def handleDialogBtn2(): Unit = {
-    println("Dialog button 2 clicked")
+  private def executeCurrentSelection(): Unit = {
+    this._dialogBtns(this._currentSelection).execute()
   }
+}
 
-  private def handleDialogBtn3(): Unit = {
-    println("Dialog button 3 clicked")
-  }
+class DialogBtn(
+  val text: String,
+  val action: () => Unit
+) {
 
-  private def handleDialogBtn4(): Unit = {
-    println("Dialog button 4 clicked")
-  }
+  def execute(): Unit = this.action()
 }
