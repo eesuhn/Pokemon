@@ -10,25 +10,25 @@ abstract class StatEffect {
 }
 
 case class AttackEffect(
-  stage: Int,
+  stage: Int
   ) extends StatEffect {
   override protected def stat(pokemon: Pokemon): Stat = pokemon.attack
 }
 
 case class DefenseEffect(
-  stage: Int,
+  stage: Int
   ) extends StatEffect {
   override protected def stat(pokemon: Pokemon): Stat = pokemon.defense
 }
 
 case class AccuracyEffect(
-  stage: Int,
+  stage: Int
   ) extends StatEffect {
   override protected def stat(pokemon: Pokemon): Stat = pokemon.accuracy
 }
 
 case class SpeedEffect(
-  stage: Int,
+  stage: Int
   ) extends StatEffect {
   override protected def stat(pokemon: Pokemon): Stat = pokemon.speed
 }
