@@ -19,3 +19,9 @@
 	-fx-padding: 6 12;  /* vertical horizontal */
 	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
 }
+
+.battle-text {
+	-fx-font-size: 16px;
+	-fx-font-weight: bold;
+	-fx-text-fill: black;
+}

@@ -1,24 +1,30 @@
 package pokemon.model
 
-import scala.util.Random
-
 class Game {
-  var player1: Player = _
-  var player2: Player = _
-  var currentPlayer: Player = _
+  private var _player: Trainer = _
+  private var _bot: Trainer = _
+  private var _battle: Battle = _
 
-  def start(p1Name: String, p2Name: String): Unit = {
-    this.player1 = new Player(p1Name)
-    this.player2 = new Player(p2Name)
+  def player: Trainer = this._player
+  def bot: Trainer = this._bot
 
-    decideFirstPlayer()
+  def start(): Unit = {
+    this._player = new Player()
+    this._bot = new Bot()
 
-    this.player1.generateDeck()
-    this.player2.generateDeck()
+    this._player.generateDeck()
+    this._bot.generateDeck()
+
+    this._battle = new Battle(this._player, this._bot)
   }
 
-  def decideFirstPlayer(): Unit = {
-    val rand = Random
-    this.currentPlayer = if (rand.nextBoolean()) this.player1 else this.player2
+  def isGameOver: Boolean = this._player.isDefeated || this._bot.isDefeated
+
+  def winner: Option[Trainer] = {
+    if (this._player.isDefeated) Some(this._bot)
+    else if (this._bot.isDefeated) Some(this._player)
+    else None
   }
+
+  def performTurn(): List[String] = this._battle.performTurn()
 }

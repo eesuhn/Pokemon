@@ -1,41 +1,13 @@
 package pokemon.model
 
-import scala.collection.mutable.ArrayBuffer
+class Player extends Trainer {
+  val name = "Player"
+  private var _selectedMoveIndex: Int = -1
 
-class Player(
-  val playerName: String
-) {
+  def setSelectedMoveIndex(index: Int): Unit = this._selectedMoveIndex = index
 
-  var deck: ArrayBuffer[Pokemon] = ArrayBuffer.empty[Pokemon]
-  var activePokemon: Pokemon = _
-
-  def generateDeck(): Unit = {
-    val charmander = new Charmander
-    val squirtle = new Squirtle
-    val bulbasaur = new Bulbasaur
-
-    addPokemon(charmander)
-    addPokemon(squirtle)
-    addPokemon(bulbasaur)
-  }
-
-  /**
-    * Add Pokemon to deck
-    *
-    * @param pokemon
-    */
-  def addPokemon(pokemon: Pokemon): Unit = {
-    if (this.deck.size > 3) {
-      throw new Exception(s"Player $playerName can only have 3 Pokemon")
-    }
-    this.deck += pokemon
-    if (this.deck.size == 1) this.activePokemon = pokemon
-  }
-
-  def switchActivePokemon(pokemon: Pokemon): Unit = {
-    if (!this.deck.contains(pokemon)) {
-      throw new Exception(s"Player $playerName does not have this Pokemon")
-    }
-    this.activePokemon = pokemon
+  override def chooseMove(): (Int, Move) = {
+    val move = activePokemon.moves(this._selectedMoveIndex)
+    (this._selectedMoveIndex, move)
   }
 }

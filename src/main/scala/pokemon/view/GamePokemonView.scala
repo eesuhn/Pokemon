@@ -11,7 +11,7 @@ class GamePokemonView(
 ) {
 
   def setup(imagePath: String): Unit = {
-    val image = ResourceUtil.resouceImage(imagePath)
+    val image = ResourceUtil.resouceImage(s"pokes/${imagePath}.gif")
     imageView.image = image
     imageView.preserveRatio = true
     imageView.smooth = true

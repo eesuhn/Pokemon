@@ -7,6 +7,7 @@ import scalafx.Includes._
 import scalafx.application.Platform
 import scalafxml.core.macros.sfxml
 import javafx.scene.{Node => JFXNode}
+import pokemon.model.{Game, Move, Player}
 
 @sfxml
 class GameController(
@@ -21,22 +22,82 @@ class GameController(
   val dialogBtn1: Label,
   val dialogBtn2: Label,
   val dialogBtn3: Label,
-  val dialogBtn4: Label
+  val dialogBtn4: Label,
+  val statusLabel: Label
 ) {
 
-  val gameView = new GameView(battleBg, battleDialogOne, battleDialogTwo)
+  val game = new Game()
+  val gameView = new GameView(battleBg, battleDialogOne, battleDialogTwo, statusLabel)
   val pokemonLeftView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
   val pokemonRightView = new GamePokemonView(pokemonRight, pokemonRightPane)
 
-  gameView.setup()
-  pokemonLeftView.setup("pokes/Mewtwo-back.gif")
-  pokemonRightView.setup("pokes/Snorlax-front.gif")
+  def initialize(): Unit = {
+    this.game.start()
+    gameView.setup()
+    updatePokemonViews()
+    // updateStatusLabel()
 
-  DialogController.initialize(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4)
+    DialogController.initialize(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4, () => setAttackDialogButtons())
 
-  Platform.runLater {
-    val scene = buttonGrid.scene.value
-    scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
-    buttonGrid.requestFocus()
+    Platform.runLater {
+      val scene = buttonGrid.scene.value
+      scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
+      buttonGrid.requestFocus()
+    }
   }
+
+  private def updatePokemonViews(): Unit = {
+    pokemonLeftView.setup(s"${this.game.player.activePokemon.pName}-back")
+    pokemonRightView.setup(s"${this.game.bot.activePokemon.pName}-front")
+  }
+
+  private def updateStatusLabel(): Unit = {
+    val playerPokemon = this.game.player.activePokemon
+    val botPokemon = this.game.bot.activePokemon
+    val statusText = s"Your ${playerPokemon.pName}: ${playerPokemon.currentHP} HP\n" +
+                    s"Opponent's ${botPokemon.pName}: ${botPokemon.currentHP} HP"
+    gameView.updateStatus(statusText)
+  }
+
+  private def setAttackDialogButtons(): Unit = {
+    val moves = this.game.player.activePokemon.moves
+    val dialogBtns = moves.map(move =>
+      new DialogBtn(move.moveName, () =>
+        performTurn(this.game.player.activePokemon.moves.indexOf(move))))
+
+    DialogController.setDialogBtns(dialogBtns.toArray)
+  }
+
+  private def performTurn(playerMoveIndex: Int): Unit = {
+    this.game.player.asInstanceOf[Player].setSelectedMoveIndex(playerMoveIndex)
+
+    val results = this.game.performTurn()
+
+    def showNextResult(index: Int): Unit = {
+      if (index < results.length) {
+        gameView.updateStatus(results(index))
+        Platform.runLater {
+          // Thread.sleep(1000)
+          showNextResult(index + 1)
+        }
+      } else {
+        if (this.game.isGameOver) {
+          handleGameOver()
+        } else {
+          updatePokemonViews()
+          // updateStatusLabel()
+          DialogController.resetToMainMenu()
+        }
+      }
+    }
+
+    showNextResult(0)
+  }
+
+  private def handleGameOver(): Unit = this.game.winner match {
+    case Some(trainer) => gameView.updateStatus(s"Game Over! ${trainer.name} wins!")
+    case None => gameView.updateStatus("Game Over! It's a tie!")
+  }
+
+  initialize()
 }
