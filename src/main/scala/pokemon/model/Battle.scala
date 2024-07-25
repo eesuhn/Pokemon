@@ -5,31 +5,31 @@ import scala.collection.mutable.ListBuffer
 class Battle(val player: Trainer, val bot: Trainer) {
 
   def performTurn(): List[String] = {
-    val res = ListBuffer[String]()
+    val results = ListBuffer[String]()
 
     val playerMove = player.chooseMove()
     val botMove = bot.chooseMove()
 
-    val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirst(
+    val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirstBySpeed(
       player, playerMove, bot, botMove)
 
     // First attack
-    res += performAttack(firstAttacker, if (firstAttacker == player) bot else player, firstMove)
+    results += performAttack(firstAttacker, if (firstAttacker == player) bot else player, firstMove)
 
     // Check if the second Pokemon fainted
     if ((secondAttacker == player && player.hasActivePokemon) ||
         (secondAttacker == bot && bot.hasActivePokemon)) {
       // Second attack
-      res += performAttack(secondAttacker, if (secondAttacker == player) bot else player, secondMove)
+      results += performAttack(secondAttacker, if (secondAttacker == player) bot else player, secondMove)
     }
 
-    res ++= handleFaintingAndSwitching(player)
-    res ++= handleFaintingAndSwitching(bot)
+    results ++= handleFaintSwitch(player)
+    results ++= handleFaintSwitch(bot)
 
-    res.toList
+    results.toList
   }
 
-  private def decideFirst(
+  private def decideFirstBySpeed(
     attacker1: Trainer,
     move1: Move,
     attacker2: Trainer,
@@ -50,6 +50,7 @@ class Battle(val player: Trainer, val bot: Trainer) {
     val attackResult = attackerPokemon.attack(move, defenderPokemon)
 
     if (!attackResult) {
+      // Attack missed
       s"""
 
         |${attackerPokemon.pName} used ${move.moveName}!
@@ -57,6 +58,7 @@ class Battle(val player: Trainer, val bot: Trainer) {
 
       """
     } else if (defenderPokemon.currentHP == 0) {
+      // Attack was successful and the defender fainted
       s"""
 
         |${attackerPokemon.pName} used ${move.moveName}!
@@ -64,33 +66,22 @@ class Battle(val player: Trainer, val bot: Trainer) {
 
       """
     } else {
+      // Attack was successful
       s"""
 
-        |>>> START <<<
-        |
         |${attackerPokemon.pName} used ${move.moveName}!
-        |
-        |${attackerPokemon.pName}:
-        |HP: ${attackerPokemon.currentHP}
-        |Attack: ${attackerPokemon.attack.value}
-        |Defense: ${attackerPokemon.defense.value}
-        |Accuracy: ${attackerPokemon.accuracy.value}
-        |Speed: ${attackerPokemon.speed.value}
-        |
-        |${defenderPokemon.pName}:
-        |HP: ${defenderPokemon.currentHP}
-        |Attack: ${defenderPokemon.attack.value}
-        |Defense: ${defenderPokemon.defense.value}
-        |Accuracy: ${defenderPokemon.accuracy.value}
-        |Speed: ${defenderPokemon.speed.value}
-        |
-        |>>> END <<<
 
       """
     }
   }
 
-  private def handleFaintingAndSwitching(trainer: Trainer): List[String] = {
+  /**
+    * Switch to the next alive Pokemon if the current Pokemon fainted
+    *
+    * @param trainer
+    * @return
+    */
+  private def handleFaintSwitch(trainer: Trainer): List[String] = {
     if (!trainer.hasActivePokemon) {
       trainer.switchToNextAlivePokemon() match {
         case Some(pokemon) => List(s"${trainer.name}'s ${pokemon.pName} was sent out!")

@@ -10,6 +10,11 @@ class GamePokemonView(
   val anchorPane: AnchorPane
 ) {
 
+  /**
+    * Source from `pokes` directory with `.gif` extension
+    *
+    * @param imagePath
+    */
   def setup(imagePath: String): Unit = {
     val image = ResourceUtil.resouceImage(s"pokes/${imagePath}.gif")
     imageView.image = image

@@ -1,6 +1,6 @@
 package pokemon.view
 
-import pokemon.model.{Game, Player}
+import pokemon.model.Game
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.control.Label
@@ -34,15 +34,8 @@ class GameController(
     this.game.start()
     gameView.setup()
     updatePokemonViews()
-    // updateStatusLabel()
-
-    DialogController.initialize(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4, () => setAttackDialogButtons())
-
-    Platform.runLater {
-      val scene = buttonGrid.scene.value
-      scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
-      buttonGrid.requestFocus()
-    }
+    initializeDialogController()
+    setupKeyboardInput()
   }
 
   private def updatePokemonViews(): Unit = {
@@ -50,50 +43,61 @@ class GameController(
     pokemonRightView.setup(s"${this.game.bot.activePokemon.pName}-front")
   }
 
-  private def updateStatusLabel(): Unit = {
-    val playerPokemon = this.game.player.activePokemon
-    val botPokemon = this.game.bot.activePokemon
-    val statusText = s"Your ${playerPokemon.pName}: ${playerPokemon.currentHP} HP\n" +
-                    s"Opponent's ${botPokemon.pName}: ${botPokemon.currentHP} HP"
-    gameView.updateStatus(statusText)
+  private def initializeDialogController(): Unit = {
+    val dialogButtons = Array(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4)
+    DialogController.initialize(dialogButtons, () => setAttackDialogButtons())
+  }
+
+  private def setupKeyboardInput(): Unit = {
+    Platform.runLater {
+      val scene = buttonGrid.scene.value
+      scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
+      buttonGrid.requestFocus()
+    }
   }
 
   private def setAttackDialogButtons(): Unit = {
     val moves = this.game.player.activePokemon.moves
-    val dialogBtns = moves.map(move =>
-      new DialogBtn(move.moveName, () =>
-        performTurn(this.game.player.activePokemon.moves.indexOf(move))))
-
+    val dialogBtns = moves.zipWithIndex.map { case (move, index) =>
+      new DialogBtn(move.moveName, () => controlTurn(index))
+    }
     DialogController.setDialogBtns(dialogBtns.toArray)
   }
 
-  private def performTurn(playerMoveIndex: Int): Unit = {
-    this.game.player match {
-      case player: Player => player.setSelectedMoveIndex(playerMoveIndex)
-      case _ => throw new Exception("Game player is not of type Player")
-    }
-
+  private def controlTurn(moveIndex: Int): Unit = {
+    this.game.player.moveIndex(moveIndex)
     val results = this.game.performTurn()
+    showResults(results)
+  }
 
+  /**
+    * Parse results by new line and show each result with delay
+    *
+    * @param results
+    */
+  private def showResults(results: Seq[String]): Unit = {
     def showNextResult(index: Int): Unit = {
       if (index < results.length) {
         gameView.updateStatus(results(index))
         Platform.runLater {
-          // Thread.sleep(1000)
+          // TimeLine or PauseTransition for delay
           showNextResult(index + 1)
         }
       } else {
-        if (this.game.isGameOver) {
-          handleGameOver()
-        } else {
-          updatePokemonViews()
-          // updateStatusLabel()
-          DialogController.resetToMainMenu()
-        }
+        handleTurnEnd()
       }
     }
 
     showNextResult(0)
+  }
+
+  private def handleTurnEnd(): Unit = {
+    if (this.game.isGameOver) {
+      handleGameOver()
+    } else {
+      updatePokemonViews()
+      DialogController.resetToMainMenu()
+    }
   }
 
   private def handleGameOver(): Unit = this.game.winner match {
