@@ -20,6 +20,7 @@ object DialogController {
     dialogBtn4: Label,
     setAttackDialogButtons: () => Unit
   ): Unit = {
+
     this._buttons = Array(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4)
     this._setAttackDialogButtons = setAttackDialogButtons
     setMainMenuDialogBtns()
@@ -39,9 +40,7 @@ object DialogController {
       case KeyCode.Enter =>
         executeCurrentSelection()
       case KeyCode.Escape =>
-        if (_isInAttackMenu) {
-          setMainMenuDialogBtns()
-        }
+        if (this._isInAttackMenu) setMainMenuDialogBtns()
       case _ =>
     }
     updateSelectedButton()
@@ -49,7 +48,7 @@ object DialogController {
 
   private def updateSelectedButton(): Unit = {
     this._buttons.zipWithIndex.foreach { case (button, index) =>
-      button.style = if (index == this._currentSelection) _selectedButtonStyle else ""
+      button.style = if (index == this._currentSelection) this._selectedButtonStyle else ""
     }
   }
 
@@ -60,25 +59,26 @@ object DialogController {
   }
 
   def setDialogBtns(dialogBtns: Array[DialogBtn]): Unit = {
-    // if (dialogBtns.length != 4) throw new Exception("Must provide exactly 4 DialogBtn")
     this._dialogBtns = dialogBtns
     updateButtonTexts()
   }
 
   private def setMainMenuDialogBtns(): Unit = {
     this._dialogBtns = Array(
-      new DialogBtn("Attack", () => {
-        _isInAttackMenu = true
-        _setAttackDialogButtons()
-      }),
+      new DialogBtn("Attack", () => handleAttackBtn()),
       new DialogBtn("Bag", () => println("Bag action")),
       new DialogBtn("Pokémon", () => println("Pokémon action")),
       new DialogBtn("Run", () => println("Run action"))
     )
-    _isInAttackMenu = false
+    this._currentSelection = 0
+    this._isInAttackMenu = false
     updateButtonTexts()
-    _currentSelection = 0
     updateSelectedButton()
+  }
+
+  private def handleAttackBtn(): Unit = {
+    this._isInAttackMenu = true
+    this._setAttackDialogButtons()
   }
 
   private def executeCurrentSelection(): Unit = {

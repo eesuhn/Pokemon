@@ -2,7 +2,7 @@ package pokemon.model
 
 import scala.util.Random
 
-class Bot() extends Trainer {
+class Bot extends Trainer {
   val name = "Bot"
 
   override def chooseMove(): (Int, Move) = {

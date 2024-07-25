@@ -45,8 +45,8 @@ class GameController(
   }
 
   private def updatePokemonViews(): Unit = {
-    pokemonLeftView.setup(s"pokes/${this.game.player.activePokemon.pName}-back.gif")
-    pokemonRightView.setup(s"pokes/${this.game.bot.activePokemon.pName}-front.gif")
+    pokemonLeftView.setup(s"${this.game.player.activePokemon.pName}-back")
+    pokemonRightView.setup(s"${this.game.bot.activePokemon.pName}-front")
   }
 
   private def setAttackDialogButtons(): Unit = {
@@ -59,7 +59,6 @@ class GameController(
   }
 
   private def performTurn(playerMoveIndex: Int): Unit = {
-    // Set the selected move index for the player
     this.game.player.asInstanceOf[Player].setSelectedMoveIndex(playerMoveIndex)
 
     val results = this.game.performTurn()
@@ -68,11 +67,9 @@ class GameController(
       if (index < results.length) {
         println(results(index))
         Platform.runLater {
-          // Thread.sleep(1000) // Wait for 1 second between messages
           showNextResult(index + 1)
         }
       } else {
-        // After showing all results
         if (this.game.isGameOver) {
           handleGameOver()
         } else {
@@ -85,13 +82,9 @@ class GameController(
     showNextResult(0)
   }
 
-  private def handleGameOver(): Unit = {
-    val winner = this.game.winner
-    winner match {
-      case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
-      case None => println("Game Over! It's a tie!")
-    }
-    // Disable further moves or implement a "New Game" option
+  private def handleGameOver(): Unit = this.game.winner match {
+    case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
+    case None => println("Game Over! It's a tie!")
   }
 
   initialize()

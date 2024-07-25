@@ -14,7 +14,7 @@ object ResourceUtil {
     * @return
     */
   def resourceLayout(path: String): FXMLLoader = {
-    val resource = MainApp.getClass.getResourceAsStream(s"view/${path}")
+    val resource = MainApp.getClass.getResourceAsStream(s"view/${path}.fxml")
     if (resource == null) throw new Exception(s"Cannot load resource: $path")
 
     val loader = new FXMLLoader(null, NoDependencyResolver)
