@@ -26,6 +26,9 @@
       </children>
     </Pane>
     <Pane layoutY="540.0" prefHeight="180.0" prefWidth="560.0">
+      <children>
+        <Label fx:id="statusLabel" styleClass="battle-text" layoutX="2.0" layoutY="2.0" prefWidth="520.0" prefHeight="140.0" wrapText="true" />
+      </children>
     </Pane>
     <Pane layoutX="560.0" layoutY="540.0" prefHeight="180.0" prefWidth="400.0">
       <GridPane fx:id="buttonGrid" alignment="CENTER" hgap="20" layoutX="32.0" layoutY="32.0" vgap="10">

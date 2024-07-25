@@ -22,11 +22,12 @@ class GameController(
   val dialogBtn1: Label,
   val dialogBtn2: Label,
   val dialogBtn3: Label,
-  val dialogBtn4: Label
+  val dialogBtn4: Label,
+  val statusLabel: Label
 ) {
 
   val game = new Game()
-  val gameView = new GameView(battleBg, battleDialogOne, battleDialogTwo)
+  val gameView = new GameView(battleBg, battleDialogOne, battleDialogTwo, statusLabel)
   val pokemonLeftView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
   val pokemonRightView = new GamePokemonView(pokemonRight, pokemonRightPane)
 
@@ -34,6 +35,7 @@ class GameController(
     this.game.start()
     gameView.setup()
     updatePokemonViews()
+    // updateStatusLabel()
 
     DialogController.initialize(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4, () => setAttackDialogButtons())
 
@@ -47,6 +49,14 @@ class GameController(
   private def updatePokemonViews(): Unit = {
     pokemonLeftView.setup(s"${this.game.player.activePokemon.pName}-back")
     pokemonRightView.setup(s"${this.game.bot.activePokemon.pName}-front")
+  }
+
+  private def updateStatusLabel(): Unit = {
+    val playerPokemon = this.game.player.activePokemon
+    val botPokemon = this.game.bot.activePokemon
+    val statusText = s"Your ${playerPokemon.pName}: ${playerPokemon.currentHP} HP\n" +
+                    s"Opponent's ${botPokemon.pName}: ${botPokemon.currentHP} HP"
+    gameView.updateStatus(statusText)
   }
 
   private def setAttackDialogButtons(): Unit = {
@@ -65,8 +75,9 @@ class GameController(
 
     def showNextResult(index: Int): Unit = {
       if (index < results.length) {
-        println(results(index))
+        gameView.updateStatus(results(index))
         Platform.runLater {
+          // Thread.sleep(1000)
           showNextResult(index + 1)
         }
       } else {
@@ -74,6 +85,7 @@ class GameController(
           handleGameOver()
         } else {
           updatePokemonViews()
+          // updateStatusLabel()
           DialogController.resetToMainMenu()
         }
       }
@@ -83,8 +95,8 @@ class GameController(
   }
 
   private def handleGameOver(): Unit = this.game.winner match {
-    case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
-    case None => println("Game Over! It's a tie!")
+    case Some(trainer) => gameView.updateStatus(s"Game Over! ${trainer.name} wins!")
+    case None => gameView.updateStatus("Game Over! It's a tie!")
   }
 
   initialize()
