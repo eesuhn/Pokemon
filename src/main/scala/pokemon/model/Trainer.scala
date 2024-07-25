@@ -34,14 +34,12 @@ abstract class Trainer {
 
   def hasActivePokemon: Boolean = activePokemon != null && activePokemon.currentHP > 0
 
-  def switchToNextAlivePokemon(): Boolean = {
-    val alivePokemon = deck.find(_.currentHP > 0)
-    alivePokemon match {
-      case Some(pokemon) =>
-        switchActivePokemon(pokemon)
-        true
-      case None =>
-        false
+  def switchToNextAlivePokemon(): Option[Pokemon] = {
+    deck.find(_.currentHP > 0).map { pokemon =>
+      switchActivePokemon(pokemon)
+      pokemon
     }
   }
+
+  def isDefeated: Boolean = deck.forall(_.currentHP == 0)
 }
