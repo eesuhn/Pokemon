@@ -1,7 +1,7 @@
 package pokemon.model
 
 abstract class Stat {
-  private var _baseValue: Int = initValue
+  private val _baseValue: Int = initValue
   private var _value: Int = initValue
   private var currentStage: Int = 0
 

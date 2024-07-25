@@ -8,7 +8,7 @@ abstract class Trainer {
   var deck: ArrayBuffer[Pokemon] = ArrayBuffer.empty[Pokemon]
   var activePokemon: Pokemon = _
 
-  def chooseMove(): (Int, Move)
+  def chooseMove(): Move
 
   def generateDeck(): Unit = {
     val allPokemons = PokemonRegistry.pokemons

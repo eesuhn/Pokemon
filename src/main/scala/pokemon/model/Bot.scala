@@ -3,10 +3,10 @@ package pokemon.model
 import scala.util.Random
 
 class Bot extends Trainer {
-  val name = "Bot"
+  val name: String = "Bot"
 
-  override def chooseMove(): (Int, Move) = {
+  override def chooseMove(): Move = {
     val moveIndex = Random.nextInt(activePokemon.moves.length)
-    (moveIndex, activePokemon.moves(moveIndex))
+    activePokemon.moves(moveIndex)
   }
 }

@@ -1,13 +1,16 @@
 package pokemon
 
+import java.net.URL
+
+import javafx.scene.layout.BorderPane
 import pokemon.model.Layout
+import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
-import scalafx.Includes._
 
 object MainApp extends JFXApp {
-  val rootLayout = Layout.rootLayout()
-  val cssResource = getClass.getResource("view/Theme.css")
+  val rootLayout: BorderPane = Layout.rootLayout()
+  val cssResource: URL = getClass.getResource("view/Theme.css")
 
   stage = new JFXApp.PrimaryStage {
     title = "Pokemon"

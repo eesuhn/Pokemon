@@ -1,8 +1,8 @@
 package pokemon.view
 
 import pokemon.util.ResourceUtil
-import scalafx.scene.image.ImageView
 import scalafx.scene.control.Label
+import scalafx.scene.image.ImageView
 
 class GameView(
   battleBg: ImageView,

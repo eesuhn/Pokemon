@@ -17,7 +17,7 @@ abstract class Type {
 }
 
 object Normal extends Type {
-  val name = "Normal"
+  val name: String = "Normal"
   val strongAgainst: List[Type] = List()
   val weakAgainst: List[Type] = List(
     Rock
@@ -25,7 +25,7 @@ object Normal extends Type {
 }
 
 object Fire extends Type {
-  val name = "Fire"
+  val name: String = "Fire"
   val strongAgainst: List[Type] = List(
     Grass,
     Ice,
@@ -39,7 +39,7 @@ object Fire extends Type {
 }
 
 object Water extends Type {
-  val name = "Water"
+  val name: String = "Water"
   val strongAgainst: List[Type] = List(
     Fire,
     Rock
@@ -51,7 +51,7 @@ object Water extends Type {
 }
 
 object Electric extends Type {
-  val name = "Electric"
+  val name: String = "Electric"
   val strongAgainst: List[Type] = List(
     Water
   )
@@ -62,7 +62,7 @@ object Electric extends Type {
 }
 
 object Grass extends Type {
-  val name = "Grass"
+  val name: String = "Grass"
   val strongAgainst: List[Type] = List(
     Water,
     Rock
@@ -76,7 +76,7 @@ object Grass extends Type {
 }
 
 object Ice extends Type {
-  val name = "Ice"
+  val name: String = "Ice"
   val strongAgainst: List[Type] = List(
     Grass
   )
@@ -88,7 +88,7 @@ object Ice extends Type {
 }
 
 object Fighting extends Type {
-  val name = "Fighting"
+  val name: String = "Fighting"
   val strongAgainst: List[Type] = List(
     Normal,
     Ice,
@@ -102,7 +102,7 @@ object Fighting extends Type {
 }
 
 object Poison extends Type {
-  val name = "Poison"
+  val name: String = "Poison"
   val strongAgainst: List[Type] = List(
     Grass
   )
@@ -113,7 +113,7 @@ object Poison extends Type {
 }
 
 object Psychic extends Type {
-  val name = "Psychic"
+  val name: String = "Psychic"
   val strongAgainst: List[Type] = List(
     Fighting,
     Poison
@@ -124,7 +124,7 @@ object Psychic extends Type {
 }
 
 object Bug extends Type {
-  val name = "Bug"
+  val name: String = "Bug"
   val strongAgainst: List[Type] = List(
     Grass,
     Psychic
@@ -137,7 +137,7 @@ object Bug extends Type {
 }
 
 object Rock extends Type {
-  val name = "Rock"
+  val name: String = "Rock"
   val strongAgainst: List[Type] = List(
     Fire,
     Ice,

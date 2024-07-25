@@ -7,8 +7,8 @@ class Battle(val player: Trainer, val bot: Trainer) {
   def performTurn(): List[String] = {
     val res = ListBuffer[String]()
 
-    val (playerMoveIndex, playerMove) = player.chooseMove()
-    val (botMoveIndex, botMove) = bot.chooseMove()
+    val playerMove = player.chooseMove()
+    val botMove = bot.chooseMove()
 
     val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirst(
       player, playerMove, bot, botMove)
@@ -49,9 +49,14 @@ class Battle(val player: Trainer, val bot: Trainer) {
 
     val attackResult = attackerPokemon.attack(move, defenderPokemon)
 
-    if (!attackResult) return s"${attackerPokemon.pName}'s attack missed!"
+    if (!attackResult) {
+      s"""
 
-    if (defenderPokemon.currentHP == 0) {
+        |${attackerPokemon.pName} used ${move.moveName}!
+        |${move.moveName} missed!
+
+      """
+    } else if (defenderPokemon.currentHP == 0) {
       s"""
 
         |${attackerPokemon.pName} used ${move.moveName}!

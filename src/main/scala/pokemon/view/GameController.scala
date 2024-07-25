@@ -1,13 +1,14 @@
 package pokemon.view
 
-import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{AnchorPane, GridPane}
-import scalafx.scene.control.Label
+import pokemon.model.Game
+import pokemon.model.Player
 import scalafx.Includes._
 import scalafx.application.Platform
+import scalafx.scene.control.Label
+import scalafx.scene.image.ImageView
+import scalafx.scene.layout.AnchorPane
+import scalafx.scene.layout.GridPane
 import scalafxml.core.macros.sfxml
-import javafx.scene.{Node => JFXNode}
-import pokemon.model.{Game, Move, Player}
 
 @sfxml
 class GameController(
@@ -26,10 +27,10 @@ class GameController(
   val statusLabel: Label
 ) {
 
-  val game = new Game()
-  val gameView = new GameView(battleBg, battleDialogOne, battleDialogTwo, statusLabel)
-  val pokemonLeftView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
-  val pokemonRightView = new GamePokemonView(pokemonRight, pokemonRightPane)
+  val game: Game = new Game()
+  val gameView: GameView = new GameView(battleBg, battleDialogOne, battleDialogTwo, statusLabel)
+  val pokemonLeftView: GamePokemonView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
+  val pokemonRightView: GamePokemonView = new GamePokemonView(pokemonRight, pokemonRightPane)
 
   def initialize(): Unit = {
     this.game.start()
@@ -69,7 +70,10 @@ class GameController(
   }
 
   private def performTurn(playerMoveIndex: Int): Unit = {
-    this.game.player.asInstanceOf[Player].setSelectedMoveIndex(playerMoveIndex)
+    this.game.player match {
+      case player: Player => player.setSelectedMoveIndex(playerMoveIndex)
+      case _ => throw new Exception("Game player is not of type Player")
+    }
 
     val results = this.game.performTurn()
 

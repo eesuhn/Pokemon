@@ -6,7 +6,12 @@ scalaVersion := "2.12.18"
 
 lazy val commonSettings = Seq(
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
-  scalacOptions += "-language:experimental.macros"
+  scalacOptions ++= Seq(
+    "-language:experimental.macros",
+    "-Ywarn-unused",
+    "-Ywarn-unused-import",
+    "-Xlint:unused"
+  )
 )
 
 lazy val macros = (project in file("macros"))
@@ -27,3 +32,16 @@ lazy val root = (project in file("."))
     Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "resources"
   )
   .dependsOn(macros)
+
+inThisBuild(
+  List(
+    scalaVersion := "2.12.18",
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
+  )
+)
+
+ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value)
+ThisBuild / scalafixDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.2.9"
+)

@@ -1,8 +1,8 @@
 package pokemon.view
 
 import scalafx.scene.control.Label
-import scalafx.scene.input.KeyEvent
 import scalafx.scene.input.KeyCode
+import scalafx.scene.input.KeyEvent
 
 object DialogController {
   private var _buttons: Array[Label] = _
