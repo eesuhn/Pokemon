@@ -1,8 +1,8 @@
 package pokemon.model
 
+import javafx.{scene => jfxs}
 import pokemon.MainApp
 import pokemon.util.ResourceUtil
-import javafx.{scene => jfxs}
 
 object Layout {
 

@@ -1,9 +1,9 @@
 package pokemon.util
 
 import pokemon.MainApp
-import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import scalafx.scene.image.Image
 import scalafx.scene.text.Font
+import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 
 object ResourceUtil {
 

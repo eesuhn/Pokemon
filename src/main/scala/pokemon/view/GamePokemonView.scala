@@ -1,15 +1,20 @@
 package pokemon.view
 
 import pokemon.util.ResourceUtil
+import scalafx.application.Platform
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.AnchorPane
-import scalafx.application.Platform
 
 class GamePokemonView(
   val imageView: ImageView,
   val anchorPane: AnchorPane
 ) {
 
+  /**
+    * Source from `pokes` directory with `.gif` extension
+    *
+    * @param imagePath
+    */
   def setup(imagePath: String): Unit = {
     val image = ResourceUtil.resouceImage(s"pokes/${imagePath}.gif")
     imageView.image = image
@@ -40,10 +45,6 @@ class GamePokemonView(
       val imageWidth = newImage.getWidth()
       val imageHeight = newImage.getHeight()
       val paneWidth = anchorPane.width.value
-      val paneHeight = anchorPane.height.value
-
-      // Scale factor to fit image within the pane
-      // val scale = Math.min(paneWidth / imageWidth, paneHeight / imageHeight)
 
       imageView.fitWidth = imageWidth
       imageView.fitHeight = imageHeight

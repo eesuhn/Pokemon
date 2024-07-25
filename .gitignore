@@ -1,8 +1,9 @@
 # build
 .bloop/
 .metals/
-project/
 target/
+project/*
+!project/plugins.sbt
 
 # cache
 .vscode/
