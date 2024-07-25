@@ -4,6 +4,14 @@ import scala.collection.mutable.ListBuffer
 
 class Battle(val player: Trainer, val bot: Trainer) {
 
+  /**
+    * Perform a turn in the battle
+    * 
+    * - Decide who attacks first based on speed
+    * - Check if defender fainted
+    *
+    * @return
+    */
   def performTurn(): List[String] = {
     val results = ListBuffer[String]()
 
@@ -53,7 +61,6 @@ class Battle(val player: Trainer, val bot: Trainer) {
       // Attack missed
       s"""
 
-        |${attackerPokemon.pName} used ${move.moveName}!
         |${move.moveName} missed!
 
       """
@@ -61,7 +68,6 @@ class Battle(val player: Trainer, val bot: Trainer) {
       // Attack was successful and the defender fainted
       s"""
 
-        |${attackerPokemon.pName} used ${move.moveName}!
         |${defenderPokemon.pName} fainted!
 
       """

@@ -26,6 +26,11 @@ class Game {
 
   def isGameOver: Boolean = this._player.isDefeated || this._bot.isDefeated
 
+  /**
+    * Checks if any of the Trainers is defeated, and returns the winner
+    *
+    * @return
+    */
   def winner: Option[Trainer] = {
     if (this._player.isDefeated) Some(this._bot)
     else if (this._bot.isDefeated) Some(this._player)
