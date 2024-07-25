@@ -3,8 +3,7 @@ package pokemon.util
 import pokemon.MainApp
 import scalafx.scene.image.Image
 import scalafx.scene.text.Font
-import scalafxml.core.FXMLLoader
-import scalafxml.core.NoDependencyResolver
+import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 
 object ResourceUtil {
 

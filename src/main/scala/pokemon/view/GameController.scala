@@ -1,13 +1,11 @@
 package pokemon.view
 
-import pokemon.model.Game
-import pokemon.model.Player
+import pokemon.model.{Game, Player}
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.control.Label
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.AnchorPane
-import scalafx.scene.layout.GridPane
+import scalafx.scene.layout.{AnchorPane, GridPane}
 import scalafxml.core.macros.sfxml
 
 @sfxml
