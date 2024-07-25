@@ -1,47 +1,13 @@
 package pokemon.model
 
-import scala.collection.mutable.ArrayBuffer
-import scala.util.Random
+class Player extends Trainer {
+  val name = "Player"
+  private var _selectedMoveIndex: Int = -1
 
-class Player(
-  val playerName: String
-) {
+  def setSelectedMoveIndex(index: Int): Unit = _selectedMoveIndex = index
 
-  var deck: ArrayBuffer[Pokemon] = ArrayBuffer.empty[Pokemon]
-  var activePokemon: Pokemon = _
-
-  def generateDeck(): Unit = {
-    val allPokemons = PokemonRegistry.pokemons
-    val rand = new Random()
-
-    for (_ <- 1 to 3) {
-      val randomPokemonClass = allPokemons(rand.nextInt(allPokemons.length))
-      val pokemon = randomPokemonClass.getDeclaredConstructor().newInstance()
-      addPokemon(pokemon)
-    }
-  }
-
-  def addPokemon(pokemon: Pokemon): Unit = {
-    if (this.deck.size >= 3) throw new Exception(s"Player $playerName can only have 3 Pokemon")
-    this.deck += pokemon
-    if (this.deck.size == 1) this.activePokemon = pokemon
-  }
-
-  def switchActivePokemon(pokemon: Pokemon): Unit = {
-    if (!this.deck.contains(pokemon)) throw new Exception(s"Player $playerName does not have this Pokemon")
-    this.activePokemon = pokemon
-  }
-
-  def hasActivePokemon: Boolean = activePokemon != null && activePokemon.currentHP > 0
-
-  def switchToNextAlivePokemon(): Boolean = {
-    val alivePokemon = deck.find(_.currentHP > 0)
-    alivePokemon match {
-      case Some(pokemon) =>
-        switchActivePokemon(pokemon)
-        true
-      case None =>
-        false
-    }
+  override def chooseMove(): (Int, Move) = {
+    val move = activePokemon.moves(_selectedMoveIndex)
+    (_selectedMoveIndex, move)
   }
 }

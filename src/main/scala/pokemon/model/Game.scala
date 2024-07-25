@@ -4,15 +4,15 @@ import scala.util.Random
 import scala.collection.mutable.ListBuffer
 
 class Game {
-  private var _player: Player = _
-  private var _bot: Player = _
+  private var _player: Trainer = _
+  private var _bot: Trainer = _
 
-  def player: Player = this._player
-  def bot: Player = this._bot
+  def player: Trainer = this._player
+  def bot: Trainer = this._bot
 
   def start(): Unit = {
-    this._player = new Player("Player")
-    this._bot = new Player("Bot")
+    this._player = new Player()
+    this._bot = new Bot()
 
     this._player.generateDeck()
     this._bot.generateDeck()
@@ -22,19 +22,17 @@ class Game {
     this._player.deck.forall(_.currentHP == 0) || this._bot.deck.forall(_.currentHP == 0)
   }
 
-  def winner: Option[Player] = {
+  def winner: Option[Trainer] = {
     if (this._player.deck.forall(_.currentHP == 0)) Some(this._bot)
     else if (this._bot.deck.forall(_.currentHP == 0)) Some(this._player)
     else None
   }
 
-  def performTurn(playerMoveIndex: Int): List[String] = {
+  def performTurn(): List[String] = {
     val res = ListBuffer[String]()
 
-    val playerPokemon = this._player.activePokemon
-    val botPokemon = this._bot.activePokemon
-    val playerMove = playerPokemon.moves(playerMoveIndex)
-    val botMove = botPokemon.moves(Random.nextInt(botPokemon.moves.length))
+    val (playerMoveIndex, playerMove) = this._player.chooseMove()
+    val (botMoveIndex, botMove) = this._bot.chooseMove()
 
     val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirst(
       this._player, playerMove, this._bot, botMove)
@@ -52,12 +50,12 @@ class Game {
     // Handle fainting and switching
     if (!this._player.hasActivePokemon) {
       if (this._player.switchToNextAlivePokemon()) {
-        res += s"${this._player.playerName}'s ${this._player.activePokemon.pName} was sent out!"
+        res += s"${this._player.name}'s ${this._player.activePokemon.pName} was sent out!"
       }
     }
     if (!this._bot.hasActivePokemon) {
       if (this._bot.switchToNextAlivePokemon()) {
-        res += s"${this._bot.playerName}'s ${this._bot.activePokemon.pName} was sent out!"
+        res += s"${this._bot.name}'s ${this._bot.activePokemon.pName} was sent out!"
       }
     }
 
@@ -65,11 +63,11 @@ class Game {
   }
 
   private def decideFirst(
-    attacker1: Player,
+    attacker1: Trainer,
     move1: Move,
-    attacker2: Player,
+    attacker2: Trainer,
     move2: Move
-  ): (Player, Move, Player, Move) = {
+  ): (Trainer, Move, Trainer, Move) = {
 
     val attacker1Speed = attacker1.activePokemon.speed.value
     val attacker2Speed = attacker2.activePokemon.speed.value
@@ -78,7 +76,7 @@ class Game {
     else (attacker2, move2, attacker1, move1)
   }
 
-  private def performAttack(attacker: Player, defender: Player, move: Move): String = {
+  private def performAttack(attacker: Trainer, defender: Trainer, move: Move): String = {
     val attackerPokemon = attacker.activePokemon
     val defenderPokemon = defender.activePokemon
 

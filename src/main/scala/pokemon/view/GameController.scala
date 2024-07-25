@@ -7,7 +7,7 @@ import scalafx.Includes._
 import scalafx.application.Platform
 import scalafxml.core.macros.sfxml
 import javafx.scene.{Node => JFXNode}
-import pokemon.model.{Game, Move}
+import pokemon.model.{Game, Move, Player}
 
 @sfxml
 class GameController(
@@ -31,7 +31,7 @@ class GameController(
   val pokemonRightView = new GamePokemonView(pokemonRight, pokemonRightPane)
 
   def initialize(): Unit = {
-    game.start()
+    this.game.start()
     gameView.setup()
     updatePokemonViews()
 
@@ -45,18 +45,24 @@ class GameController(
   }
 
   private def updatePokemonViews(): Unit = {
-    pokemonLeftView.setup(s"pokes/${game.player.activePokemon.pName}-back.gif")
-    pokemonRightView.setup(s"pokes/${game.bot.activePokemon.pName}-front.gif")
+    pokemonLeftView.setup(s"pokes/${this.game.player.activePokemon.pName}-back.gif")
+    pokemonRightView.setup(s"pokes/${this.game.bot.activePokemon.pName}-front.gif")
   }
 
   private def setAttackDialogButtons(): Unit = {
-    val moves = game.player.activePokemon.moves
-    val dialogBtns = moves.map(move => new DialogBtn(move.moveName, () => performTurn(game.player.activePokemon.moves.indexOf(move))))
+    val moves = this.game.player.activePokemon.moves
+    val dialogBtns = moves.map(move =>
+      new DialogBtn(move.moveName, () =>
+        performTurn(this.game.player.activePokemon.moves.indexOf(move))))
+
     DialogController.setDialogBtns(dialogBtns.toArray)
   }
 
   private def performTurn(playerMoveIndex: Int): Unit = {
-    val results = game.performTurn(playerMoveIndex)
+    // Set the selected move index for the player
+    this.game.player.asInstanceOf[Player].setSelectedMoveIndex(playerMoveIndex)
+
+    val results = this.game.performTurn()
 
     def showNextResult(index: Int): Unit = {
       if (index < results.length) {
@@ -67,7 +73,7 @@ class GameController(
         }
       } else {
         // After showing all results
-        if (game.isGameOver) {
+        if (this.game.isGameOver) {
           handleGameOver()
         } else {
           updatePokemonViews()
@@ -80,9 +86,9 @@ class GameController(
   }
 
   private def handleGameOver(): Unit = {
-    val winner = game.winner
+    val winner = this.game.winner
     winner match {
-      case Some(player) => println(s"Game Over! ${player.playerName} wins!")
+      case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
       case None => println("Game Over! It's a tie!")
     }
     // Disable further moves or implement a "New Game" option
