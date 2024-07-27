@@ -13,7 +13,9 @@ class GameView(
   val pokemonLeft: GamePokemonView,
   val pokemonRight: GamePokemonView,
   val stateDialogTxt: Label,
+  val powerTxtLabel: Label,
   val powerTxt: Label,
+  val accuracyTxtLabel: Label,
   val accuracyTxt: Label,
   val moveCat: ImageView,
   val moveTypeImg: ImageView,
@@ -24,15 +26,6 @@ class GameView(
     battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
     battleDialogLeft.image = ResourceUtil.resouceImage("misc/battle-dialog-left.png")
     battleDialogRight.image = ResourceUtil.resouceImage("misc/battle-dialog-right.png")
-    sampleInput()
-  }
-
-  private def sampleInput(): Unit = {
-    updateStateDialogTxt("What will Squirtle do?")
-    updateMoveCat("physical")
-    updateMoveType("normal")
-    updatePowerTxt("40")
-    updateAccuracyTxt("100")
   }
 
   def updatePokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
@@ -42,9 +35,15 @@ class GameView(
 
   def updateStateDialogTxt(text: String): Unit = stateDialogTxt.text = text
 
-  def updatePowerTxt(text: String): Unit = powerTxt.text = text
+  def updatePowerTxt(text: String): Unit = {
+    powerTxt.text = text
+    powerTxtLabel.text = "Power"
+  }
 
-  def updateAccuracyTxt(text: String): Unit = accuracyTxt.text = text
+  def updateAccuracyTxt(text: String): Unit = {
+    accuracyTxt.text = text
+    accuracyTxtLabel.text = "Accuracy"
+  }
 
   def updateMoveCat(category: String): Unit = moveCat.image = ResourceUtil.resouceImage(s"misc/${category}-move.png")
 
@@ -67,9 +66,39 @@ class GameView(
       case "psychic" => "#9c4267"
       case "bug" => "#6f7b13"
       case "rock" => "#72613a"
-      case _ => "#000000"
+      case _ => "black"
     }
     moveTypeTxt.style = s"-fx-text-fill: ${color};"
+  }
+
+  /**
+    * Clear the left dialog pane
+    * 
+    * - Dialog text
+    */
+  def clearLeftDialogPane(): Unit = {
+    stateDialogTxt.text = ""
+  }
+
+  /**
+    * Clear the right dialog pane
+    * 
+    * - Move category image
+    * - Move type image
+    * - Move type text
+    * - Move type text color
+    * - Power text
+    * - Accuracy text
+    */
+  def clearRightDialogPane(): Unit = {
+    powerTxt.text = ""
+    powerTxtLabel.text = ""
+    accuracyTxt.text = ""
+    accuracyTxtLabel.text = ""
+    moveCat.image = null
+    moveTypeImg.image = null
+    moveTypeTxt.text = ""
+    moveTypeTxt.style = s"-fx-text-fill: black;"
   }
 }
 

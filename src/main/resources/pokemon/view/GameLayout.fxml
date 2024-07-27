@@ -63,9 +63,9 @@
 
         <!-- move stats -->
         <GridPane hgap="10" layoutX="40.0" layoutY="82.0" prefHeight="180.0" prefWidth="380.0" vgap="2">
-          <Label styleClass="right-battle-text" text="Power" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+          <Label fx:id="powerTxtLabel" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="powerTxt" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-          <Label styleClass="right-battle-text" text="Accuracy" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+          <Label fx:id="accuracyTxtLabel" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="1" />
           <Label fx:id="accuracyTxt" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
           <columnConstraints>
             <ColumnConstraints hgrow="NEVER" minWidth="156.0" prefWidth="156.0" />
