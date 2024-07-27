@@ -27,7 +27,7 @@
     </Pane>
     <Pane fx:id="inputPane" layoutY="540.0" prefHeight="180.0" prefWidth="960.0">
       <Pane prefHeight="180.0" prefWidth="580.0">
-        <Label fx:id="leftDialogTxt" text="What will Charmander do?" layoutX="38.0" layoutY="32.0" prefHeight="120.0" prefWidth="480.0" styleClass="left-battle-text" wrapText="true" />
+        <Label fx:id="stateDialogTxt" text="What will Charmander do?" layoutX="38.0" layoutY="32.0" prefHeight="120.0" prefWidth="480.0" styleClass="left-battle-text" wrapText="true" />
       </Pane>
       <Pane prefHeight="180.0" prefWidth="580.0">
         <GridPane fx:id="leftButtonGrid" alignment="CENTER" hgap="12" layoutX="38.0" layoutY="32.0" vgap="10">
@@ -48,9 +48,9 @@
       <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
         <GridPane layoutX="38.0" layoutY="82.0" prefHeight="180.0" prefWidth="380.0" hgap="16" vgap="2">
           <Label text="Power" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-          <Label fx:id="rightDialogTxt1" text="40" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+          <Label fx:id="powerTxt" text="40" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.rowIndex="0" />
           <Label text="Accuracy" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-          <Label fx:id="rightDialogTxt2" text="40" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <Label fx:id="accuracyTxt" text="40" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         </GridPane>
       </Pane>
       <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
