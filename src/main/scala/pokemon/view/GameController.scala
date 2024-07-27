@@ -38,12 +38,12 @@ class GameController(
   val moveTypeTxt: Label
 ) {
 
-  val game: Game = new Game()
-  val gameView: GameView = initGameView()
+  private val _game: Game = new Game()
+  private val _gameView: GameView = initGameView()
 
   def initialize(): Unit = {
-    this.game.start()
-    gameView.setupGameView()
+    this._game.start()
+    this._gameView.setup()
     updatePokemonViews()
     initDialogController()
     setupKeyboardInput()
@@ -75,9 +75,9 @@ class GameController(
   }
 
   private def updatePokemonViews(): Unit = {
-    gameView.updatePokemonViews(
-      this.game.player.activePokemon.pName,
-      this.game.bot.activePokemon.pName
+    this._gameView.pokemonViews(
+      this._game.player.activePokemon.pName,
+      this._game.bot.activePokemon.pName
     )
   }
 
@@ -86,7 +86,7 @@ class GameController(
     val rightDialogBtns = Array(rightDialogBtn1, rightDialogBtn2, rightDialogBtn3, rightDialogBtn4)
 
     DialogController.initialize(
-      gameView,
+      this._gameView,
       leftDialogBtns,
       rightDialogBtns,
       setMoveBtns = () => setMoveBtns()
@@ -105,7 +105,7 @@ class GameController(
     * Obtain moves from active Pokemon and set them as dialog buttons
     */
   private def setMoveBtns(): Unit = {
-    val moves = this.game.player.activePokemon.moves
+    val moves = this._game.player.activePokemon.moves
     val dialogBtns = moves
       .zipWithIndex
       .map { case (move, index) =>
@@ -115,8 +115,8 @@ class GameController(
   }
 
   private def controlTurn(moveIndex: Int): Unit = {
-    this.game.player.moveIndex(moveIndex)
-    val results = this.game.performTurn()
+    this._game.player.moveIndex(moveIndex)
+    val results = this._game.performTurn()
     showResultsInDialog(results)
   }
 
@@ -128,9 +128,9 @@ class GameController(
   private def showResultsInDialog(results: Seq[String]): Unit = {
     def showNextResult(index: Int): Unit = {
       if (index < results.length) {
-        gameView.updateStateDialogTxt(results(index))
+        this._gameView.stateDialogTxt(results(index))
         Platform.runLater {
-          // TimeLine or PauseTransition for delay
+          // TODO: Enter key to show next result
           showNextResult(index + 1)
         }
       } else {
@@ -144,7 +144,7 @@ class GameController(
     * Handle turn end by checking if game is over or not
     */
   private def handleTurnEnd(): Unit = {
-    if (this.game.isGameOver) {
+    if (this._game.isGameOver) {
       handleGameOver()
     } else {
       updatePokemonViews()
@@ -152,7 +152,7 @@ class GameController(
     }
   }
 
-  private def handleGameOver(): Unit = this.game.winner match {
+  private def handleGameOver(): Unit = this._game.winner match {
     case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
     case None => println("Game Over! It's a tie!")
   }

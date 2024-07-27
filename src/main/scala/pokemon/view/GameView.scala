@@ -22,30 +22,30 @@ class GameView(
   val moveTypeTxt: Label
 ) {
 
-  def setupGameView(): Unit = {
+  def setup(): Unit = {
     battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
     battleDialogLeft.image = ResourceUtil.resouceImage("misc/battle-dialog-left.png")
     battleDialogRight.image = ResourceUtil.resouceImage("misc/battle-dialog-right.png")
   }
 
-  def updatePokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
+  def pokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
     pokemonLeft.setup(s"${leftPokemon}-back")
     pokemonRight.setup(s"${rightPokemon}-front")
   }
 
-  def updateStateDialogTxt(text: String): Unit = stateDialogTxt.text = text
+  def stateDialogTxt(text: String): Unit = stateDialogTxt.text = text
 
-  private def updatePowerTxt(text: String): Unit = {
+  private def powerTxt(text: String): Unit = {
     powerTxt.text = text
     if (!text.isEmpty()) powerTxtLabel.text = "Power" else powerTxtLabel.text = ""
   }
 
-  private def updateAccuracyTxt(text: String): Unit = {
+  private def accuracyTxt(text: String): Unit = {
     accuracyTxt.text = text
     if (!text.isEmpty()) accuracyTxtLabel.text = "Accuracy" else accuracyTxtLabel.text = ""
   }
 
-  private def updateMoveCat(category: String): Unit = {
+  private def moveCat(category: String): Unit = {
     if (!category.isEmpty()) {
       moveCat.image = ResourceUtil.resouceImage(s"misc/${category}-move.png")
     } else {
@@ -53,19 +53,19 @@ class GameView(
     }
   }
 
-  private def updateMoveType(typeOfMove: String): Unit = {
+  private def moveType(typeOfMove: String): Unit = {
     if (!typeOfMove.isEmpty()) {
       moveTypeImg.image = ResourceUtil.resouceImage(s"misc/${typeOfMove}-type.png")
       moveTypeTxt.text = typeOfMove.toUpperCase()
-      setMoveTypeTextColor(typeOfMove)
+      moveTypeTextColor(typeOfMove)
     } else {
       moveTypeImg.image = null
       moveTypeTxt.text = ""
-      setMoveTypeTextColor("")
+      moveTypeTextColor("")
     }
   }
 
-  private def setMoveTypeTextColor(typeOfMove: String): Unit = {
+  private def moveTypeTextColor(typeOfMove: String): Unit = {
     val color = typeOfMove match {
       case "normal" => "#7a6f63"
       case "fire" => "#a0292c"
@@ -88,17 +88,27 @@ class GameView(
   }
 
   def clearRightDialogPane(): Unit = {
-    updatePowerTxt("")
-    updateAccuracyTxt("")
-    updateMoveCat("")
-    updateMoveType("")
+    powerTxt("")
+    accuracyTxt("")
+    moveCat("")
+    moveType("")
   }
 
-  def setMoveStats(power: String, accuracy: String, category: String, typeOfMove: String): Unit = {
-    updatePowerTxt(power)
-    updateAccuracyTxt(accuracy)
-    updateMoveCat(category)
-    updateMoveType(typeOfMove)
+  /**
+    * Set move stats on the right dialog pane
+    * 
+    * - Power, Accuracy, Category, Type of Move
+    *
+    * @param power
+    * @param accuracy
+    * @param category
+    * @param typeOfMove
+    */
+  def moveStats(power: String, accuracy: String, category: String, typeOfMove: String): Unit = {
+    powerTxt(power)
+    accuracyTxt(accuracy)
+    moveCat(category)
+    moveType(typeOfMove)
   }
 }
 
