@@ -43,6 +43,13 @@
 	-fx-font-size: 24px;
 	-fx-font-family: 'Minecraft Regular';
 	-fx-text-fill: black;
-	-fx-alignment: top-left;
 	-fx-padding: 0 6;
+}
+
+.move-type-text {
+	-fx-font-size: 20px;
+	-fx-font-family: 'Minecraft Bold';
+	-fx-text-fill: black;
+	-fx-padding: 0 6;
+	-fx-alignment: center-left;
 }

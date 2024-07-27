@@ -31,6 +31,9 @@ class GameController(
   val stateDialogTxt: Label,
   val powerTxt: Label,
   val accuracyTxt: Label,
+  val moveCat: ImageView,
+  val moveTypeImg: ImageView,
+  val moveTypeTxt: Label
 ) {
 
   val game: Game = new Game()
@@ -47,12 +50,19 @@ class GameController(
   private def initGameView(): GameView = {
     val pokemonLeftView: GamePokemonView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
     val pokemonRightView: GamePokemonView = new GamePokemonView(pokemonRight, pokemonRightPane)
-    new GameView(battleBg, battleDialogLeft, battleDialogRight, pokemonLeftView, pokemonRightView)
-  }
-
-  private def updateStateDialogTxt(text: String): Unit = {
-    // stateDialogTxt.text = text
-    println(text)
+    new GameView(
+      battleBg,
+      battleDialogLeft,
+      battleDialogRight,
+      pokemonLeftView,
+      pokemonRightView,
+      stateDialogTxt,
+      powerTxt,
+      accuracyTxt,
+      moveCat,
+      moveTypeImg,
+      moveTypeTxt
+    )
   }
 
   private def updatePokemonViews(): Unit = {
@@ -108,7 +118,7 @@ class GameController(
   private def showResultsInDialog(results: Seq[String]): Unit = {
     def showNextResult(index: Int): Unit = {
       if (index < results.length) {
-        updateStateDialogTxt(results(index))
+        gameView.updateStateDialogTxt(results(index))
         Platform.runLater {
           // TimeLine or PauseTransition for delay
           showNextResult(index + 1)
