@@ -5,94 +5,146 @@ import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.control.Label
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{AnchorPane, GridPane}
+import scalafx.scene.layout.{AnchorPane, GridPane, Pane}
 import scalafxml.core.macros.sfxml
 
 @sfxml
 class GameController(
   val battleBg: ImageView,
-  val battleDialogOne: ImageView,
-  val battleDialogTwo: ImageView,
+  val battleDialogLeft: ImageView,
+  val battleDialogRight: ImageView,
   val pokemonLeftPane: AnchorPane,
   val pokemonRightPane: AnchorPane,
   val pokemonLeft: ImageView,
   val pokemonRight: ImageView,
-  val buttonGrid: GridPane,
-  val dialogBtn1: Label,
-  val dialogBtn2: Label,
-  val dialogBtn3: Label,
-  val dialogBtn4: Label,
-  val statusLabel: Label
+  val inputPane: Pane,
+  val leftButtonGrid: GridPane,
+  val leftDialogBtn1: Label,
+  val leftDialogBtn2: Label,
+  val leftDialogBtn3: Label,
+  val leftDialogBtn4: Label,
+  val rightButtonGrid: GridPane,
+  val rightDialogBtn1: Label,
+  val rightDialogBtn2: Label,
+  val rightDialogBtn3: Label,
+  val rightDialogBtn4: Label,
+  val stateDialogTxt: Label,
+  val powerTxtLabel: Label,
+  val powerTxt: Label,
+  val accuracyTxtLabel: Label,
+  val accuracyTxt: Label,
+  val moveCat: ImageView,
+  val moveTypeImg: ImageView,
+  val moveTypeTxt: Label
 ) {
 
-  val game: Game = new Game()
-  val gameView: GameView = new GameView(battleBg, battleDialogOne, battleDialogTwo, statusLabel)
-  val pokemonLeftView: GamePokemonView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
-  val pokemonRightView: GamePokemonView = new GamePokemonView(pokemonRight, pokemonRightPane)
+  private val _game: Game = new Game()
+  private val _gameView: GameView = initGameView()
 
   def initialize(): Unit = {
-    this.game.start()
-    gameView.setup()
+    this._game.start()
+    this._gameView.setup()
     updatePokemonViews()
-    initializeDialogController()
+    initDialogController()
     setupKeyboardInput()
   }
 
-  private def updatePokemonViews(): Unit = {
-    pokemonLeftView.setup(s"${this.game.player.activePokemon.pName}-back")
-    pokemonRightView.setup(s"${this.game.bot.activePokemon.pName}-front")
+  /**
+    * Handle most of the game elements, besides dialog buttons
+    *
+    * @return
+    */
+  private def initGameView(): GameView = {
+    val pokemonLeftView: GamePokemonView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
+    val pokemonRightView: GamePokemonView = new GamePokemonView(pokemonRight, pokemonRightPane)
+    new GameView(
+      battleBg,
+      battleDialogLeft,
+      battleDialogRight,
+      pokemonLeftView,
+      pokemonRightView,
+      stateDialogTxt,
+      powerTxtLabel,
+      powerTxt,
+      accuracyTxtLabel,
+      accuracyTxt,
+      moveCat,
+      moveTypeImg,
+      moveTypeTxt
+    )
   }
 
-  private def initializeDialogController(): Unit = {
-    val dialogButtons = Array(dialogBtn1, dialogBtn2, dialogBtn3, dialogBtn4)
-    DialogController.initialize(dialogButtons, () => setAttackDialogButtons())
+  private def updatePokemonViews(): Unit = {
+    this._gameView.pokemonViews(
+      this._game.player.activePokemon.pName,
+      this._game.bot.activePokemon.pName
+    )
+  }
+
+  private def initDialogController(): Unit = {
+    val leftDialogBtns = Array(leftDialogBtn1, leftDialogBtn2, leftDialogBtn3, leftDialogBtn4)
+    val rightDialogBtns = Array(rightDialogBtn1, rightDialogBtn2, rightDialogBtn3, rightDialogBtn4)
+
+    DialogController.initialize(
+      this._gameView,
+      leftDialogBtns,
+      rightDialogBtns,
+      setMoveBtns = () => setMoveBtns()
+    )
   }
 
   private def setupKeyboardInput(): Unit = {
     Platform.runLater {
-      val scene = buttonGrid.scene.value
+      val scene = inputPane.scene.value
       scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
-      buttonGrid.requestFocus()
+      inputPane.requestFocus()
     }
   }
 
-  private def setAttackDialogButtons(): Unit = {
-    val moves = this.game.player.activePokemon.moves
-    val dialogBtns = moves.zipWithIndex.map { case (move, index) =>
-      new DialogBtn(move.moveName, () => controlTurn(index))
-    }
+  /**
+    * Obtain moves from active Pokemon and set them as dialog buttons
+    */
+  private def setMoveBtns(): Unit = {
+    val moves = this._game.player.activePokemon.moves
+    val dialogBtns = moves
+      .zipWithIndex
+      .map { case (move, index) =>
+        new DialogBtn(move.moveName, () => controlTurn(index))
+      }
     DialogController.setDialogBtns(dialogBtns.toArray)
   }
 
   private def controlTurn(moveIndex: Int): Unit = {
-    this.game.player.moveIndex(moveIndex)
-    val results = this.game.performTurn()
-    showResults(results)
+    this._game.player.moveIndex(moveIndex)
+    val results = this._game.performTurn()
+    showResultsInDialog(results)
   }
 
   /**
-    * Parse results by new line and show each result with delay
+    * Parse results by new line and show them in dialog
     *
     * @param results
     */
-  private def showResults(results: Seq[String]): Unit = {
+  private def showResultsInDialog(results: Seq[String]): Unit = {
     def showNextResult(index: Int): Unit = {
       if (index < results.length) {
-        gameView.updateStatus(results(index))
+        this._gameView.stateDialogTxt(results(index))
         Platform.runLater {
-          // TimeLine or PauseTransition for delay
+          // TODO: Enter key to show next result
           showNextResult(index + 1)
         }
       } else {
         handleTurnEnd()
       }
     }
-
     showNextResult(0)
   }
 
+  /**
+    * Handle turn end by checking if game is over or not
+    */
   private def handleTurnEnd(): Unit = {
-    if (this.game.isGameOver) {
+    if (this._game.isGameOver) {
       handleGameOver()
     } else {
       updatePokemonViews()
@@ -100,9 +152,9 @@ class GameController(
     }
   }
 
-  private def handleGameOver(): Unit = this.game.winner match {
-    case Some(trainer) => gameView.updateStatus(s"Game Over! ${trainer.name} wins!")
-    case None => gameView.updateStatus("Game Over! It's a tie!")
+  private def handleGameOver(): Unit = this._game.winner match {
+    case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
+    case None => println("Game Over! It's a tie!")
   }
 
   initialize()

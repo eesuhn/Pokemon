@@ -56,15 +56,26 @@ abstract class Stat {
   }
 }
 
-case class Attack(initValue: Int) extends Stat {
+case class Attack(
+  initValue: Int
+) extends Stat {
   override protected def minValue: Int = 20
 }
-case class Defense(initValue: Int) extends Stat {
+
+case class Defense(
+  initValue: Int
+) extends Stat {
   override protected def minValue: Int = 20
 }
-case class Accuracy(initValue: Int) extends Stat {
+
+case class Accuracy(
+  initValue: Int
+) extends Stat {
   override protected def minValue: Int = 60
 }
-case class Speed(initValue: Int) extends Stat {
+
+case class Speed(
+  initValue: Int
+) extends Stat {
   override protected def minValue: Int = 10
 }

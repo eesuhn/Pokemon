@@ -3,40 +3,100 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane maxHeight="720.0" maxWidth="960.0" minHeight="720.0" minWidth="960.0" prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.GameController">
   <children>
+
+    <!-- background -->
     <ImageView fx:id="battleBg" fitHeight="540.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true" />
-    <ImageView fx:id="battleDialogOne" fitHeight="180.0" fitWidth="560.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
-    <ImageView fx:id="battleDialogTwo" fitHeight="180.0" fitWidth="400.0" layoutX="560.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleDialogLeft" fitHeight="180.0" fitWidth="580.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleDialogRight" fitHeight="180.0" fitWidth="380.0" layoutX="580.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
+
+    <!-- pokemon -->
     <Pane maxHeight="540.0" maxWidth="960.0" minHeight="540.0" minWidth="960.0" prefHeight="540.0" prefWidth="960.0">
-      <children>
-        <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="250" prefWidth="250">
-          <children>
-            <ImageView fx:id="pokemonLeft" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
-          </children>
-        </AnchorPane>
-        <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="70.0" prefHeight="250" prefWidth="250">
-          <children>
-            <ImageView fx:id="pokemonRight" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
-          </children>
-        </AnchorPane>
-      </children>
+      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="250" prefWidth="250">
+        <children>
+          <ImageView fx:id="pokemonLeft" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
+        </children>
+      </AnchorPane>
+      <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="70.0" prefHeight="250" prefWidth="250">
+        <children>
+          <ImageView fx:id="pokemonRight" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
+        </children>
+      </AnchorPane>
     </Pane>
-    <Pane layoutY="540.0" prefHeight="180.0" prefWidth="560.0">
-      <children>
-        <Label fx:id="statusLabel" styleClass="battle-text" layoutX="2.0" layoutY="2.0" prefWidth="520.0" prefHeight="140.0" wrapText="true" />
-      </children>
+
+    <!-- input -->
+    <Pane fx:id="inputPane" layoutY="540.0" prefHeight="180.0" prefWidth="960.0">
+      <!-- left dialog text -->
+      <Pane prefHeight="180.0" prefWidth="580.0">
+        <Label fx:id="stateDialogTxt" layoutX="38.0" layoutY="32.0" prefHeight="120.0" prefWidth="480.0" styleClass="left-battle-text" wrapText="true" />
+      </Pane>
+
+      <!-- left buttons -->
+      <Pane prefHeight="180.0" prefWidth="580.0">
+        <GridPane fx:id="leftButtonGrid" alignment="CENTER" hgap="12" layoutX="38.0" layoutY="32.0" vgap="10">
+          <Label fx:id="leftDialogBtn1" styleClass="left-battle-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+          <Label fx:id="leftDialogBtn2" styleClass="left-battle-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+          <Label fx:id="leftDialogBtn3" styleClass="left-battle-btn" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+          <Label fx:id="leftDialogBtn4" styleClass="left-battle-btn" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="220.0" prefWidth="220.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="220.0" prefWidth="220.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+          </rowConstraints>
+        </GridPane>
+      </Pane>
+
+      <!-- right dialog text -->
+      <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
+        <ImageView fx:id="moveTypeImg" fitWidth="38.0" layoutX="38.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" />
+        <Label fx:id="moveTypeTxt" layoutX="76.0" layoutY="40.0" styleClass="move-type-text" />
+        <ImageView fx:id="moveCat" fitWidth="74.0" layoutX="206.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
+
+        <!-- move stats -->
+        <GridPane hgap="10" layoutX="40.0" layoutY="82.0" prefHeight="180.0" prefWidth="380.0" vgap="2">
+          <Label fx:id="powerTxtLabel" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+          <Label fx:id="powerTxt" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+          <Label fx:id="accuracyTxtLabel" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+          <Label fx:id="accuracyTxt" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+          <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="156.0" prefWidth="156.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="80.0" prefWidth="80.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+          </rowConstraints>
+        </GridPane>
+      </Pane>
+
+      <!-- right buttons -->
+      <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
+        <GridPane fx:id="rightButtonGrid" alignment="CENTER" hgap="16" layoutX="42.0" layoutY="32.0" vgap="10">
+          <Label fx:id="rightDialogBtn1" styleClass="right-dialog-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+          <Label fx:id="rightDialogBtn2" styleClass="right-dialog-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+          <Label fx:id="rightDialogBtn3" styleClass="right-dialog-btn" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+          <Label fx:id="rightDialogBtn4" styleClass="right-dialog-btn" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="140.0" prefWidth="140.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="100.0" prefWidth="100.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+          </rowConstraints>
+        </GridPane>
+      </Pane>
+
     </Pane>
-    <Pane layoutX="560.0" layoutY="540.0" prefHeight="180.0" prefWidth="400.0">
-      <GridPane fx:id="buttonGrid" alignment="CENTER" hgap="20" layoutX="32.0" layoutY="32.0" vgap="10">
-        <Label fx:id="dialogBtn1" styleClass="battle-button" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Label fx:id="dialogBtn2" styleClass="battle-button" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Label fx:id="dialogBtn3" styleClass="battle-button" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Label fx:id="dialogBtn4" styleClass="battle-button" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      </GridPane>
-    </Pane>
+
   </children>
 </AnchorPane>

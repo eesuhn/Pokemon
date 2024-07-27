@@ -8,20 +8,48 @@
 	src: url('../font/MinecraftBold.otf');
 }
 
+/* -fx-padding: vertical horizontal */
+
 /* GameLayout */
-.battle-button {
+.left-battle-btn {
 	-fx-background-color: transparent;
 	-fx-text-fill: black;
 	-fx-font-size: 30px;
 	-fx-font-family: 'Minecraft Regular';
 	-fx-alignment: center-left;
-	/* -fx-padding: 0 0 0 0; */  /* top right bottom left */
-	-fx-padding: 6 12;  /* vertical horizontal */
+	-fx-padding: 6 6;
 	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
 }
 
-.battle-text {
-	-fx-font-size: 16px;
-	-fx-font-weight: bold;
+.right-dialog-btn {
+	-fx-background-color: transparent;
 	-fx-text-fill: black;
+	-fx-font-size: 30px;
+	-fx-font-family: 'Minecraft Regular';
+	-fx-alignment: center-left;
+	-fx-padding: 6 6;
+	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
+}
+
+.left-battle-text {
+	-fx-font-size: 30px;
+	-fx-font-family: 'Minecraft Regular';
+	-fx-text-fill: black;
+	-fx-alignment: top-left;
+	-fx-padding: 0 6;
+}
+
+.right-battle-text {
+	-fx-font-size: 24px;
+	-fx-font-family: 'Minecraft Regular';
+	-fx-text-fill: black;
+	-fx-padding: 0 6;
+}
+
+.move-type-text {
+	-fx-font-size: 20px;
+	-fx-font-family: 'Minecraft Bold';
+	-fx-text-fill: black;
+	-fx-padding: 0 6;
+	-fx-alignment: center-left;
 }
