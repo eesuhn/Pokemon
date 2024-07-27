@@ -14,25 +14,24 @@ abstract class Trainer {
     * Generates a deck of 3 random Pokemon
     */
   def generateDeck(): Unit = {
-    val allPokemons = PokemonRegistry.pokemons
-    val rand = new Random()
+    val pokemons = PokemonRegistry.pokemons
+      .map(pokemon => pokemon.getDeclaredConstructor().newInstance())
+      .toList
+    val randomPokemons = Random.shuffle(pokemons).take(3)
 
-    for (_ <- 1 to 3) {
-      val randomPokemonClass = allPokemons(rand.nextInt(allPokemons.length))
-      val pokemon = randomPokemonClass.getDeclaredConstructor().newInstance()
-      addPokemon(pokemon)
-    }
+    addPokemons(randomPokemons)
   }
 
   /**
-    * Hard limit of 3 Pokemon per Trainer
+    * Hard limit of 3 Pokemons per Trainer
     *
-    * @param pokemon
+    * @param pokemons
     */
-  def addPokemon(pokemon: Pokemon): Unit = {
-    if (this.deck.size >= 3) throw new Exception(s"$name can only have 3 Pokemon")
-    this.deck += pokemon
-    if (this.deck.size == 1) this.activePokemon = pokemon
+  protected def addPokemons(pokemons: List[Pokemon]): Unit = {
+    if (pokemons.size == 0) throw new Exception("Cannot add 0 Pokemon")
+    if (this.deck.size + pokemons.size > 3) throw new Exception(s"$name can only have 3 Pokemon")
+    this.deck ++= pokemons
+    this.activePokemon = this.deck.head
   }
 
   def switchActivePokemon(pokemon: Pokemon): Unit = {
@@ -58,11 +57,29 @@ class Player extends Trainer {
 
   def moveIndex(index: Int): Unit = this._moveIndex = index
 
+  // DEBUG: Defined list of Pokemon
+  override def generateDeck(): Unit = {
+    val pokemons = List(
+      new Squirtle(),
+      new Bulbasaur()
+    )
+    addPokemons(pokemons)
+  }
+
   override def chooseMove(): Move = activePokemon.moves(this._moveIndex)
 }
 
 class Bot extends Trainer {
   val name: String = "Bot"
+
+  // DEBUG: Defined list of Pokemon
+  override def generateDeck(): Unit = {
+    val pokemons = List(
+      new Pikachu(),
+      new Charmander()
+    )
+    addPokemons(pokemons)
+  }
 
   override def chooseMove(): Move = {
     randomMove()

@@ -78,6 +78,9 @@ class GameController(
     }
   }
 
+  /**
+    * Obtain moves from active Pokemon and set them as dialog buttons
+    */
   private def setMoveBtns(): Unit = {
     val moves = this.game.player.activePokemon.moves
     val dialogBtns = moves
