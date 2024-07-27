@@ -28,7 +28,7 @@ class GameController(
   val rightDialogBtn2: Label,
   val rightDialogBtn3: Label,
   val rightDialogBtn4: Label,
-  val leftDialog: Label
+  val leftDialogTxt: Label
 ) {
 
   val game: Game = new Game()
@@ -48,8 +48,9 @@ class GameController(
     new GameView(battleBg, battleDialogLeft, battleDialogRight, pokemonLeftView, pokemonRightView)
   }
 
-  private def updateLeftDialog(text: String): Unit = {
-    leftDialog.text = text
+  private def updateLeftDialogTxt(text: String): Unit = {
+    // leftDialogTxt.text = text
+    println(text)
   }
 
   private def updatePokemonViews(): Unit = {
@@ -105,7 +106,7 @@ class GameController(
   private def showResultsInDialog(results: Seq[String]): Unit = {
     def showNextResult(index: Int): Unit = {
       if (index < results.length) {
-        updateLeftDialog(results(index))
+        updateLeftDialogTxt(results(index))
         Platform.runLater {
           // TimeLine or PauseTransition for delay
           showNextResult(index + 1)

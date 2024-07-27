@@ -32,7 +32,17 @@
 }
 
 .left-battle-text {
-	-fx-font-size: 16px;
-	-fx-font-weight: bold;
+	-fx-font-size: 30px;
+	-fx-font-family: 'Minecraft Regular';
 	-fx-text-fill: black;
+	-fx-alignment: top-left;
+	-fx-padding: 0 6;
+}
+
+.right-battle-text {
+	-fx-font-size: 24px;
+	-fx-font-family: 'Minecraft Regular';
+	-fx-text-fill: black;
+	-fx-alignment: top-left;
+	-fx-padding: 0 6;
 }
