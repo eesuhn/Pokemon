@@ -6,7 +6,7 @@ class Battle(val player: Trainer, val bot: Trainer) {
 
   /**
     * Perform a turn in the battle
-    * 
+    *
     * - Decide who attacks first based on speed
     * - Check if defender fainted
     *
