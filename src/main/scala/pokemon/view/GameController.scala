@@ -86,6 +86,7 @@ class GameController(
     val rightDialogBtns = Array(rightDialogBtn1, rightDialogBtn2, rightDialogBtn3, rightDialogBtn4)
 
     DialogController.initialize(
+      gameView,
       leftDialogBtns,
       rightDialogBtns,
       setMoveBtns = () => setMoveBtns()

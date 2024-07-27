@@ -12,6 +12,7 @@ object DialogController {
     activeButtonCount: Int = 4
   )
 
+  private var _gameView: GameView = _
   private var _leftBtnState: DialogBtnState = _
   private var _rightBtnState: DialogBtnState = _
   private var _setMoveBtns: () => Unit = _
@@ -24,13 +25,15 @@ object DialogController {
   """
 
   def initialize(
+    gameView: GameView,
     leftDialogBtns: Array[Label],
     rightDialogBtns: Array[Label],
     setMoveBtns: () => Unit
   ): Unit = {
 
+    this._gameView = gameView
     this._leftBtnState = DialogBtnState(leftDialogBtns, emptyBtns())
-    this._rightBtnState = DialogBtnState(rightDialogBtns, emptyBtns())
+    this._rightBtnState = DialogBtnState(rightDialogBtns, menuBtns())
     this._setMoveBtns = setMoveBtns
     updateView()
   }
@@ -124,6 +127,7 @@ object DialogController {
   }
 
   def resetToMainMenu(): Unit = {
+    this._gameView.clearRightDialogPane()
     this._rightBtnState = this._rightBtnState.copy(dialogBtns = menuBtns(), currentSelection = 0, activeButtonCount = 4)
     this._leftBtnState = this._leftBtnState.copy(dialogBtns = emptyBtns(), currentSelection = 0, activeButtonCount = 0)
     _isInAttackMenu = false
@@ -175,6 +179,7 @@ object DialogController {
   }
 
   private def handleAttackBtn(): Unit = {
+    this._gameView.clearLeftDialogPane()
     _isInAttackMenu = true
     _setMoveBtns()
   }

@@ -35,17 +35,17 @@ class GameView(
 
   def updateStateDialogTxt(text: String): Unit = stateDialogTxt.text = text
 
-  def updatePowerTxt(text: String): Unit = {
+  private def updatePowerTxt(text: String): Unit = {
     powerTxt.text = text
     if (!text.isEmpty()) powerTxtLabel.text = "Power" else powerTxtLabel.text = ""
   }
 
-  def updateAccuracyTxt(text: String): Unit = {
+  private def updateAccuracyTxt(text: String): Unit = {
     accuracyTxt.text = text
     if (!text.isEmpty()) accuracyTxtLabel.text = "Accuracy" else accuracyTxtLabel.text = ""
   }
 
-  def updateMoveCat(category: String): Unit = {
+  private def updateMoveCat(category: String): Unit = {
     if (!category.isEmpty()) {
       moveCat.image = ResourceUtil.resouceImage(s"misc/${category}-move.png")
     } else {
@@ -53,7 +53,7 @@ class GameView(
     }
   }
 
-  def updateMoveType(typeOfMove: String): Unit = {
+  private def updateMoveType(typeOfMove: String): Unit = {
     if (!typeOfMove.isEmpty()) {
       moveTypeImg.image = ResourceUtil.resouceImage(s"misc/${typeOfMove}-type.png")
       moveTypeTxt.text = typeOfMove.toUpperCase()
@@ -92,6 +92,13 @@ class GameView(
     updateAccuracyTxt("")
     updateMoveCat("")
     updateMoveType("")
+  }
+
+  def setMoveStats(power: String, accuracy: String, category: String, typeOfMove: String): Unit = {
+    updatePowerTxt(power)
+    updateAccuracyTxt(accuracy)
+    updateMoveCat(category)
+    updateMoveType(typeOfMove)
   }
 }
 
