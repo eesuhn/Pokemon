@@ -30,7 +30,7 @@ object DialogController {
   ): Unit = {
 
     this._leftBtnState = DialogBtnState(leftDialogBtns, emptyBtns())
-    this._rightBtnState = DialogBtnState(rightDialogBtns, menuBtns())
+    this._rightBtnState = DialogBtnState(rightDialogBtns, emptyBtns())
     this._setMoveBtns = setMoveBtns
     updateView()
   }

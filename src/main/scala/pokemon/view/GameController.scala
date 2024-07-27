@@ -49,6 +49,11 @@ class GameController(
     setupKeyboardInput()
   }
 
+  /**
+    * Handle most of the game elements, besides dialog buttons
+    *
+    * @return
+    */
   private def initGameView(): GameView = {
     val pokemonLeftView: GamePokemonView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
     val pokemonRightView: GamePokemonView = new GamePokemonView(pokemonRight, pokemonRightPane)

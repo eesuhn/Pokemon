@@ -37,20 +37,32 @@ class GameView(
 
   def updatePowerTxt(text: String): Unit = {
     powerTxt.text = text
-    powerTxtLabel.text = "Power"
+    if (!text.isEmpty()) powerTxtLabel.text = "Power" else powerTxtLabel.text = ""
   }
 
   def updateAccuracyTxt(text: String): Unit = {
     accuracyTxt.text = text
-    accuracyTxtLabel.text = "Accuracy"
+    if (!text.isEmpty()) accuracyTxtLabel.text = "Accuracy" else accuracyTxtLabel.text = ""
   }
 
-  def updateMoveCat(category: String): Unit = moveCat.image = ResourceUtil.resouceImage(s"misc/${category}-move.png")
+  def updateMoveCat(category: String): Unit = {
+    if (!category.isEmpty()) {
+      moveCat.image = ResourceUtil.resouceImage(s"misc/${category}-move.png")
+    } else {
+      moveCat.image = null
+    }
+  }
 
   def updateMoveType(typeOfMove: String): Unit = {
-    moveTypeImg.image = ResourceUtil.resouceImage(s"misc/${typeOfMove}-type.png")
-    moveTypeTxt.text = typeOfMove.toUpperCase()
-    setMoveTypeTextColor(typeOfMove)
+    if (!typeOfMove.isEmpty()) {
+      moveTypeImg.image = ResourceUtil.resouceImage(s"misc/${typeOfMove}-type.png")
+      moveTypeTxt.text = typeOfMove.toUpperCase()
+      setMoveTypeTextColor(typeOfMove)
+    } else {
+      moveTypeImg.image = null
+      moveTypeTxt.text = ""
+      setMoveTypeTextColor("")
+    }
   }
 
   private def setMoveTypeTextColor(typeOfMove: String): Unit = {
@@ -71,34 +83,15 @@ class GameView(
     moveTypeTxt.style = s"-fx-text-fill: ${color};"
   }
 
-  /**
-    * Clear the left dialog pane
-    * 
-    * - Dialog text
-    */
   def clearLeftDialogPane(): Unit = {
     stateDialogTxt.text = ""
   }
 
-  /**
-    * Clear the right dialog pane
-    * 
-    * - Move category image
-    * - Move type image
-    * - Move type text
-    * - Move type text color
-    * - Power text
-    * - Accuracy text
-    */
   def clearRightDialogPane(): Unit = {
-    powerTxt.text = ""
-    powerTxtLabel.text = ""
-    accuracyTxt.text = ""
-    accuracyTxtLabel.text = ""
-    moveCat.image = null
-    moveTypeImg.image = null
-    moveTypeTxt.text = ""
-    moveTypeTxt.style = s"-fx-text-fill: black;"
+    updatePowerTxt("")
+    updateAccuracyTxt("")
+    updateMoveCat("")
+    updateMoveType("")
   }
 }
 
