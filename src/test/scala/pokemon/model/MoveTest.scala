@@ -42,7 +42,7 @@ class MoveTest extends AnyFunSuite {
     val charmander = new Charmander()
     val squirtle = new Squirtle()
 
-    val damage = Ember.calculatePhysicalDamage(charmander, squirtle)
+    val (damage, _) = Ember.calculatePhysicalDamage(charmander, squirtle)
     val expectedHP = squirtle.baseHP - damage.toInt
     val expectedCharmanderAttack = charmander.attack.value
     val expectedCharmanderDefense = charmander.defense.value
@@ -61,7 +61,7 @@ class MoveTest extends AnyFunSuite {
 
     val expectedCharmanderSpeed = (charmander.speed.value * (2.0 / (2.0 + testCount))).toInt
 
-    val damage = RockTomb.calculatePhysicalDamage(geodude, charmander)
+    val (damage, _) = RockTomb.calculatePhysicalDamage(geodude, charmander)
     val expectedHP = charmander.baseHP - damage.toInt
 
     geodude.attack(RockTomb, charmander)
@@ -74,7 +74,7 @@ class MoveTest extends AnyFunSuite {
     val mewtwo = new Mewtwo()
     val toxicroak = new Toxicroak()
 
-    val damage = PsychoCut.calculatePhysicalDamage(mewtwo, toxicroak)
+    val (damage, _) = PsychoCut.calculatePhysicalDamage(mewtwo, toxicroak)
     val expectedHP = toxicroak.baseHP - damage.toInt
 
     mewtwo.attack(PsychoCut, toxicroak)
@@ -86,7 +86,7 @@ class MoveTest extends AnyFunSuite {
     val scyther = new Scyther()
     val toxicroak = new Toxicroak()
 
-    val damage = XScissor.calculatePhysicalDamage(scyther, toxicroak)
+    val (damage, _) = XScissor.calculatePhysicalDamage(scyther, toxicroak)
     val expectedHP = toxicroak.baseHP - damage.toInt
 
     scyther.attack(XScissor, toxicroak)
