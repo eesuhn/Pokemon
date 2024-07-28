@@ -1,5 +1,6 @@
 package pokemon.view
 
+import pokemon.model.Game
 import scalafx.scene.control.Label
 import scalafx.scene.input.{KeyCode, KeyEvent}
 
@@ -12,6 +13,7 @@ object DialogController {
     activeButtonCount: Int = 4
   )
 
+  private var _game: Game = _
   private var _gameView: GameView = _
   private var _leftBtnState: DialogBtnState = _
   private var _rightBtnState: DialogBtnState = _
@@ -29,12 +31,14 @@ object DialogController {
   def isInAttackMenu: Boolean = this._isInAttackMenu
 
   def initialize(
+    game: Game,
     gameView: GameView,
     leftDialogBtns: Array[Label],
     rightDialogBtns: Array[Label],
     setMoveBtns: () => Unit
   ): Unit = {
 
+    this._game = game
     this._gameView = gameView
     this._leftBtnState = DialogBtnState(leftDialogBtns, emptyBtns())
     this._rightBtnState = DialogBtnState(rightDialogBtns, menuBtns())
@@ -51,7 +55,10 @@ object DialogController {
 
     event.code match {
       case KeyCode.Enter => executeCurrentSelection()
-      case KeyCode.Escape if this._isInAttackMenu => resetToMainMenu()
+      case KeyCode.Escape if this._isInAttackMenu => {
+        resetToMainMenu()
+        this._gameView.stateDialogTxt(s"What will ${this._game.player.activePokemon.pName} do?")
+      }
       case _ =>
     }
 
