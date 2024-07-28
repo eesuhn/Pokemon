@@ -42,23 +42,7 @@ class GameController(
 
   private val _game: Game = new Game()
   private val _gameView: GameView = initGameView()
-  private var _gameState: String = ""  // TODO: Perhaps we don't need this
   private var _scene: Scene = null
-
-  def gameState(state: String): Unit = {
-    this._gameState = state
-
-    this._gameState match {
-      case "main_menu" => handleMainMenu()
-      case _ => throw new Exception(s"Unknown game state: ${this._gameState}")
-    }
-  }
-
-  private def handleMainMenu(): Unit = {
-    updatePokemonViews()
-    DialogController.resetToMainMenu()
-    this._gameView.stateDialogTxt(s"What will ${this._game.player.activePokemon.pName} do?")
-  }
 
   def initialize(): Unit = {
     this._game.start()
@@ -69,8 +53,14 @@ class GameController(
     Platform.runLater {
       this._scene = inputPane.scene.value
       focusInputPane()
-      gameState("main_menu")
+      handleMainMenu()
     }
+  }
+
+  private def handleMainMenu(): Unit = {
+    updatePokemonViews()
+    DialogController.resetToMainMenu()
+    this._gameView.stateDialogTxt(s"What will ${this._game.player.activePokemon.pName} do?")
   }
 
   /**
@@ -124,16 +114,21 @@ class GameController(
 
   private def hookKeyPress(): Unit = {
     if (DialogController.isInAttackMenu) {
-      val currentSelection = DialogController.leftBtnState.currentSelection
-      val moveName = this._game.player.activePokemon.moves(currentSelection).moveName
-      moveStats(moveName)
+      showStats()
     }
+  }
+
+  private def showStats(): Unit = {
+    val currentSelection = DialogController.leftBtnState.currentSelection
+    val moveName = this._game.player.activePokemon.moves(currentSelection).moveName
+    moveStats(moveName)
   }
 
   /**
     * Obtain moves from active Pokemon and set them as dialog buttons
     */
   private def setMoveBtns(): Unit = {
+    showStats()
     val moves = this._game.player.activePokemon.moves
     val dialogBtns = moves
       .zipWithIndex
@@ -156,6 +151,7 @@ class GameController(
     */
   private def showResultsInDialog(results: Seq[String]): Unit = {
     DialogController.clearMoveBtns()
+    this._gameView.clearRightDialogPane()
     var currentIndex = 0
 
     def showNextResult(): Unit = {
@@ -186,7 +182,7 @@ class GameController(
     if (this._game.isGameOver) {
       handleGameOver()
     } else {
-      gameState("main_menu")
+      handleMainMenu()
     }
   }
 
