@@ -23,9 +23,11 @@ abstract class Trainer {
   }
 
   /**
-    * Hard limit of 3 Pokemons per Trainer
+    * Adds a list of Pokemon to the deck
     *
     * @param pokemons
+    *
+    * @throws Exception if `pokemon == 0` || `deck.size + pokemons.size > 3`
     */
   protected def addPokemons(pokemons: List[Pokemon]): Unit = {
     if (pokemons.size == 0) throw new Exception("Cannot add 0 Pokemon")
@@ -34,12 +36,17 @@ abstract class Trainer {
     activePokemon = deck.head
   }
 
+  /**
+    * Switches the active Pokemon to the given Pokemon
+    *
+    * @param pokemon
+    *
+    * @throws Exception if `deck` does not contain the given Pokemon
+    */
   def switchActivePokemon(pokemon: Pokemon): Unit = {
     if (!deck.contains(pokemon)) throw new Exception(s"$name does not have this Pokemon")
     activePokemon = pokemon
   }
-
-  def hasActivePokemon: Boolean = activePokemon != null && activePokemon.currentHP > 0
 
   def switchToNextAlivePokemon(): Option[Pokemon] = {
     deck.find(_.currentHP > 0).map { pokemon =>
@@ -47,6 +54,8 @@ abstract class Trainer {
       pokemon
     }
   }
+
+  def hasActivePokemon: Boolean = activePokemon != null && activePokemon.currentHP > 0
 
   def isDefeated: Boolean = deck.forall(_.currentHP == 0)
 }
@@ -60,7 +69,7 @@ class Player extends Trainer {
   // DEBUG: Defined list of Pokemon
   override def generateDeck(): Unit = {
     val pokemons = List(
-      new Mewtwo(),
+      new Squirtle(),
       new Bulbasaur()
     )
     addPokemons(pokemons)

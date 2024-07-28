@@ -21,16 +21,23 @@ abstract class Move {
   val accuracy: Int
   val moveType: Type
 
+  /**
+    * Return power of the move if it is a PhysicalMove
+    *
+    * @return
+    */
   def movePower: String = this match {
     case physicalMove: PhysicalMove => physicalMove.basePower.toString
     case _ => "-"
   }
 
-  def moveTypeName: String = moveType
-    .getClass
-    .getSimpleName
-    .toLowerCase
-    .replace("$", "")
+  def moveTypeName: String = {
+    moveType
+      .getClass
+      .getSimpleName
+      .toLowerCase
+      .replace("$", "")
+  }
 
   def moveCategoryName: String = this match {
     case _: SpecialMove => "special"
@@ -53,11 +60,6 @@ trait StatusMove extends Move {
   def effects: List[StatEffect]
   def targetSelf: Boolean
 
-  /**
-    * Apply effects of the move to the target Pokemon
-    *
-    * @param pokemon
-    */
   def applyEffects(pokemon: Pokemon): Unit = {
     effects.foreach(_.applyEffect(pokemon))
   }
@@ -73,8 +75,8 @@ trait PhysicalMove extends Move {
   /**
     * Calculate modifier for the move based on target's type
     *
-    * - *2 if move is strong against target type
-    * - *0.5 if move is weak against target type
+    * - multiply by 2 if move is strong against target type
+    * - multiply by 0.5 if move is weak against target type
     *
     * @param target
     * @return
@@ -109,6 +111,9 @@ trait PhysicalMove extends Move {
   }
 }
 
+/**
+  * SpecialMove is the combination of PhysicalMove and StatusMove
+  */
 trait SpecialMove extends PhysicalMove with StatusMove
 
 object Growl extends StatusMove {

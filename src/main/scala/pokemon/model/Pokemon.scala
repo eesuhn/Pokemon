@@ -40,11 +40,11 @@ abstract class Pokemon {
     * Set the types for the Pokemon, at most 2 types can be set
     *
     * @param types
+    *
+    * @throws Exception if `types.length > 2`
     */
   protected def pTypes(types: List[Type]): Unit = {
-    if (types.length > 2) {
-      throw new Exception(s"Pokemon $pName can have at most 2 types")
-    }
+    if (types.length > 2) throw new Exception(s"Pokemon $pName can have at most 2 types")
     _pTypes = types
   }
 
@@ -52,11 +52,11 @@ abstract class Pokemon {
     * Set the moves for the Pokemon, at most 4 moves can be set
     *
     * @param moves
+    *
+    * @throws Exception if `moves.length > 4`
     */
   protected def moves(moves: List[Move]): Unit = {
-    if (moves.length > 4) {
-      throw new Exception(s"Pokemon $pName can learn at most 4 moves")
-    }
+    if (moves.length > 4) throw new Exception(s"Pokemon $pName can learn at most 4 moves")
     _moves = moves
   }
 
@@ -89,6 +89,7 @@ abstract class Pokemon {
     *
     * Consider accuracy for both move and Pokemon
     *
+    * - SpecialMove: PhysicalMove + StatusMove
     * - PhysicalMove: Calculate damage based on the user's attack and the target's defense
     * - StatusMove: Apply effects of the move to the target Pokemon
     *
