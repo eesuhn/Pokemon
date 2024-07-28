@@ -96,7 +96,7 @@ class GameView(
 
   /**
     * Set move stats on the right dialog pane
-    * 
+    *
     * - Power, Accuracy, Category, Type of Move
     *
     * @param power

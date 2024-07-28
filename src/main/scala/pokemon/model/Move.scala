@@ -21,6 +21,24 @@ abstract class Move {
   val accuracy: Int
   val moveType: Type
 
+  def movePower: String = this match {
+    case physicalMove: PhysicalMove => physicalMove.basePower.toString
+    case _ => "-"
+  }
+
+  def moveTypeName: String = this.moveType
+    .getClass
+    .getSimpleName
+    .toLowerCase
+    .replace("$", "")
+
+  def moveCategoryName: String = this match {
+    case _: SpecialMove => "special"
+    case _: PhysicalMove => "physical"
+    case _: StatusMove => "status"
+    case _ => "unknown"
+  }
+
   def calculateMoveAccuracy(): Boolean = {
     val random = Random
     random.nextInt(100) <= this.accuracy
@@ -90,6 +108,8 @@ trait PhysicalMove extends Move {
     damage * modifier
   }
 }
+
+trait SpecialMove extends PhysicalMove with StatusMove
 
 object Growl extends StatusMove {
   val moveName: String = "Growl"
@@ -247,7 +267,7 @@ object WaterGun extends PhysicalMove {
   override def basePower: Int = 40
 }
 
-object Spark extends PhysicalMove with StatusMove {
+object Spark extends SpecialMove {
   val moveName: String = "Spark"
   val accuracy: Int = 100
   val moveType: Electric.type = Electric
@@ -265,7 +285,7 @@ object VineWhip extends PhysicalMove {
   override def basePower: Int = 45
 }
 
-object IcePunch extends PhysicalMove with StatusMove {
+object IcePunch extends SpecialMove {
   val moveName: String = "Ice Punch"
   val accuracy: Int = 100
   val moveType: Ice.type = Ice
@@ -283,7 +303,7 @@ object DoubleKick extends PhysicalMove {
   override def basePower: Int = 60
 }
 
-object PoisonFang extends PhysicalMove with StatusMove {
+object PoisonFang extends SpecialMove {
   val moveName: String = "Poison Fang"
   val accuracy: Int = 100
   val moveType: Poison.type = Poison
@@ -294,7 +314,7 @@ object PoisonFang extends PhysicalMove with StatusMove {
   override def targetSelf: Boolean = false
 }
 
-object PoisonSting extends PhysicalMove with StatusMove {
+object PoisonSting extends SpecialMove {
   val moveName: String = "Poison Sting"
   val accuracy: Int = 100
   val moveType: Poison.type = Poison
@@ -319,7 +339,7 @@ object XScissor extends PhysicalMove {
   override def basePower: Int = 80
 }
 
-object RockTomb extends PhysicalMove with StatusMove {
+object RockTomb extends SpecialMove {
   val moveName: String = "Rock Tomb"
   val accuracy: Int = 95
   val moveType: Rock.type = Rock
@@ -340,7 +360,7 @@ object Growth extends StatusMove {
   override def targetSelf: Boolean = true
 }
 
-object IcyWind extends PhysicalMove with StatusMove {
+object IcyWind extends SpecialMove {
   val moveName: String = "Icy Wind"
   val accuracy: Int = 95
   val moveType: Ice.type = Ice
@@ -351,7 +371,7 @@ object IcyWind extends PhysicalMove with StatusMove {
   override def targetSelf: Boolean = false
 }
 
-object AncientPower extends PhysicalMove with StatusMove {
+object AncientPower extends SpecialMove {
   val moveName: String = "Ancient Power"
   val accuracy: Int = 100
   val moveType: Rock.type = Rock
@@ -371,7 +391,7 @@ object PsychoCut extends PhysicalMove {
   override def basePower: Int = 70
 }
 
-object BodySlam extends PhysicalMove with StatusMove {
+object BodySlam extends SpecialMove {
   val moveName: String = "Body Slam"
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
@@ -410,7 +430,7 @@ object Smokescreen extends StatusMove {
   override def targetSelf: Boolean = false
 }
 
-object MuddyWater extends PhysicalMove with StatusMove {
+object MuddyWater extends SpecialMove {
   val moveName: String = "Muddy Water"
   val accuracy: Int = 85
   val moveType: Water.type = Water

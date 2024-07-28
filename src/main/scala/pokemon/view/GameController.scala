@@ -3,8 +3,10 @@ package pokemon.view
 import pokemon.model.Game
 import scalafx.Includes._
 import scalafx.application.Platform
+import scalafx.scene.Scene
 import scalafx.scene.control.Label
 import scalafx.scene.image.ImageView
+import scalafx.scene.input.{KeyCode, KeyEvent}
 import scalafx.scene.layout.{AnchorPane, GridPane, Pane}
 import scalafxml.core.macros.sfxml
 
@@ -40,13 +42,25 @@ class GameController(
 
   private val _game: Game = new Game()
   private val _gameView: GameView = initGameView()
+  private var _scene: Scene = null
 
   def initialize(): Unit = {
     this._game.start()
     this._gameView.setup()
     updatePokemonViews()
     initDialogController()
-    setupKeyboardInput()
+
+    Platform.runLater {
+      this._scene = inputPane.scene.value
+      focusInputPane()
+      handleMainMenu()
+    }
+  }
+
+  private def handleMainMenu(): Unit = {
+    updatePokemonViews()
+    DialogController.resetToMainMenu()
+    this._gameView.stateDialogTxt(s"What will ${this._game.player.activePokemon.pName} do?")
   }
 
   /**
@@ -93,18 +107,28 @@ class GameController(
     )
   }
 
-  private def setupKeyboardInput(): Unit = {
-    Platform.runLater {
-      val scene = inputPane.scene.value
-      scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
-      inputPane.requestFocus()
+  private def focusInputPane(): Unit = {
+    this._scene.onKeyPressed = (event: KeyEvent) => DialogController.handleKeyPress(event, hookKeyPress)
+    inputPane.requestFocus()
+  }
+
+  private def hookKeyPress(): Unit = {
+    if (DialogController.isInAttackMenu) {
+      showStats()
     }
+  }
+
+  private def showStats(): Unit = {
+    val currentSelection = DialogController.leftBtnState.currentSelection
+    val moveName = this._game.player.activePokemon.moves(currentSelection).moveName
+    moveStats(moveName)
   }
 
   /**
     * Obtain moves from active Pokemon and set them as dialog buttons
     */
   private def setMoveBtns(): Unit = {
+    showStats()
     val moves = this._game.player.activePokemon.moves
     val dialogBtns = moves
       .zipWithIndex
@@ -126,18 +150,29 @@ class GameController(
     * @param results
     */
   private def showResultsInDialog(results: Seq[String]): Unit = {
-    def showNextResult(index: Int): Unit = {
-      if (index < results.length) {
-        this._gameView.stateDialogTxt(results(index))
+    DialogController.clearMoveBtns()
+    this._gameView.clearRightDialogPane()
+    var currentIndex = 0
+
+    def showNextResult(): Unit = {
+      if (currentIndex < results.length) {
+        val result = results(currentIndex)
         Platform.runLater {
-          // TODO: Enter key to show next result
-          showNextResult(index + 1)
+          this._gameView.stateDialogTxt(result)
         }
+        currentIndex += 1
       } else {
         handleTurnEnd()
+        focusInputPane()
       }
     }
-    showNextResult(0)
+
+    Option(this._scene).foreach { scene =>
+      scene.onKeyPressed = (event: KeyEvent) =>
+        if (event.code == KeyCode.Enter) showNextResult()
+    }
+
+    showNextResult()
   }
 
   /**
@@ -147,14 +182,27 @@ class GameController(
     if (this._game.isGameOver) {
       handleGameOver()
     } else {
-      updatePokemonViews()
-      DialogController.resetToMainMenu()
+      handleMainMenu()
     }
   }
 
   private def handleGameOver(): Unit = this._game.winner match {
     case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
     case None => println("Game Over! It's a tie!")
+  }
+
+  private def moveStats(moveName: String): Unit = {
+    val currentMove = this._game.player.activePokemon.moves.find(_.moveName == moveName).get
+
+    val power = currentMove.movePower
+    val category = currentMove.moveCategoryName
+
+    this._gameView.moveStats(
+      power,
+      currentMove.accuracy.toString,
+      category,
+      currentMove.moveTypeName
+    )
   }
 
   initialize()

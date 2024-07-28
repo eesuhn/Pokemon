@@ -79,6 +79,11 @@ abstract class Pokemon {
     target.takeDamage(damage.toInt)
   }
 
+  private def specialAttack(specialMove: SpecialMove, target: Pokemon): Unit = {
+    physicalAttack(specialMove, target)
+    statusAttack(specialMove, target)
+  }
+
   /**
     * Attack the target Pokemon with the move
     *
@@ -95,6 +100,7 @@ abstract class Pokemon {
       false
     } else {
       move match {
+        case specialMove: SpecialMove => specialAttack(specialMove, target)
         case physicalMove: PhysicalMove => physicalAttack(physicalMove, target)
         case statusMove: StatusMove => statusAttack(statusMove, target)
       }
