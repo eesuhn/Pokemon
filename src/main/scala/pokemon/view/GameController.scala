@@ -3,8 +3,10 @@ package pokemon.view
 import pokemon.model.Game
 import scalafx.Includes._
 import scalafx.application.Platform
+import scalafx.scene.Scene
 import scalafx.scene.control.Label
 import scalafx.scene.image.ImageView
+import scalafx.scene.input.{KeyCode, KeyEvent}
 import scalafx.scene.layout.{AnchorPane, GridPane, Pane}
 import scalafxml.core.macros.sfxml
 
@@ -40,13 +42,35 @@ class GameController(
 
   private val _game: Game = new Game()
   private val _gameView: GameView = initGameView()
+  private var _gameState: String = ""
+  private var _scene: Scene = null
+
+  def gameState(state: String): Unit = {
+    this._gameState = state
+
+    this._gameState match {
+      case "main_menu" => handleMainMenu()
+      case _ => throw new Exception(s"Unknown game state: ${this._gameState}")
+    }
+  }
+
+  private def handleMainMenu(): Unit = {
+    updatePokemonViews()
+    DialogController.resetToMainMenu()
+    this._gameView.stateDialogTxt(s"What will ${this._game.player.activePokemon.pName} do?")
+  }
 
   def initialize(): Unit = {
     this._game.start()
     this._gameView.setup()
     updatePokemonViews()
     initDialogController()
-    setupKeyboardInput()
+
+    Platform.runLater {
+      this._scene = inputPane.scene.value
+      focusInputPane()
+      gameState("main_menu")
+    }
   }
 
   /**
@@ -93,12 +117,9 @@ class GameController(
     )
   }
 
-  private def setupKeyboardInput(): Unit = {
-    Platform.runLater {
-      val scene = inputPane.scene.value
-      scene.onKeyPressed = (event: scalafx.scene.input.KeyEvent) => DialogController.handleKeyPress(event)
-      inputPane.requestFocus()
-    }
+  private def focusInputPane(): Unit = {
+    this._scene.onKeyPressed = (event: KeyEvent) => DialogController.handleKeyPress(event)
+    inputPane.requestFocus()
   }
 
   /**
@@ -126,18 +147,28 @@ class GameController(
     * @param results
     */
   private def showResultsInDialog(results: Seq[String]): Unit = {
-    def showNextResult(index: Int): Unit = {
-      if (index < results.length) {
-        this._gameView.stateDialogTxt(results(index))
+    DialogController.clearMoveBtns()
+    var currentIndex = 0
+
+    def showNextResult(): Unit = {
+      if (currentIndex < results.length) {
+        val result = results(currentIndex)
         Platform.runLater {
-          // TODO: Enter key to show next result
-          showNextResult(index + 1)
+          this._gameView.stateDialogTxt(result)
         }
+        currentIndex += 1
       } else {
         handleTurnEnd()
+        focusInputPane()
       }
     }
-    showNextResult(0)
+
+    Option(this._scene).foreach { scene =>
+      scene.onKeyPressed = (event: KeyEvent) =>
+        if (event.code == KeyCode.Enter) showNextResult()
+    }
+
+    showNextResult()
   }
 
   /**
@@ -147,8 +178,7 @@ class GameController(
     if (this._game.isGameOver) {
       handleGameOver()
     } else {
-      updatePokemonViews()
-      DialogController.resetToMainMenu()
+      gameState("main_menu")
     }
   }
 

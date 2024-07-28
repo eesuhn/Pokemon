@@ -190,6 +190,11 @@ object DialogController {
   }
 
   private def emptyBtns(): Array[DialogBtn] = Array.empty
+
+  def clearMoveBtns(): Unit = {
+    this._leftBtnState = this._leftBtnState.copy(dialogBtns = emptyBtns(), currentSelection = 0, activeButtonCount = 0)
+    updateView()
+  }
 }
 
 case class DialogBtn(

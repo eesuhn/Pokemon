@@ -59,25 +59,13 @@ class Battle(val player: Trainer, val bot: Trainer) {
 
     if (!attackResult) {
       // Attack missed
-      s"""
-
-        |${move.moveName} missed!
-
-      """
+      s"${attackerPokemon.pName} used ${move.moveName}! But it missed!"
     } else if (defenderPokemon.currentHP == 0) {
       // Attack was successful and the defender fainted
-      s"""
-
-        |${defenderPokemon.pName} fainted!
-
-      """
+      s"${attackerPokemon.pName} used ${move.moveName}! ${defenderPokemon.pName} fainted!"
     } else {
       // Attack was successful
-      s"""
-
-        |${attackerPokemon.pName} used ${move.moveName}!
-
-      """
+      s"${attackerPokemon.pName} used ${move.moveName}!"
     }
   }
 
