@@ -69,19 +69,21 @@ abstract class Pokemon {
     _currentHP = Math.max(currentHP - damage, 0)
   }
 
-  private def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
+  private def statusAttack(statusMove: StatusMove, target: Pokemon): List[String] = {
     if (statusMove.targetSelf) statusMove.applyEffects(this)
     else statusMove.applyEffects(target)
   }
 
-  private def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): Unit = {
-    val damage: Double = physicalMove.calculatePhysicalDamage(this, target)
+  private def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): List[String] = {
+    val (damage, effectivenessMessage) = physicalMove.calculatePhysicalDamage(this, target)
     target.takeDamage(damage.toInt)
+    List(effectivenessMessage).filter(_.nonEmpty)
   }
 
-  private def specialAttack(specialMove: SpecialMove, target: Pokemon): Unit = {
-    physicalAttack(specialMove, target)
-    statusAttack(specialMove, target)
+  private def specialAttack(specialMove: SpecialMove, target: Pokemon): List[String] = {
+    val physicalMessage = physicalAttack(specialMove, target)
+    val statusMessages = statusAttack(specialMove, target)
+    (physicalMessage ::: statusMessages)
   }
 
   /**
@@ -96,16 +98,16 @@ abstract class Pokemon {
     * @param move
     * @param target
     */
-  def attack(move: Move, target: Pokemon): Boolean = {
+  def attack(move: Move, target: Pokemon): (Boolean, List[String]) = {
     if (!calculatePokemonAccuracy() || !move.calculateMoveAccuracy()) {
-      false
+      (false, List.empty)
     } else {
-      move match {
+      val effectMessages = move match {
         case specialMove: SpecialMove => specialAttack(specialMove, target)
         case physicalMove: PhysicalMove => physicalAttack(physicalMove, target)
         case statusMove: StatusMove => statusAttack(statusMove, target)
       }
-      true
+      (true, effectMessages)
     }
   }
 
@@ -113,6 +115,8 @@ abstract class Pokemon {
     val random = new Random()
     random.nextInt(100) <= accuracy.value
   }
+
+  def pokemonHpPercentage: Double = currentHP.toDouble / baseHP.toDouble
 }
 
 class Charmander extends Pokemon {

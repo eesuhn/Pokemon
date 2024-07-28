@@ -60,8 +60,29 @@ trait StatusMove extends Move {
   def effects: List[StatEffect]
   def targetSelf: Boolean
 
-  def applyEffects(pokemon: Pokemon): Unit = {
-    effects.foreach(_.applyEffect(pokemon))
+  /**
+    * Returns a list of effects (message) applied to the target Pokemon
+    *
+    * @param pokemon
+    * @return
+    */
+  def applyEffects(pokemon: Pokemon): List[String] = {
+    effects.map { effect =>
+      effect.applyEffect(pokemon)
+      val statName = effect match {
+        case _: AttackEffect => "attack"
+        case _: DefenseEffect => "defense"
+        case _: AccuracyEffect => "accuracy"
+        case _: SpeedEffect => "speed"
+      }
+      val changeType = if (effect.stage > 0) "rose" else "fell"
+      val intensity = Math.abs(effect.stage) match {
+        case 1 => ""
+        case 2 => "sharply "
+        case n if n > 2 => "drastically "
+      }
+      s"${pokemon.pName}'s $statName $intensity$changeType!"
+    }
   }
 }
 
@@ -94,6 +115,22 @@ trait PhysicalMove extends Move {
   }
 
   /**
+    * Return effectiveness (message) of the move based on target's type
+    *
+    * @param target
+    * @return
+    */
+  private def calculateEffectiveness(target: Pokemon): (Double, String) = {
+    val modifier = calculateModifier(target)
+    val effectivenessMessage = modifier match {
+      case m if m > 1 => "It's super effective!"
+      case m if m < 1 => "It's not very effective..."
+      case _ => ""
+    }
+    (modifier, effectivenessMessage)
+  }
+
+  /**
     * Calculate damage for the move
     *
     * Damage = (2 * Level / 5 + 2) * Attack * Power / Defense / 50 + 2
@@ -102,12 +139,12 @@ trait PhysicalMove extends Move {
     * @param target
     * @return
     */
-  def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): Double = {
-    val modifier = calculateModifier(target)
+  def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): (Double, String) = {
+    val (modifier, effectivenessMessage) = calculateEffectiveness(target)
     val damage: Double = (
       (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / target.defense.value / 50 + 2
     )
-    damage * modifier
+    (damage * modifier, effectivenessMessage)
   }
 }
 

@@ -18,7 +18,7 @@
 	-fx-font-family: 'Minecraft Regular';
 	-fx-alignment: center-left;
 	-fx-padding: 6 6;
-	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
+	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 1, 1);
 }
 
 .right-dialog-btn {
@@ -28,7 +28,7 @@
 	-fx-font-family: 'Minecraft Regular';
 	-fx-alignment: center-left;
 	-fx-padding: 6 6;
-	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 0, 1);
+	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.4), 4, 0, 1, 1);
 }
 
 .left-battle-text {
@@ -52,4 +52,14 @@
 	-fx-text-fill: black;
 	-fx-padding: 0 6;
 	-fx-alignment: center-left;
+}
+
+.hp-bar {
+	-fx-accent: #00FF00; /* filled */
+    -fx-control-inner-background: white; /* not filled */
+	-fx-effect: dropshadow(three-pass-box, rgba(24 ,24 ,24 , 0.6), 6, 0.4, 1, 1);
+}
+
+.hp-bar > .bar {
+	-fx-background-insets: 1;
 }

@@ -1,5 +1,7 @@
 package pokemon.model
 
+import scala.collection.mutable.ListBuffer
+
 class Battle(
   val player: Trainer,
   val bot: Trainer
@@ -19,22 +21,40 @@ class Battle(
     else (attacker2, move2, attacker1, move1)
   }
 
-  def performAttack(attacker: Trainer, defender: Trainer, move: Move): String = {
+  /**
+    * Perform an attack on the defender
+    *
+    * Returns a list of messages to be displayed to the user
+    *
+    * @param attacker
+    * @param defender
+    * @param move
+    * @return
+    */
+  def performAttack(attacker: Trainer, defender: Trainer, move: Move): List[String] = {
+    val messages = ListBuffer[String]()
     val attackerPokemon = attacker.activePokemon
     val defenderPokemon = defender.activePokemon
 
-    val attackResult = attackerPokemon.attack(move, defenderPokemon)
+    val (attackResult, effectMessages) = attackerPokemon.attack(move, defenderPokemon)
 
-    if (!attackResult) {
-      // Attack missed
+    val attackMessage = if (!attackResult) {
       s"${attackerPokemon.pName} used ${move.moveName}! But it missed!"
-    } else if (defenderPokemon.currentHP == 0) {
-      // Attack was successful and the defender fainted
-      s"${attackerPokemon.pName} used ${move.moveName}! ${defenderPokemon.pName} fainted!"
     } else {
-      // Attack was successful
       s"${attackerPokemon.pName} used ${move.moveName}!"
     }
+
+    messages += attackMessage
+
+    if (attackResult) {
+      messages ++= effectMessages
+
+      if (defenderPokemon.currentHP == 0) {
+        messages += s"${defenderPokemon.pName} fainted!"
+      }
+    }
+
+    messages.toList
   }
 
   /**

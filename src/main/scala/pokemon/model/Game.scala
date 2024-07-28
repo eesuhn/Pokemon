@@ -37,13 +37,13 @@ class Game {
       player, playerMove, bot, botMove)
 
     // First attack
-    results += _battle.performAttack(firstAttacker, if (firstAttacker == player) bot else player, firstMove)
+    results ++= _battle.performAttack(firstAttacker, if (firstAttacker == player) bot else player, firstMove)
 
     // Check if the second Pokemon fainted
     if ((secondAttacker == player && player.hasActivePokemon) ||
         (secondAttacker == bot && bot.hasActivePokemon)) {
       // Second attack
-      results += _battle.performAttack(secondAttacker, if (secondAttacker == player) bot else player, secondMove)
+      results ++= _battle.performAttack(secondAttacker, if (secondAttacker == player) bot else player, secondMove)
     }
 
     results ++= _battle.handleFaintSwitch(player)

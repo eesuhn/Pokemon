@@ -4,7 +4,7 @@ import pokemon.model.Game
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene
-import scalafx.scene.control.Label
+import scalafx.scene.control.{Label, ProgressBar}
 import scalafx.scene.image.ImageView
 import scalafx.scene.input.KeyEvent
 import scalafx.scene.layout.{AnchorPane, Pane}
@@ -12,30 +12,43 @@ import scalafxml.core.macros.sfxml
 
 @sfxml
 class GameController(
+  // background
   val battleBg: ImageView,
   val battleDialogLeft: ImageView,
   val battleDialogRight: ImageView,
+
+  // pokemon
   val pokemonLeftPane: AnchorPane,
   val pokemonRightPane: AnchorPane,
+  val pokemonLeftHpBar: ProgressBar,
   val pokemonLeft: ImageView,
   val pokemonRight: ImageView,
+  val pokemonRightHpBar: ProgressBar,
+
+  // input
   val inputPane: Pane,
+
+  // left dialog
+  val stateDialogTxt: Label,
+  // left dialog buttons
   val leftDialogBtn1: Label,
   val leftDialogBtn2: Label,
   val leftDialogBtn3: Label,
   val leftDialogBtn4: Label,
-  val rightDialogBtn1: Label,
-  val rightDialogBtn2: Label,
-  val rightDialogBtn3: Label,
-  val rightDialogBtn4: Label,
-  val stateDialogTxt: Label,
+
+  // right dialog
+  val moveTypeImg: ImageView,
+  val moveTypeTxt: Label,
+  val moveCat: ImageView,
   val powerTxtLabel: Label,
   val powerTxt: Label,
   val accuracyTxtLabel: Label,
   val accuracyTxt: Label,
-  val moveCat: ImageView,
-  val moveTypeImg: ImageView,
-  val moveTypeTxt: Label
+  // right dialog buttons
+  val rightDialogBtn1: Label,
+  val rightDialogBtn2: Label,
+  val rightDialogBtn3: Label,
+  val rightDialogBtn4: Label
 ) {
 
   private val _game: Game = new Game()
@@ -56,14 +69,37 @@ class GameController(
   }
 
   private def initGameView(): GameView = {
-    val pokemonLeftView: GamePokemonView = new GamePokemonView(pokemonLeft, pokemonLeftPane)
-    val pokemonRightView: GamePokemonView = new GamePokemonView(pokemonRight, pokemonRightPane)
+    val pokemonLeftView: GamePokemonView = new GamePokemonView(
+      pokemonLeft,
+      pokemonLeftPane,
+      pokemonLeftHpBar
+    )
+    val pokemonRightView: GamePokemonView = new GamePokemonView(
+      pokemonRight,
+      pokemonRightPane,
+      pokemonRightHpBar
+    )
     new GameView(
-      battleBg, battleDialogLeft, battleDialogRight,
-      pokemonLeftView, pokemonRightView,
-      stateDialogTxt, powerTxtLabel, powerTxt,
-      accuracyTxtLabel, accuracyTxt,
-      moveCat, moveTypeImg, moveTypeTxt
+      // background
+      battleBg,
+      battleDialogLeft,
+      battleDialogRight,
+
+      // pokemon
+      pokemonLeftView,
+      pokemonRightView,
+
+      // left dialog
+      stateDialogTxt,
+
+      // right dialog
+      moveTypeImg,
+      moveTypeTxt,
+      moveCat,
+      powerTxtLabel,
+      powerTxt,
+      accuracyTxtLabel,
+      accuracyTxt
     )
   }
 
@@ -71,6 +107,10 @@ class GameController(
     _gameView.pokemonViews(
       _game.player.activePokemon.pName,
       _game.bot.activePokemon.pName
+    )
+    _gameView.pokemonHpBars(
+      _game.player.activePokemon.pokemonHpPercentage,
+      _game.bot.activePokemon.pokemonHpPercentage
     )
   }
 
