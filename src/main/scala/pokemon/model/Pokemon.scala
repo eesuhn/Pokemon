@@ -94,11 +94,10 @@ abstract class Pokemon {
     if (!calculatePokemonAccuracy() || !move.calculateMoveAccuracy()) {
       false
     } else {
-      // TODO: physicalMove + statusMove = specialMove
-      move match {
-        case physicalMove: PhysicalMove => physicalAttack(physicalMove, target)
-        case statusMove: StatusMove => statusAttack(statusMove, target)
-      }
+      // TODO: Perhaps not using pattern matching here would be better
+      if (move.isInstanceOf[PhysicalMove]) physicalAttack(move.asInstanceOf[PhysicalMove], target)
+      if (move.isInstanceOf[StatusMove]) statusAttack(move.asInstanceOf[StatusMove], target)
+      // TODO: Not guarding against other types of moves
       true
     }
   }

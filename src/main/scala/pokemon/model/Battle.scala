@@ -2,7 +2,10 @@ package pokemon.model
 
 import scala.collection.mutable.ListBuffer
 
-class Battle(val player: Trainer, val bot: Trainer) {
+class Battle(
+  val player: Trainer,
+  val bot: Trainer
+) {
 
   /**
     * Perform a turn in the battle

@@ -16,24 +16,21 @@ object MoveRegistry {
   registerMoves(Macros.registerInstances[Move]("pokemon.model"))
 }
 
-// case class MoveStats {
-// }
-
 abstract class Move {
   val moveName: String
   val accuracy: Int
   val moveType: Type
+
+  def movePower: String = this match {
+    case physicalMove: PhysicalMove => physicalMove.basePower.toString
+    case _ => "-"
+  }
 
   def moveTypeName: String = this.moveType
     .getClass
     .getSimpleName
     .toLowerCase
     .replace("$", "")
-
-  def movePower: String = this match {
-    case physicalMove: PhysicalMove => physicalMove.basePower.toString
-    case _ => "-"
-  }
 
   def moveCategoryName: String = this match {
     case _: PhysicalMove => "physical"

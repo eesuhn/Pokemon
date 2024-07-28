@@ -24,9 +24,9 @@ object DialogController {
     -fx-text-fill: black;
   """
 
-  def leftBtnState: DialogBtnState = _leftBtnState
-  def rightBtnState: DialogBtnState = _rightBtnState
-  def isInAttackMenu: Boolean = _isInAttackMenu
+  def leftBtnState: DialogBtnState = this._leftBtnState
+  def rightBtnState: DialogBtnState = this._rightBtnState
+  def isInAttackMenu: Boolean = this._isInAttackMenu
 
   def initialize(
     gameView: GameView,
@@ -43,7 +43,7 @@ object DialogController {
   }
 
   def handleKeyPress(event: KeyEvent, hookKeyPress: () => Unit): Unit = {
-    val currentState = if (_isInAttackMenu) _leftBtnState else _rightBtnState
+    val currentState = if (this._isInAttackMenu) this._leftBtnState else this._rightBtnState
     val newSelection = getNewSelection(currentState, event.code)
 
     updateCurrentState(newSelection)
@@ -51,7 +51,7 @@ object DialogController {
 
     event.code match {
       case KeyCode.Enter => executeCurrentSelection()
-      case KeyCode.Escape if _isInAttackMenu => resetToMainMenu()
+      case KeyCode.Escape if this._isInAttackMenu => resetToMainMenu()
       case _ =>
     }
 
@@ -117,10 +117,10 @@ object DialogController {
   }
 
   private def updateCurrentState(newSelection: Int): Unit = {
-    if (_isInAttackMenu) {
-      _leftBtnState = _leftBtnState.copy(currentSelection = newSelection)
+    if (this._isInAttackMenu) {
+      this._leftBtnState = this._leftBtnState.copy(currentSelection = newSelection)
     } else {
-      _rightBtnState = _rightBtnState.copy(currentSelection = newSelection)
+      this._rightBtnState = this._rightBtnState.copy(currentSelection = newSelection)
     }
   }
 
@@ -135,7 +135,7 @@ object DialogController {
     this._gameView.clearRightDialogPane()
     this._rightBtnState = this._rightBtnState.copy(dialogBtns = menuBtns(), currentSelection = 0, activeButtonCount = 4)
     this._leftBtnState = this._leftBtnState.copy(dialogBtns = emptyBtns(), currentSelection = 0, activeButtonCount = 0)
-    _isInAttackMenu = false
+    this._isInAttackMenu = false
     updateView()
   }
 
@@ -155,10 +155,10 @@ object DialogController {
   }
 
   private def updateSelectedButton(): Unit = {
-    val currentState = if (_isInAttackMenu) this._leftBtnState else this._rightBtnState
+    val currentState = if (this._isInAttackMenu) this._leftBtnState else this._rightBtnState
     currentState.texts.zipWithIndex.foreach { case (button, index) =>
       if (index < currentState.activeButtonCount) {
-        button.style = if (index == currentState.currentSelection) _selectedButtonStyle else _defaultButtonStyle
+        button.style = if (index == currentState.currentSelection) this._selectedButtonStyle else this._defaultButtonStyle
       } else {
         button.style = ""
         button.text = ""
@@ -167,7 +167,7 @@ object DialogController {
   }
 
   private def executeCurrentSelection(): Unit = {
-    if (_isInAttackMenu) {
+    if (this._isInAttackMenu) {
       this._leftBtnState.dialogBtns(this._leftBtnState.currentSelection).execute()
     } else {
       this._rightBtnState.dialogBtns(this._rightBtnState.currentSelection).execute()
@@ -185,8 +185,8 @@ object DialogController {
 
   private def handleAttackBtn(): Unit = {
     this._gameView.clearLeftDialogPane()
-    _isInAttackMenu = true
-    _setMoveBtns()
+    this._isInAttackMenu = true
+    this._setMoveBtns()
   }
 
   private def resetButtonTexts(): Unit = {

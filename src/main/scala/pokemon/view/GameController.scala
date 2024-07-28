@@ -42,7 +42,7 @@ class GameController(
 
   private val _game: Game = new Game()
   private val _gameView: GameView = initGameView()
-  private var _gameState: String = ""
+  private var _gameState: String = ""  // TODO: Perhaps we don't need this
   private var _scene: Scene = null
 
   def gameState(state: String): Unit = {
@@ -122,7 +122,7 @@ class GameController(
     inputPane.requestFocus()
   }
 
-  def hookKeyPress(): Unit = {
+  private def hookKeyPress(): Unit = {
     if (DialogController.isInAttackMenu) {
       val currentSelection = DialogController.leftBtnState.currentSelection
       val moveName = this._game.player.activePokemon.moves(currentSelection).moveName
@@ -195,7 +195,7 @@ class GameController(
     case None => println("Game Over! It's a tie!")
   }
 
-  def moveStats(moveName: String): Unit = {
+  private def moveStats(moveName: String): Unit = {
     val currentMove = this._game.player.activePokemon.moves.find(_.moveName == moveName).get
 
     val power = currentMove.movePower
