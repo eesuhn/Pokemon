@@ -60,7 +60,7 @@ class Player extends Trainer {
   // DEBUG: Defined list of Pokemon
   override def generateDeck(): Unit = {
     val pokemons = List(
-      new Slowpoke(),
+      new Mewtwo(),
       new Bulbasaur()
     )
     addPokemons(pokemons)

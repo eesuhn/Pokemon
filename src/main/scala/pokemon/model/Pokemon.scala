@@ -79,6 +79,11 @@ abstract class Pokemon {
     target.takeDamage(damage.toInt)
   }
 
+  private def specialAttack(specialMove: SpecialMove, target: Pokemon): Unit = {
+    physicalAttack(specialMove, target)
+    statusAttack(specialMove, target)
+  }
+
   /**
     * Attack the target Pokemon with the move
     *
@@ -94,10 +99,11 @@ abstract class Pokemon {
     if (!calculatePokemonAccuracy() || !move.calculateMoveAccuracy()) {
       false
     } else {
-      // TODO: Perhaps not using pattern matching here would be better
-      if (move.isInstanceOf[PhysicalMove]) physicalAttack(move.asInstanceOf[PhysicalMove], target)
-      if (move.isInstanceOf[StatusMove]) statusAttack(move.asInstanceOf[StatusMove], target)
-      // TODO: Not guarding against other types of moves
+      move match {
+        case specialMove: SpecialMove => specialAttack(specialMove, target)
+        case physicalMove: PhysicalMove => physicalAttack(physicalMove, target)
+        case statusMove: StatusMove => statusAttack(statusMove, target)
+      }
       true
     }
   }
