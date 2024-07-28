@@ -39,7 +39,7 @@
 
       <!-- left buttons -->
       <Pane prefHeight="180.0" prefWidth="580.0">
-        <GridPane fx:id="leftButtonGrid" alignment="CENTER" hgap="18" layoutX="38.0" layoutY="32.0" vgap="10">
+        <GridPane alignment="CENTER" hgap="18" layoutX="38.0" layoutY="32.0" vgap="10">
           <Label fx:id="leftDialogBtn1" styleClass="left-battle-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="leftDialogBtn2" styleClass="left-battle-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
           <Label fx:id="leftDialogBtn3" styleClass="left-battle-btn" GridPane.columnIndex="0" GridPane.rowIndex="1" />
@@ -80,7 +80,7 @@
 
       <!-- right buttons -->
       <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
-        <GridPane fx:id="rightButtonGrid" alignment="CENTER" hgap="16" layoutX="42.0" layoutY="32.0" vgap="10">
+        <GridPane alignment="CENTER" hgap="16" layoutX="42.0" layoutY="32.0" vgap="10">
           <Label fx:id="rightDialogBtn1" styleClass="right-dialog-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="rightDialogBtn2" styleClass="right-dialog-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
           <Label fx:id="rightDialogBtn3" styleClass="right-dialog-btn" GridPane.columnIndex="0" GridPane.rowIndex="1" />

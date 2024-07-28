@@ -8,10 +8,10 @@ object PokemonRegistry {
   private var _pokemons: List[Class[_ <: Pokemon]] = List.empty
 
   def registerPokemon(newPokemons: List[Class[_ <: Pokemon]]): Unit = {
-    this._pokemons = newPokemons ::: this._pokemons
+    _pokemons = newPokemons ::: _pokemons
   }
 
-  def pokemons: List[Class[_ <: Pokemon]] = this._pokemons
+  def pokemons: List[Class[_ <: Pokemon]] = _pokemons
 
   registerPokemon(Macros.registerSubclasses[Pokemon]("pokemon.model"))
 }
@@ -45,7 +45,7 @@ abstract class Pokemon {
     if (types.length > 2) {
       throw new Exception(s"Pokemon $pName can have at most 2 types")
     }
-    this._pTypes = types
+    _pTypes = types
   }
 
   /**
@@ -57,7 +57,7 @@ abstract class Pokemon {
     if (moves.length > 4) {
       throw new Exception(s"Pokemon $pName can learn at most 4 moves")
     }
-    this._moves = moves
+    _moves = moves
   }
 
   /**
@@ -66,7 +66,7 @@ abstract class Pokemon {
     * @param damage
     */
   def takeDamage(damage: Int): Unit = {
-    this._currentHP = Math.max(this.currentHP - damage, 0)
+    _currentHP = Math.max(currentHP - damage, 0)
   }
 
   private def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
@@ -110,7 +110,7 @@ abstract class Pokemon {
 
   private def calculatePokemonAccuracy(): Boolean = {
     val random = new Random()
-    random.nextInt(100) <= this.accuracy.value
+    random.nextInt(100) <= accuracy.value
   }
 }
 

@@ -29,14 +29,14 @@ abstract class Trainer {
     */
   protected def addPokemons(pokemons: List[Pokemon]): Unit = {
     if (pokemons.size == 0) throw new Exception("Cannot add 0 Pokemon")
-    if (this.deck.size + pokemons.size > 3) throw new Exception(s"$name can only have 3 Pokemon")
-    this.deck ++= pokemons
-    this.activePokemon = this.deck.head
+    if (deck.size + pokemons.size > 3) throw new Exception(s"$name can only have 3 Pokemon")
+    deck ++= pokemons
+    activePokemon = deck.head
   }
 
   def switchActivePokemon(pokemon: Pokemon): Unit = {
-    if (!this.deck.contains(pokemon)) throw new Exception(s"$name does not have this Pokemon")
-    this.activePokemon = pokemon
+    if (!deck.contains(pokemon)) throw new Exception(s"$name does not have this Pokemon")
+    activePokemon = pokemon
   }
 
   def hasActivePokemon: Boolean = activePokemon != null && activePokemon.currentHP > 0
@@ -55,7 +55,7 @@ class Player extends Trainer {
   val name: String = "Player"
   private var _moveIndex: Int = -1
 
-  def moveIndex(index: Int): Unit = this._moveIndex = index
+  def moveIndex(index: Int): Unit = _moveIndex = index
 
   // DEBUG: Defined list of Pokemon
   override def generateDeck(): Unit = {
@@ -66,7 +66,7 @@ class Player extends Trainer {
     addPokemons(pokemons)
   }
 
-  override def chooseMove(): Move = activePokemon.moves(this._moveIndex)
+  override def chooseMove(): Move = activePokemon.moves(_moveIndex)
 }
 
 class Bot extends Trainer {

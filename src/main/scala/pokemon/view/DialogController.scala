@@ -10,25 +10,26 @@ object DialogController {
     texts: Array[Label],
     dialogBtns: Array[DialogBtn],
     currentSelection: Int = 0,
-    activeButtonCount: Int = 4
+    activeButtonCount: Int = 0
   )
 
   private var _game: Game = _
   private var _gameView: GameView = _
+  private var _isInAttackMenu = false
   private var _leftBtnState: DialogBtnState = _
   private var _rightBtnState: DialogBtnState = _
   private var _setMoveBtns: () => Unit = _
-  private var _isInAttackMenu = false
-  private val _selectedButtonStyle = """
+
+  private val _selectedBtnStyle = """
     -fx-text-fill: #f84620;
   """
-  private val _defaultButtonStyle = """
+  private val _defaultBtnStyle = """
     -fx-text-fill: black;
   """
 
-  def leftBtnState: DialogBtnState = this._leftBtnState
-  def rightBtnState: DialogBtnState = this._rightBtnState
-  def isInAttackMenu: Boolean = this._isInAttackMenu
+  def isInAttackMenu: Boolean = _isInAttackMenu
+  def leftBtnState: DialogBtnState = _leftBtnState
+  def rightBtnState: DialogBtnState = _rightBtnState
 
   def initialize(
     game: Game,
@@ -38,35 +39,36 @@ object DialogController {
     setMoveBtns: () => Unit
   ): Unit = {
 
-    this._game = game
-    this._gameView = gameView
-    this._leftBtnState = DialogBtnState(leftDialogBtns, emptyBtns())
-    this._rightBtnState = DialogBtnState(rightDialogBtns, menuBtns())
-    this._setMoveBtns = setMoveBtns
+    _game = game
+    _gameView = gameView
+    _leftBtnState = DialogBtnState(leftDialogBtns, Array.empty)
+    _rightBtnState = DialogBtnState(rightDialogBtns, menuBtns(), activeButtonCount = 4)
+    _setMoveBtns = setMoveBtns
     updateView()
   }
 
   def handleKeyPress(event: KeyEvent, hookKeyPress: () => Unit): Unit = {
-    val currentState = if (this._isInAttackMenu) this._leftBtnState else this._rightBtnState
+    val currentState = if (_isInAttackMenu) _leftBtnState else _rightBtnState
     val newSelection = getNewSelection(currentState, event.code)
 
     updateCurrentState(newSelection)
     hookKeyPress()
 
     event.code match {
-      case KeyCode.Enter => executeCurrentSelection()
-      case KeyCode.Escape if this._isInAttackMenu => {
+      case KeyCode.Enter => executeCurrent()
+      case KeyCode.Escape if _isInAttackMenu => {
         resetToMainMenu()
-        this._gameView.stateDialogTxt(s"What will ${this._game.player.activePokemon.pName} do?")
+        _gameView.setStateDialog(s"What will ${_game.player.activePokemon.pName} do?")
       }
       case _ =>
     }
-
     updateView()
   }
 
   /**
-    * Returns the new selection based on the current state and the key code
+    * Keyboard navigation
+    *
+    * `moveVertically` and `moveHorizontally` keep navigation wrap around
     *
     * @param state
     * @param keyCode
@@ -82,15 +84,6 @@ object DialogController {
     }
   }
 
-  /**
-    * Moves the selection up or down by the given offset
-    *
-    * - Wrap around the selection if it goes out of bounds
-    *
-    * @param state
-    * @param offset
-    * @return
-    */
   private def moveVertically(state: DialogBtnState, offset: Int): Int = {
     val currentRow = state.currentSelection / 2
     val currentCol = state.currentSelection % 2
@@ -103,15 +96,6 @@ object DialogController {
     }
   }
 
-  /**
-    * Moves the selection left or right by the given offset
-    *
-    * - Wrap around the selection if it goes out of bounds
-    *
-    * @param state
-    * @param offset
-    * @return
-    */
   private def moveHorizontally(state: DialogBtnState, offset: Int): Int = {
     val currentRow = state.currentSelection / 2
     val newCol = (state.currentSelection + offset + 2) % 2
@@ -124,25 +108,25 @@ object DialogController {
   }
 
   private def updateCurrentState(newSelection: Int): Unit = {
-    if (this._isInAttackMenu) {
-      this._leftBtnState = this._leftBtnState.copy(currentSelection = newSelection)
+    if (_isInAttackMenu) {
+      _leftBtnState = _leftBtnState.copy(currentSelection = newSelection)
     } else {
-      this._rightBtnState = this._rightBtnState.copy(currentSelection = newSelection)
+      _rightBtnState = _rightBtnState.copy(currentSelection = newSelection)
     }
   }
 
   def setDialogBtns(dialogBtns: Array[DialogBtn]): Unit = {
     val activeButtonCount = dialogBtns.length
-    this._leftBtnState = this._leftBtnState.copy(dialogBtns = dialogBtns, activeButtonCount = activeButtonCount)
-    this._rightBtnState = this._rightBtnState.copy(dialogBtns = emptyBtns())
+    _leftBtnState = _leftBtnState.copy(dialogBtns = dialogBtns, activeButtonCount = activeButtonCount)
+    _rightBtnState = _rightBtnState.copy(dialogBtns = Array.empty)
     updateView()
   }
 
   def resetToMainMenu(): Unit = {
-    this._gameView.clearRightDialogPane()
-    this._rightBtnState = this._rightBtnState.copy(dialogBtns = menuBtns(), currentSelection = 0, activeButtonCount = 4)
-    this._leftBtnState = this._leftBtnState.copy(dialogBtns = emptyBtns(), currentSelection = 0, activeButtonCount = 0)
-    this._isInAttackMenu = false
+    _gameView.clearRightDialogPane()
+    _leftBtnState = _leftBtnState.copy(dialogBtns = Array.empty, currentSelection = 0, activeButtonCount = 0)
+    _rightBtnState = _rightBtnState.copy(dialogBtns = menuBtns(), currentSelection = 0, activeButtonCount = 4)
+    _isInAttackMenu = false
     updateView()
   }
 
@@ -152,59 +136,50 @@ object DialogController {
   }
 
   private def updateButtonTexts(): Unit = {
-    resetButtonTexts()
-    this._leftBtnState.texts.zip(this._leftBtnState.dialogBtns).foreach { case (button, dialogBtn) =>
-      button.text = dialogBtn.text
-    }
-    this._rightBtnState.texts.zip(this._rightBtnState.dialogBtns).foreach { case (button, dialogBtn) =>
+    updateStateButtonTexts(_leftBtnState)
+    updateStateButtonTexts(_rightBtnState)
+  }
+
+  private def updateStateButtonTexts(state: DialogBtnState): Unit = {
+    state.texts.foreach(_.text = "")
+    state.texts.zip(state.dialogBtns).foreach { case (button, dialogBtn) =>
       button.text = dialogBtn.text
     }
   }
 
   private def updateSelectedButton(): Unit = {
-    val currentState = if (this._isInAttackMenu) this._leftBtnState else this._rightBtnState
+    val currentState = if (_isInAttackMenu) _leftBtnState else _rightBtnState
     currentState.texts.zipWithIndex.foreach { case (button, index) =>
-      if (index < currentState.activeButtonCount) {
-        button.style = if (index == currentState.currentSelection) this._selectedButtonStyle else this._defaultButtonStyle
-      } else {
-        button.style = ""
-        button.text = ""
-      }
+      button.style = if (index < currentState.activeButtonCount) {
+        if (index == currentState.currentSelection) _selectedBtnStyle else _defaultBtnStyle
+      } else ""
+      if (index >= currentState.activeButtonCount) button.text = ""
     }
   }
 
-  private def executeCurrentSelection(): Unit = {
-    if (this._isInAttackMenu) {
-      this._leftBtnState.dialogBtns(this._leftBtnState.currentSelection).execute()
+  private def executeCurrent(): Unit = {
+    if (_isInAttackMenu) {
+      _leftBtnState.dialogBtns(_leftBtnState.currentSelection).execute()
     } else {
-      this._rightBtnState.dialogBtns(this._rightBtnState.currentSelection).execute()
+      _rightBtnState.dialogBtns(_rightBtnState.currentSelection).execute()
     }
   }
 
-  private def menuBtns(): Array[DialogBtn] = {
-    Array(
-      DialogBtn("Attack", () => handleAttackBtn()),
-      DialogBtn("Bag", () => println("Bag action")),
-      DialogBtn("Pokémon", () => println("Pokémon action")),
-      DialogBtn("Run", () => println("Run action"))
-    )
-  }
+  private def menuBtns(): Array[DialogBtn] = Array(
+    DialogBtn("Attack", () => handleAttackBtn()),
+    DialogBtn("Bag", () => println("Bag action")),
+    DialogBtn("Pokémon", () => println("Pokémon action")),
+    DialogBtn("Run", () => println("Run action"))
+  )
 
   private def handleAttackBtn(): Unit = {
-    this._gameView.clearLeftDialogPane()
-    this._isInAttackMenu = true
-    this._setMoveBtns()
+    _gameView.clearLeftDialogPane()
+    _isInAttackMenu = true
+    _setMoveBtns()
   }
-
-  private def resetButtonTexts(): Unit = {
-    this._leftBtnState.texts.foreach(_.text = "")
-    this._rightBtnState.texts.foreach(_.text = "")
-  }
-
-  private def emptyBtns(): Array[DialogBtn] = Array.empty
 
   def clearMoveBtns(): Unit = {
-    this._leftBtnState = this._leftBtnState.copy(dialogBtns = emptyBtns(), currentSelection = 0, activeButtonCount = 0)
+    _leftBtnState = _leftBtnState.copy(dialogBtns = Array.empty)
     updateView()
   }
 }

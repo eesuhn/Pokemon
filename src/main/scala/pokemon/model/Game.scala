@@ -5,16 +5,16 @@ class Game {
   private var _bot: Bot = _
   private var _battle: Battle = _
 
-  def player: Player = this._player
-  def bot: Bot = this._bot
+  def player: Player = _player
+  def bot: Bot = _bot
 
   def start(): Unit = {
-    this._player = new Player()
-    this._bot = new Bot()
-    this._battle = new Battle(this._player, this._bot)
+    _player = new Player()
+    _bot = new Bot()
+    _battle = new Battle(_player, _bot)
 
-    this._player.generateDeck()
-    this._bot.generateDeck()
+    _player.generateDeck()
+    _bot.generateDeck()
   }
 
   /**
@@ -22,9 +22,9 @@ class Game {
     *
     * @return
     */
-  def performTurn(): List[String] = this._battle.performTurn()
+  def performTurn(): List[String] = _battle.performTurn()
 
-  def isGameOver: Boolean = this._player.isDefeated || this._bot.isDefeated
+  def isGameOver: Boolean = _player.isDefeated || _bot.isDefeated
 
   /**
     * Checks if any of the Trainers is defeated, and returns the winner
@@ -32,8 +32,8 @@ class Game {
     * @return
     */
   def winner: Option[Trainer] = {
-    if (this._player.isDefeated) Some(this._bot)
-    else if (this._bot.isDefeated) Some(this._player)
+    if (_player.isDefeated) Some(_bot)
+    else if (_bot.isDefeated) Some(_player)
     else None
   }
 }
