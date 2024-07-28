@@ -113,6 +113,8 @@ abstract class Pokemon {
     val random = new Random()
     random.nextInt(100) <= accuracy.value
   }
+
+  def pokemonHpPercentage: Double = currentHP.toDouble / baseHP.toDouble
 }
 
 class Charmander extends Pokemon {
