@@ -3,7 +3,7 @@ package pokemon.model
 abstract class Stat {
   private val _baseValue: Int = initValue
   private var _value: Int = initValue
-  private var currentStage: Int = 0
+  private var _currentStage: Int = 0
 
   protected def initValue: Int
   protected def minValue: Int = 0
@@ -28,7 +28,7 @@ abstract class Stat {
     * @param stage
     */
   private def changeStage(stage: Int): Unit = {
-    this.currentStage = Math.min(Math.max(this.currentStage + stage, -6), 6)
+    _currentStage = Math.min(Math.max(_currentStage + stage, -6), 6)
   }
 
   /**
@@ -51,8 +51,8 @@ abstract class Stat {
     * Hard limit the value to minValue
     */
   private def updateValue(): Unit = {
-    val calculated = (this._baseValue * this.calculateStage(this.currentStage)).toInt
-    this._value = Math.max(calculated, minValue)
+    val calculated = (_baseValue * calculateStage(_currentStage)).toInt
+    _value = Math.max(calculated, minValue)
   }
 }
 

@@ -1,39 +1,62 @@
 package pokemon.model
 
+import scala.collection.mutable.ListBuffer
+
 class Game {
   private var _player: Player = _
   private var _bot: Bot = _
   private var _battle: Battle = _
 
-  def player: Player = this._player
-  def bot: Bot = this._bot
+  def player: Player = _player
+  def bot: Bot = _bot
 
   def start(): Unit = {
-    this._player = new Player()
-    this._bot = new Bot()
-    this._battle = new Battle(this._player, this._bot)
+    _player = new Player()
+    _bot = new Bot()
+    _battle = new Battle(_player, _bot)
 
-    this._player.generateDeck()
-    this._bot.generateDeck()
+    _player.generateDeck()
+    _bot.generateDeck()
   }
 
   /**
-    * Linked to `performTurn` from `Battle`
+    * Perform a turn in the battle
+    *
+    * - Decide who attacks first based on speed
+    * - Check if defender fainted
     *
     * @return
     */
-  def performTurn(): List[String] = this._battle.performTurn()
+  def performTurn(): List[String] = {
+    val results = ListBuffer[String]()
 
-  def isGameOver: Boolean = this._player.isDefeated || this._bot.isDefeated
+    val playerMove = player.chooseMove()
+    val botMove = bot.chooseMove()
 
-  /**
-    * Checks if any of the Trainers is defeated, and returns the winner
-    *
-    * @return
-    */
+    val (firstAttacker, firstMove, secondAttacker, secondMove) = _battle.decideFirstBySpeed(
+      player, playerMove, bot, botMove)
+
+    // First attack
+    results += _battle.performAttack(firstAttacker, if (firstAttacker == player) bot else player, firstMove)
+
+    // Check if the second Pokemon fainted
+    if ((secondAttacker == player && player.hasActivePokemon) ||
+        (secondAttacker == bot && bot.hasActivePokemon)) {
+      // Second attack
+      results += _battle.performAttack(secondAttacker, if (secondAttacker == player) bot else player, secondMove)
+    }
+
+    results ++= _battle.handleFaintSwitch(player)
+    results ++= _battle.handleFaintSwitch(bot)
+
+    results.toList
+  }
+
+  def isGameOver: Boolean = _player.isDefeated || _bot.isDefeated
+
   def winner: Option[Trainer] = {
-    if (this._player.isDefeated) Some(this._bot)
-    else if (this._bot.isDefeated) Some(this._player)
+    if (_player.isDefeated) Some(_bot)
+    else if (_bot.isDefeated) Some(_player)
     else None
   }
 }

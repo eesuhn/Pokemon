@@ -33,27 +33,44 @@ class GameView(
     pokemonRight.setup(s"${rightPokemon}-front")
   }
 
-  def stateDialogTxt(text: String): Unit = stateDialogTxt.text = text
+  def setStateDialog(text: String): Unit = stateDialogTxt.text = text
+
+  def updateMoveStats(power: String, accuracy: String, category: String, typeOfMove: String): Unit = {
+    powerTxt(power)
+    accuracyTxt(accuracy)
+    setMoveCatImg(category)
+    setMoveType(typeOfMove)
+  }
+
+  def clearLeftDialogPane(): Unit = stateDialogTxt.text = ""
+
+  def clearRightDialogPane(): Unit = updateMoveStats("", "", "", "")
 
   private def powerTxt(text: String): Unit = {
     powerTxt.text = text
-    if (!text.isEmpty()) powerTxtLabel.text = "Power" else powerTxtLabel.text = ""
+    powerTxtLabel.text = if (text.nonEmpty) "Power" else ""
   }
 
   private def accuracyTxt(text: String): Unit = {
     accuracyTxt.text = text
-    if (!text.isEmpty()) accuracyTxtLabel.text = "Accuracy" else accuracyTxtLabel.text = ""
+    accuracyTxtLabel.text = if (text.nonEmpty) "Accuracy" else ""
   }
 
-  private def moveCat(category: String): Unit = {
-    if (!category.isEmpty()) {
-      moveCat.image = ResourceUtil.resouceImage(s"misc/${category}-move.png")
-    } else {
-      moveCat.image = null
-    }
+  /**
+    * Set move category image
+    *
+    * @param category
+    */
+  private def setMoveCatImg(category: String): Unit = {
+    moveCat.image = if (category.nonEmpty) ResourceUtil.resouceImage(s"misc/${category}-move.png") else null
   }
 
-  private def moveType(typeOfMove: String): Unit = {
+  /**
+    * Set move type image and text
+    *
+    * @param typeOfMove
+    */
+  private def setMoveType(typeOfMove: String): Unit = {
     if (!typeOfMove.isEmpty()) {
       moveTypeImg.image = ResourceUtil.resouceImage(s"misc/${typeOfMove}-type.png")
       moveTypeTxt.text = typeOfMove.toUpperCase()
@@ -82,34 +99,6 @@ class GameView(
     }
     moveTypeTxt.style = s"-fx-text-fill: ${color};"
   }
-
-  def clearLeftDialogPane(): Unit = {
-    stateDialogTxt.text = ""
-  }
-
-  def clearRightDialogPane(): Unit = {
-    powerTxt("")
-    accuracyTxt("")
-    moveCat("")
-    moveType("")
-  }
-
-  /**
-    * Set move stats on the right dialog pane
-    *
-    * - Power, Accuracy, Category, Type of Move
-    *
-    * @param power
-    * @param accuracy
-    * @param category
-    * @param typeOfMove
-    */
-  def moveStats(power: String, accuracy: String, category: String, typeOfMove: String): Unit = {
-    powerTxt(power)
-    accuracyTxt(accuracy)
-    moveCat(category)
-    moveType(typeOfMove)
-  }
 }
 
 case class GamePokemonView(
@@ -128,14 +117,10 @@ case class GamePokemonView(
     imageView.preserveRatio = true
     imageView.smooth = true
 
-    Platform.runLater {
-      positionPokemon()
-    }
+    Platform.runLater(positionPokemon())
 
     imageView.image.onChange { (_, _, newImage) =>
-      if (newImage != null) {
-        positionPokemon()
-      }
+      if (newImage != null) positionPokemon()
     }
   }
 
@@ -146,9 +131,7 @@ case class GamePokemonView(
     * - Anchor to bottom
     */
   private def positionPokemon(): Unit = {
-    val newImage = imageView.image.value
-
-    if (newImage != null) {
+    Option(imageView.image.value).foreach { newImage =>
       val imageWidth = newImage.getWidth()
       val imageHeight = newImage.getHeight()
       val paneWidth = anchorPane.width.value
@@ -156,11 +139,9 @@ case class GamePokemonView(
       imageView.fitWidth = imageWidth
       imageView.fitHeight = imageHeight
 
-      // Center horizontally
       val leftAnchor = (paneWidth - imageView.fitWidth.value) / 2
       AnchorPane.setLeftAnchor(imageView, leftAnchor)
 
-      // Anchor to bottom
       AnchorPane.setBottomAnchor(imageView, 0.0)
     }
   }

@@ -11,6 +11,8 @@ object ResourceUtil {
     * Load a resource layout from "view" folder
     *
     * @param path
+    *
+    * @throws Exception if resource is not found
     * @return
     */
   def resourceLayout(path: String): FXMLLoader = {
@@ -22,6 +24,14 @@ object ResourceUtil {
     loader
   }
 
+  /**
+    * Load a resource image from any folder
+    *
+    * @param path
+    *
+    * @throws Exception if resource is not found
+    * @return
+    */
   def resouceImage(path: String): Image = {
     val resource = MainApp.getClass.getResourceAsStream(path)
     if (resource == null) throw new Exception(s"Cannot load resource: $path")
@@ -33,6 +43,8 @@ object ResourceUtil {
     * Load specifically TTF, from "font" folder
     *
     * @param path
+    *
+    * @throws Exception if resource is not found
     */
   def loadFont(path: String): Unit = {
     val fontResource = MainApp.getClass.getResourceAsStream(s"font/${path}")

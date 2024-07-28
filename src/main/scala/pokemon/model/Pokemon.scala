@@ -8,10 +8,10 @@ object PokemonRegistry {
   private var _pokemons: List[Class[_ <: Pokemon]] = List.empty
 
   def registerPokemon(newPokemons: List[Class[_ <: Pokemon]]): Unit = {
-    this._pokemons = newPokemons ::: this._pokemons
+    _pokemons = newPokemons ::: _pokemons
   }
 
-  def pokemons: List[Class[_ <: Pokemon]] = this._pokemons
+  def pokemons: List[Class[_ <: Pokemon]] = _pokemons
 
   registerPokemon(Macros.registerSubclasses[Pokemon]("pokemon.model"))
 }
@@ -40,24 +40,24 @@ abstract class Pokemon {
     * Set the types for the Pokemon, at most 2 types can be set
     *
     * @param types
+    *
+    * @throws Exception if `types.length > 2`
     */
   protected def pTypes(types: List[Type]): Unit = {
-    if (types.length > 2) {
-      throw new Exception(s"Pokemon $pName can have at most 2 types")
-    }
-    this._pTypes = types
+    if (types.length > 2) throw new Exception(s"Pokemon $pName can have at most 2 types")
+    _pTypes = types
   }
 
   /**
     * Set the moves for the Pokemon, at most 4 moves can be set
     *
     * @param moves
+    *
+    * @throws Exception if `moves.length > 4`
     */
   protected def moves(moves: List[Move]): Unit = {
-    if (moves.length > 4) {
-      throw new Exception(s"Pokemon $pName can learn at most 4 moves")
-    }
-    this._moves = moves
+    if (moves.length > 4) throw new Exception(s"Pokemon $pName can learn at most 4 moves")
+    _moves = moves
   }
 
   /**
@@ -66,7 +66,7 @@ abstract class Pokemon {
     * @param damage
     */
   def takeDamage(damage: Int): Unit = {
-    this._currentHP = Math.max(this.currentHP - damage, 0)
+    _currentHP = Math.max(currentHP - damage, 0)
   }
 
   private def statusAttack(statusMove: StatusMove, target: Pokemon): Unit = {
@@ -89,6 +89,7 @@ abstract class Pokemon {
     *
     * Consider accuracy for both move and Pokemon
     *
+    * - SpecialMove: PhysicalMove + StatusMove
     * - PhysicalMove: Calculate damage based on the user's attack and the target's defense
     * - StatusMove: Apply effects of the move to the target Pokemon
     *
@@ -110,7 +111,7 @@ abstract class Pokemon {
 
   private def calculatePokemonAccuracy(): Boolean = {
     val random = new Random()
-    random.nextInt(100) <= this.accuracy.value
+    random.nextInt(100) <= accuracy.value
   }
 }
 

@@ -8,10 +8,10 @@ object MoveRegistry {
   private var _moves: List[Move] = List.empty
 
   def registerMoves(newMoves: List[Move]): Unit = {
-    this._moves = newMoves ::: this._moves
+    _moves = newMoves ::: _moves
   }
 
-  def moves: List[Move] = this._moves
+  def moves: List[Move] = _moves
 
   registerMoves(Macros.registerInstances[Move]("pokemon.model"))
 }
@@ -21,16 +21,23 @@ abstract class Move {
   val accuracy: Int
   val moveType: Type
 
+  /**
+    * Return power of the move if it is a PhysicalMove
+    *
+    * @return
+    */
   def movePower: String = this match {
     case physicalMove: PhysicalMove => physicalMove.basePower.toString
     case _ => "-"
   }
 
-  def moveTypeName: String = this.moveType
-    .getClass
-    .getSimpleName
-    .toLowerCase
-    .replace("$", "")
+  def moveTypeName: String = {
+    moveType
+      .getClass
+      .getSimpleName
+      .toLowerCase
+      .replace("$", "")
+  }
 
   def moveCategoryName: String = this match {
     case _: SpecialMove => "special"
@@ -41,7 +48,7 @@ abstract class Move {
 
   def calculateMoveAccuracy(): Boolean = {
     val random = Random
-    random.nextInt(100) <= this.accuracy
+    random.nextInt(100) <= accuracy
   }
 }
 
@@ -53,13 +60,8 @@ trait StatusMove extends Move {
   def effects: List[StatEffect]
   def targetSelf: Boolean
 
-  /**
-    * Apply effects of the move to the target Pokemon
-    *
-    * @param pokemon
-    */
   def applyEffects(pokemon: Pokemon): Unit = {
-    this.effects.foreach(_.applyEffect(pokemon))
+    effects.foreach(_.applyEffect(pokemon))
   }
 }
 
@@ -73,8 +75,8 @@ trait PhysicalMove extends Move {
   /**
     * Calculate modifier for the move based on target's type
     *
-    * - *2 if move is strong against target type
-    * - *0.5 if move is weak against target type
+    * - multiply by 2 if move is strong against target type
+    * - multiply by 0.5 if move is weak against target type
     *
     * @param target
     * @return
@@ -84,8 +86,8 @@ trait PhysicalMove extends Move {
       .pTypes
       .foldLeft(1.0) { (modifier, t) =>
         modifier * (
-          if (this.moveType.strongAgainst.contains(t)) 2.0
-          else if (this.moveType.weakAgainst.contains(t)) 0.5
+          if (moveType.strongAgainst.contains(t)) 2.0
+          else if (moveType.weakAgainst.contains(t)) 0.5
           else 1.0
         )
       }
@@ -109,6 +111,9 @@ trait PhysicalMove extends Move {
   }
 }
 
+/**
+  * SpecialMove is the combination of PhysicalMove and StatusMove
+  */
 trait SpecialMove extends PhysicalMove with StatusMove
 
 object Growl extends StatusMove {
