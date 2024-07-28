@@ -163,20 +163,21 @@ case class GamePokemonView(
       val leftAnchor = (paneWidth - pokemonImg.fitWidth.value) / 2
       AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
 
-      // positionHpBar()
+      positionHpBar()
     }
   }
 
-  /**
-    * Position HP bar based on Pokemon image height
-    */
   def positionHpBar(): Unit = {
     Option(pokemonImg.image.value).foreach { _ =>
-      val imageHeight = pokemonImg.fitHeight.value
-      val paneHeight = anchorPane.height.value
+      // Anchor based on Pokemon image height
+      // val imageHeight = pokemonImg.fitHeight.value
+      // val paneHeight = anchorPane.height.value
 
-      val topAnchor = paneHeight - imageHeight - hpBar.getHeight - 30
-      AnchorPane.setTopAnchor(hpBar, topAnchor)
+      // val topAnchor = paneHeight - imageHeight - hpBar.getHeight - 30
+      // AnchorPane.setTopAnchor(hpBar, topAnchor)
+
+      val leftAnchor = (anchorPane.width.value - hpBar.getWidth) / 2
+      AnchorPane.setLeftAnchor(hpBar, leftAnchor)
     }
   }
 }
