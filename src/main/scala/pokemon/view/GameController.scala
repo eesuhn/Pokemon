@@ -118,8 +118,16 @@ class GameController(
   }
 
   private def focusInputPane(): Unit = {
-    this._scene.onKeyPressed = (event: KeyEvent) => DialogController.handleKeyPress(event)
+    this._scene.onKeyPressed = (event: KeyEvent) => DialogController.handleKeyPress(event, hookKeyPress)
     inputPane.requestFocus()
+  }
+
+  def hookKeyPress(): Unit = {
+    if (DialogController.isInAttackMenu) {
+      val currentSelection = DialogController.leftBtnState.currentSelection
+      val moveName = this._game.player.activePokemon.moves(currentSelection).moveName
+      moveStats(moveName)
+    }
   }
 
   /**
@@ -185,6 +193,20 @@ class GameController(
   private def handleGameOver(): Unit = this._game.winner match {
     case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
     case None => println("Game Over! It's a tie!")
+  }
+
+  def moveStats(moveName: String): Unit = {
+    val currentMove = this._game.player.activePokemon.moves.find(_.moveName == moveName).get
+
+    val power = currentMove.movePower
+    val category = currentMove.moveCategoryName
+
+    this._gameView.moveStats(
+      power,
+      currentMove.accuracy.toString,
+      category,
+      currentMove.moveTypeName
+    )
   }
 
   initialize()

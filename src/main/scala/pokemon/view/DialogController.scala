@@ -5,7 +5,7 @@ import scalafx.scene.input.{KeyCode, KeyEvent}
 
 object DialogController {
 
-  private case class DialogBtnState(
+  case class DialogBtnState(
     texts: Array[Label],
     dialogBtns: Array[DialogBtn],
     currentSelection: Int = 0,
@@ -24,6 +24,10 @@ object DialogController {
     -fx-text-fill: black;
   """
 
+  def leftBtnState: DialogBtnState = _leftBtnState
+  def rightBtnState: DialogBtnState = _rightBtnState
+  def isInAttackMenu: Boolean = _isInAttackMenu
+
   def initialize(
     gameView: GameView,
     leftDialogBtns: Array[Label],
@@ -38,11 +42,12 @@ object DialogController {
     updateView()
   }
 
-  def handleKeyPress(event: KeyEvent): Unit = {
+  def handleKeyPress(event: KeyEvent, hookKeyPress: () => Unit): Unit = {
     val currentState = if (_isInAttackMenu) _leftBtnState else _rightBtnState
     val newSelection = getNewSelection(currentState, event.code)
 
     updateCurrentState(newSelection)
+    hookKeyPress()
 
     event.code match {
       case KeyCode.Enter => executeCurrentSelection()

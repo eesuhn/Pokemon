@@ -94,6 +94,7 @@ abstract class Pokemon {
     if (!calculatePokemonAccuracy() || !move.calculateMoveAccuracy()) {
       false
     } else {
+      // TODO: physicalMove + statusMove = specialMove
       move match {
         case physicalMove: PhysicalMove => physicalAttack(physicalMove, target)
         case statusMove: StatusMove => statusAttack(statusMove, target)
