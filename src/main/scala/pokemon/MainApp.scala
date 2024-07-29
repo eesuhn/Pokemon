@@ -20,5 +20,5 @@ object MainApp extends JFXApp {
     }
   }
 
-  Layout.showGameLayout()
+  Layout.battleLayout()
 }

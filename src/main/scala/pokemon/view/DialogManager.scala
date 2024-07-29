@@ -1,12 +1,12 @@
 package pokemon.view
 
-import pokemon.model.Game
+import pokemon.model.Battle
 import scalafx.scene.control.Label
 import scalafx.scene.input.{KeyCode, KeyEvent}
 
 class DialogManager(
-  val game: Game,
-  val gameComponent: GameComponent,
+  val battle: Battle,
+  val battleComponent: BattleComponent,
   val leftDialogBtns: Array[Label],
   val rightDialogBtns: Array[Label],
   val setMoveBtns: () => Unit
@@ -51,7 +51,7 @@ class DialogManager(
       case KeyCode.Enter => executeCurrent()
       case KeyCode.Escape if _isInAttackMenu => {
         resetToMainMenu()
-        gameComponent.setStateDialog(s"What will ${game.player.activePokemon.pName} do?")
+        battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
       }
       case _ =>
     }
@@ -116,7 +116,7 @@ class DialogManager(
   }
 
   def resetToMainMenu(): Unit = {
-    gameComponent.clearRightDialogPane()
+    battleComponent.clearRightDialogPane()
     _leftBtnState = _leftBtnState.copy(dialogBtns = Array.empty, currentSelection = 0, activeButtonCount = 0)
     _rightBtnState = _rightBtnState.copy(dialogBtns = menuBtns(), currentSelection = 0, activeButtonCount = 4)
     _isInAttackMenu = false
@@ -166,7 +166,7 @@ class DialogManager(
   )
 
   private def handleAttackBtn(): Unit = {
-    gameComponent.clearLeftDialogPane()
+    battleComponent.clearLeftDialogPane()
     _isInAttackMenu = true
     setMoveBtns()
   }

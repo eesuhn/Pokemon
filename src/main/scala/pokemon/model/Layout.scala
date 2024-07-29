@@ -11,8 +11,8 @@ object Layout {
     loader.getRoot[jfxs.layout.BorderPane]
   }
 
-  def showGameLayout(): Unit = {
-    val loader = ResourceUtil.resourceLayout("GameLayout")
+  def battleLayout(): Unit = {
+    val loader = ResourceUtil.resourceLayout("BattleLayout")
     val gameLayout = loader.getRoot[jfxs.layout.AnchorPane]
     MainApp.rootLayout.setCenter(gameLayout)
   }
