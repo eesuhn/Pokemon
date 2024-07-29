@@ -4,7 +4,13 @@ import pokemon.model.Game
 import scalafx.scene.control.Label
 import scalafx.scene.input.{KeyCode, KeyEvent}
 
-object DialogController {
+class DialogManager(
+  val game: Game,
+  val gameComponent: GameComponent,
+  val leftDialogBtns: Array[Label],
+  val rightDialogBtns: Array[Label],
+  val setMoveBtns: () => Unit
+) {
 
   case class DialogBtnState(
     texts: Array[Label],
@@ -13,12 +19,9 @@ object DialogController {
     activeButtonCount: Int = 0
   )
 
-  private var _game: Game = _
-  private var _gameView: GameView = _
   private var _isInAttackMenu = false
   private var _leftBtnState: DialogBtnState = _
   private var _rightBtnState: DialogBtnState = _
-  private var _setMoveBtns: () => Unit = _
 
   private val _selectedBtnStyle = """
     -fx-text-fill: #f84620;
@@ -31,19 +34,9 @@ object DialogController {
   def leftBtnState: DialogBtnState = _leftBtnState
   def rightBtnState: DialogBtnState = _rightBtnState
 
-  def initialize(
-    game: Game,
-    gameView: GameView,
-    leftDialogBtns: Array[Label],
-    rightDialogBtns: Array[Label],
-    setMoveBtns: () => Unit
-  ): Unit = {
-
-    _game = game
-    _gameView = gameView
+  def setup(): Unit = {
     _leftBtnState = DialogBtnState(leftDialogBtns, Array.empty)
     _rightBtnState = DialogBtnState(rightDialogBtns, menuBtns(), activeButtonCount = 4)
-    _setMoveBtns = setMoveBtns
     updateView()
   }
 
@@ -58,7 +51,7 @@ object DialogController {
       case KeyCode.Enter => executeCurrent()
       case KeyCode.Escape if _isInAttackMenu => {
         resetToMainMenu()
-        _gameView.setStateDialog(s"What will ${_game.player.activePokemon.pName} do?")
+        gameComponent.setStateDialog(s"What will ${game.player.activePokemon.pName} do?")
       }
       case _ =>
     }
@@ -123,7 +116,7 @@ object DialogController {
   }
 
   def resetToMainMenu(): Unit = {
-    _gameView.clearRightDialogPane()
+    gameComponent.clearRightDialogPane()
     _leftBtnState = _leftBtnState.copy(dialogBtns = Array.empty, currentSelection = 0, activeButtonCount = 0)
     _rightBtnState = _rightBtnState.copy(dialogBtns = menuBtns(), currentSelection = 0, activeButtonCount = 4)
     _isInAttackMenu = false
@@ -173,9 +166,9 @@ object DialogController {
   )
 
   private def handleAttackBtn(): Unit = {
-    _gameView.clearLeftDialogPane()
+    gameComponent.clearLeftDialogPane()
     _isInAttackMenu = true
-    _setMoveBtns()
+    setMoveBtns()
   }
 
   def clearMoveBtns(): Unit = {
