@@ -56,6 +56,11 @@ class BattleController(
   private val _dialogManager: DialogManager = initDialogManager()
   private var _scene: Scene = null
 
+  // Handle key press delay
+  private var isKeyReleased: Boolean = true
+  private var lastKeyPressTime: Long = 0
+  private val keyPressDelay: Long = 200
+
   def initialize(): Unit = {
     _battle.start()
     _battleComponent.setup()
@@ -139,6 +144,7 @@ class BattleController(
 
   private def focusInputPane(): Unit = {
     _scene.onKeyPressed = (event: KeyEvent) => _dialogManager.handleKeyPress(event, hookKeyPress)
+    _scene.onKeyReleased = (event: KeyEvent) => _dialogManager.handleKeyRelease(event)
     inputPane.requestFocus()
   }
 
@@ -195,11 +201,24 @@ class BattleController(
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
         _battleComponent.setStateDialog(results(currentIndex))
-        _scene.onKeyPressed = (_: KeyEvent) => showNextResult(currentIndex + 1)
+        setupKeyHandlers(currentIndex)
       } else {
         handleTurnEnd()
       }
     }
+
+    def setupKeyHandlers(currentIndex: Int): Unit = {
+      _scene.onKeyPressed = (event: KeyEvent) => {
+        val currentTime = System.currentTimeMillis()
+        if (isKeyReleased && currentTime - lastKeyPressTime > keyPressDelay) {
+          isKeyReleased = false
+          lastKeyPressTime = currentTime
+          showNextResult(currentIndex + 1)
+        }
+      }
+      _scene.onKeyReleased = (_: KeyEvent) => isKeyReleased = true
+    }
+
     showNextResult(0)
   }
 

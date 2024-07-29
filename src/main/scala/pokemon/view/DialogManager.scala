@@ -23,6 +23,12 @@ class DialogManager(
   private var _leftBtnState: DialogBtnState = _
   private var _rightBtnState: DialogBtnState = _
 
+  // Handle key press delay
+  private var lastPressedKey: Option[KeyCode] = None
+  private var isKeyReleased: Boolean = true
+  private var lastKeyPressTime: Long = 0
+  private val keyPressDelay: Long = 200
+
   private val _selectedBtnStyle = """
     -fx-text-fill: #f84620;
   """
@@ -41,21 +47,36 @@ class DialogManager(
   }
 
   def handleKeyPress(event: KeyEvent, hookKeyPress: () => Unit): Unit = {
-    val currentState = if (_isInAttackMenu) _leftBtnState else _rightBtnState
-    val newSelection = getNewSelection(currentState, event.code)
+    val currentTime = System.currentTimeMillis()
+    if ((isKeyReleased || lastPressedKey != Some(event.code)) &&
+        currentTime - lastKeyPressTime > keyPressDelay) {
+      isKeyReleased = false
+      lastPressedKey = Some(event.code)
+      lastKeyPressTime = currentTime
 
-    updateCurrentState(newSelection)
-    hookKeyPress()
+      val currentState = if (_isInAttackMenu) _leftBtnState else _rightBtnState
+      val newSelection = getNewSelection(currentState, event.code)
 
-    event.code match {
-      case KeyCode.Enter => executeCurrent()
-      case KeyCode.Escape if _isInAttackMenu => {
-        resetToMainMenu()
-        battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
+      updateCurrentState(newSelection)
+      hookKeyPress()
+
+      event.code match {
+        case KeyCode.Enter => executeCurrent()
+        case KeyCode.Escape if _isInAttackMenu => {
+          resetToMainMenu()
+          battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
+        }
+        case _ =>
       }
-      case _ =>
+      updateView()
     }
-    updateView()
+  }
+
+  def handleKeyRelease(event: KeyEvent): Unit = {
+    if (lastPressedKey == Some(event.code)) {
+      isKeyReleased = true
+      lastPressedKey = None
+    }
   }
 
   /**
