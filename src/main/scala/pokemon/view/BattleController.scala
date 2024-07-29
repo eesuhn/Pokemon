@@ -1,6 +1,6 @@
 package pokemon.view
 
-import pokemon.model.Game
+import pokemon.model.Battle
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene
@@ -11,7 +11,7 @@ import scalafx.scene.layout.{AnchorPane, Pane}
 import scalafxml.core.macros.sfxml
 
 @sfxml
-class GameController(
+class BattleController(
   // background
   val battleBg: ImageView,
   val battleDialogLeft: ImageView,
@@ -51,14 +51,14 @@ class GameController(
   val rightDialogBtn4: Label
 ) {
 
-  private val _game: Game = new Game()
-  private val _gameComponent: GameComponent = initGameComponent()
+  private val _battle: Battle = new Battle()
+  private val _battleComponent: BattleComponent = initBattleComponent()
   private val _dialogManager: DialogManager = initDialogManager()
   private var _scene: Scene = null
 
   def initialize(): Unit = {
-    _game.start()
-    _gameComponent.setup()
+    _battle.start()
+    _battleComponent.setup()
     _dialogManager.setup()
     updatePokemonViews()
 
@@ -83,26 +83,26 @@ class GameController(
       rightDialogBtn4
     )
     new DialogManager(
-      _game,
-      _gameComponent,
+      _battle,
+      _battleComponent,
       leftDialogBtns,
       rightDialogBtns,
       setMoveBtns
     )
   }
 
-  private def initGameComponent(): GameComponent = {
-    val pokemonLeftView: GamePokemonView = new GamePokemonView(
+  private def initBattleComponent(): BattleComponent = {
+    val pokemonLeftView: BattlePokemonView = new BattlePokemonView(
       pokemonLeft,
       pokemonLeftPane,
       pokemonLeftHpBar
     )
-    val pokemonRightView: GamePokemonView = new GamePokemonView(
+    val pokemonRightView: BattlePokemonView = new BattlePokemonView(
       pokemonRight,
       pokemonRightPane,
       pokemonRightHpBar
     )
-    new GameComponent(
+    new BattleComponent(
       // background
       battleBg,
       battleDialogLeft,
@@ -127,13 +127,13 @@ class GameController(
   }
 
   private def updatePokemonViews(): Unit = {
-    _gameComponent.pokemonViews(
-      _game.player.activePokemon.pName,
-      _game.bot.activePokemon.pName
+    _battleComponent.pokemonViews(
+      _battle.player.activePokemon.pName,
+      _battle.bot.activePokemon.pName
     )
-    _gameComponent.pokemonHpBars(
-      _game.player.activePokemon.pokemonHpPercentage,
-      _game.bot.activePokemon.pokemonHpPercentage
+    _battleComponent.pokemonHpBars(
+      _battle.player.activePokemon.pokemonHpPercentage,
+      _battle.bot.activePokemon.pokemonHpPercentage
     )
   }
 
@@ -149,15 +149,15 @@ class GameController(
   private def handleMainMenu(): Unit = {
     updatePokemonViews()
     _dialogManager.resetToMainMenu()
-    _gameComponent.setStateDialog(s"What will ${_game.player.activePokemon.pName} do?")
+    _battleComponent.setStateDialog(s"What will ${_battle.player.activePokemon.pName} do?")
   }
 
   private def showStats(): Unit = {
     val currentSelection = _dialogManager.leftBtnState.currentSelection
-    val moveName = _game.player.activePokemon.moves(currentSelection).moveName
+    val moveName = _battle.player.activePokemon.moves(currentSelection).moveName
 
-    _game.player.activePokemon.moves.find(_.moveName == moveName).foreach { move =>
-      _gameComponent.updateMoveStats(
+    _battle.player.activePokemon.moves.find(_.moveName == moveName).foreach { move =>
+      _battleComponent.updateMoveStats(
         move.movePower,
         move.accuracy.toString,
         move.moveCategoryName,
@@ -168,7 +168,7 @@ class GameController(
 
   private def setMoveBtns(): Unit = {
     showStats()
-    val moves = _game.player.activePokemon.moves
+    val moves = _battle.player.activePokemon.moves
     val dialogBtns = moves
       .zipWithIndex
       .map { case (move, index) =>
@@ -178,8 +178,8 @@ class GameController(
   }
 
   private def controlTurn(moveIndex: Int): Unit = {
-    _game.player.moveIndex(moveIndex)
-    val results = _game.performTurn()
+    _battle.player.moveIndex(moveIndex)
+    val results = _battle.performTurn()
     showResultsInDialog(results)
   }
 
@@ -190,11 +190,11 @@ class GameController(
     */
   private def showResultsInDialog(results: Seq[String]): Unit = {
     _dialogManager.clearMoveBtns()
-    _gameComponent.clearRightDialogPane()
+    _battleComponent.clearRightDialogPane()
 
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
-        _gameComponent.setStateDialog(results(currentIndex))
+        _battleComponent.setStateDialog(results(currentIndex))
         _scene.onKeyPressed = (_: KeyEvent) => showNextResult(currentIndex + 1)
       } else {
         handleTurnEnd()
@@ -204,13 +204,13 @@ class GameController(
   }
 
   private def handleTurnEnd(): Unit = {
-    if (_game.isGameOver) handleGameOver() else handleMainMenu()
+    if (_battle.isBattleOver) handleBattleOver() else handleMainMenu()
     focusInputPane()
   }
 
-  private def handleGameOver(): Unit = _game.winner match {
-    case Some(trainer) => println(s"Game Over! ${trainer.name} wins!")
-    case None => println("Game Over! It's a tie!")
+  private def handleBattleOver(): Unit = _battle.winner match {
+    case Some(trainer) => println(s"Battle Over! ${trainer.name} wins!")
+    case None => println("Battle Over! It's a tie!")
   }
 
   initialize()

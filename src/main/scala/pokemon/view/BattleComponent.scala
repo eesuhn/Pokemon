@@ -6,15 +6,15 @@ import scalafx.scene.control.{Label, ProgressBar}
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.AnchorPane
 
-class GameComponent(
+class BattleComponent(
   // background
   val battleBg: ImageView,
   val battleDialogLeft: ImageView,
   val battleDialogRight: ImageView,
 
   // pokemon
-  val pokemonLeft: GamePokemonView,
-  val pokemonRight: GamePokemonView,
+  val pokemonLeft: BattlePokemonView,
+  val pokemonRight: BattlePokemonView,
 
   // left dialog
   val stateDialogTxt: Label,
@@ -121,7 +121,7 @@ class GameComponent(
   }
 }
 
-case class GamePokemonView(
+case class BattlePokemonView(
   pokemonImg: ImageView,
   anchorPane: AnchorPane,
   hpBar: ProgressBar
