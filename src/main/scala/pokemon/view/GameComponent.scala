@@ -6,7 +6,7 @@ import scalafx.scene.control.{Label, ProgressBar}
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.AnchorPane
 
-class GameView(
+class GameComponent(
   // background
   val battleBg: ImageView,
   val battleDialogLeft: ImageView,
@@ -163,20 +163,27 @@ case class GamePokemonView(
       val leftAnchor = (paneWidth - pokemonImg.fitWidth.value) / 2
       AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
 
-      // positionHpBar()
+      positionHpBar()
     }
   }
 
   /**
-    * Position HP bar based on Pokemon image height
+    * Position Pokemon HP bar within the AnchorPane
+    *
+    * - Center horizontally
     */
   def positionHpBar(): Unit = {
     Option(pokemonImg.image.value).foreach { _ =>
-      val imageHeight = pokemonImg.fitHeight.value
-      val paneHeight = anchorPane.height.value
 
-      val topAnchor = paneHeight - imageHeight - hpBar.getHeight - 30
-      AnchorPane.setTopAnchor(hpBar, topAnchor)
+      // Anchor based on Pokemon image height
+      // val imageHeight = pokemonImg.fitHeight.value
+      // val paneHeight = anchorPane.height.value
+
+      // val topAnchor = paneHeight - imageHeight - hpBar.getHeight - 30
+      // AnchorPane.setTopAnchor(hpBar, topAnchor)
+
+      val leftAnchor = (anchorPane.width.value - hpBar.getWidth) / 2
+      AnchorPane.setLeftAnchor(hpBar, leftAnchor)
     }
   }
 }

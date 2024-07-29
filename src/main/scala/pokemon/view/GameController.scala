@@ -52,14 +52,15 @@ class GameController(
 ) {
 
   private val _game: Game = new Game()
-  private val _gameView: GameView = initGameView()
+  private val _gameComponent: GameComponent = initGameComponent()
+  private val _dialogManager: DialogManager = initDialogManager()
   private var _scene: Scene = null
 
   def initialize(): Unit = {
     _game.start()
-    _gameView.setup()
+    _gameComponent.setup()
+    _dialogManager.setup()
     updatePokemonViews()
-    initDialogController()
 
     Platform.runLater {
       _scene = inputPane.scene.value
@@ -68,7 +69,29 @@ class GameController(
     }
   }
 
-  private def initGameView(): GameView = {
+  private def initDialogManager(): DialogManager = {
+    val leftDialogBtns = Array(
+      leftDialogBtn1,
+      leftDialogBtn2,
+      leftDialogBtn3,
+      leftDialogBtn4
+    )
+    val rightDialogBtns = Array(
+      rightDialogBtn1,
+      rightDialogBtn2,
+      rightDialogBtn3,
+      rightDialogBtn4
+    )
+    new DialogManager(
+      _game,
+      _gameComponent,
+      leftDialogBtns,
+      rightDialogBtns,
+      setMoveBtns
+    )
+  }
+
+  private def initGameComponent(): GameComponent = {
     val pokemonLeftView: GamePokemonView = new GamePokemonView(
       pokemonLeft,
       pokemonLeftPane,
@@ -79,7 +102,7 @@ class GameController(
       pokemonRightPane,
       pokemonRightHpBar
     )
-    new GameView(
+    new GameComponent(
       // background
       battleBg,
       battleDialogLeft,
@@ -104,50 +127,37 @@ class GameController(
   }
 
   private def updatePokemonViews(): Unit = {
-    _gameView.pokemonViews(
+    _gameComponent.pokemonViews(
       _game.player.activePokemon.pName,
       _game.bot.activePokemon.pName
     )
-    _gameView.pokemonHpBars(
+    _gameComponent.pokemonHpBars(
       _game.player.activePokemon.pokemonHpPercentage,
       _game.bot.activePokemon.pokemonHpPercentage
     )
   }
 
-  private def initDialogController(): Unit = {
-    val leftDialogBtns = Array(leftDialogBtn1, leftDialogBtn2, leftDialogBtn3, leftDialogBtn4)
-    val rightDialogBtns = Array(rightDialogBtn1, rightDialogBtn2, rightDialogBtn3, rightDialogBtn4)
-
-    DialogController.initialize(
-      _game,
-      _gameView,
-      leftDialogBtns,
-      rightDialogBtns,
-      setMoveBtns
-    )
-  }
-
   private def focusInputPane(): Unit = {
-    _scene.onKeyPressed = (event: KeyEvent) => DialogController.handleKeyPress(event, hookKeyPress)
+    _scene.onKeyPressed = (event: KeyEvent) => _dialogManager.handleKeyPress(event, hookKeyPress)
     inputPane.requestFocus()
   }
 
   private def hookKeyPress(): Unit = {
-    if (DialogController.isInAttackMenu) showStats()
+    if (_dialogManager.isInAttackMenu) showStats()
   }
 
   private def handleMainMenu(): Unit = {
     updatePokemonViews()
-    DialogController.resetToMainMenu()
-    _gameView.setStateDialog(s"What will ${_game.player.activePokemon.pName} do?")
+    _dialogManager.resetToMainMenu()
+    _gameComponent.setStateDialog(s"What will ${_game.player.activePokemon.pName} do?")
   }
 
   private def showStats(): Unit = {
-    val currentSelection = DialogController.leftBtnState.currentSelection
+    val currentSelection = _dialogManager.leftBtnState.currentSelection
     val moveName = _game.player.activePokemon.moves(currentSelection).moveName
 
     _game.player.activePokemon.moves.find(_.moveName == moveName).foreach { move =>
-      _gameView.updateMoveStats(
+      _gameComponent.updateMoveStats(
         move.movePower,
         move.accuracy.toString,
         move.moveCategoryName,
@@ -164,7 +174,7 @@ class GameController(
       .map { case (move, index) =>
         new DialogBtn(move.moveName, () => controlTurn(index))
       }
-    DialogController.setDialogBtns(dialogBtns.toArray)
+    _dialogManager.setDialogBtns(dialogBtns.toArray)
   }
 
   private def controlTurn(moveIndex: Int): Unit = {
@@ -179,12 +189,12 @@ class GameController(
     * @param results
     */
   private def showResultsInDialog(results: Seq[String]): Unit = {
-    DialogController.clearMoveBtns()
-    _gameView.clearRightDialogPane()
+    _dialogManager.clearMoveBtns()
+    _gameComponent.clearRightDialogPane()
 
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
-        _gameView.setStateDialog(results(currentIndex))
+        _gameComponent.setStateDialog(results(currentIndex))
         _scene.onKeyPressed = (_: KeyEvent) => showNextResult(currentIndex + 1)
       } else {
         handleTurnEnd()
