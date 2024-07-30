@@ -1,6 +1,6 @@
 package pokemon.view
 
-import pokemon.model.Battle
+import pokemon.model.{Battle, Move, Pokemon}
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene
@@ -17,12 +17,16 @@ class BattleController(
   val battleDialogLeft: ImageView,
   val battleDialogRight: ImageView,
 
-  // pokemon
-  val pokemonLeftPane: AnchorPane,
-  val pokemonRightPane: AnchorPane,
-  val pokemonLeftHpBar: ProgressBar,
+  // left pokemon
+  val pokemonLeftStatBg: ImageView,
   val pokemonLeft: ImageView,
+  val pokemonLeftPane: AnchorPane,
+  val pokemonLeftHpBar: ProgressBar,
+
+  // right pokemon
+  val pokemonRightStatBg: ImageView,
   val pokemonRight: ImageView,
+  val pokemonRightPane: AnchorPane,
   val pokemonRightHpBar: ProgressBar,
 
   // input
@@ -56,6 +60,11 @@ class BattleController(
   private val _dialogManager: DialogManager = initDialogManager()
   private var _scene: Scene = null
 
+  // Handle key press delay
+  private var isKeyReleased: Boolean = true
+  private var lastKeyPressTime: Long = 0
+  private val keyPressDelay: Long = 200
+
   def initialize(): Unit = {
     _battle.start()
     _battleComponent.setup()
@@ -87,7 +96,8 @@ class BattleController(
       _battleComponent,
       leftDialogBtns,
       rightDialogBtns,
-      setMoveBtns
+      setMoveBtns,
+      setPokemonSwitchBtns
     )
   }
 
@@ -110,7 +120,9 @@ class BattleController(
 
       // pokemon
       pokemonLeftView,
+      pokemonLeftStatBg,
       pokemonRightView,
+      pokemonRightStatBg,
 
       // left dialog
       stateDialogTxt,
@@ -139,20 +151,22 @@ class BattleController(
 
   private def focusInputPane(): Unit = {
     _scene.onKeyPressed = (event: KeyEvent) => _dialogManager.handleKeyPress(event, hookKeyPress)
+    _scene.onKeyReleased = (event: KeyEvent) => _dialogManager.handleKeyRelease(event)
     inputPane.requestFocus()
   }
 
   private def hookKeyPress(): Unit = {
-    if (_dialogManager.isInAttackMenu) showStats()
+    if (_dialogManager.isInAttackMenu) showMoveStats()
   }
 
   private def handleMainMenu(): Unit = {
     updatePokemonViews()
     _dialogManager.resetToMainMenu()
     _battleComponent.setStateDialog(s"What will ${_battle.player.activePokemon.pName} do?")
+    focusInputPane()
   }
 
-  private def showStats(): Unit = {
+  private def showMoveStats(): Unit = {
     val currentSelection = _dialogManager.leftBtnState.currentSelection
     val moveName = _battle.player.activePokemon.moves(currentSelection).moveName
 
@@ -167,19 +181,18 @@ class BattleController(
   }
 
   private def setMoveBtns(): Unit = {
-    showStats()
+    showMoveStats()
     val moves = _battle.player.activePokemon.moves
     val dialogBtns = moves
       .zipWithIndex
       .map { case (move, index) =>
-        new DialogBtn(move.moveName, () => controlTurn(index))
+        new DialogBtn(move.moveName, () => controlTurn(Left(move)))
       }
-    _dialogManager.setDialogBtns(dialogBtns.toArray)
+    _dialogManager.setLeftDialogBtns(dialogBtns.toArray)
   }
 
-  private def controlTurn(moveIndex: Int): Unit = {
-    _battle.player.moveIndex(moveIndex)
-    val results = _battle.performTurn()
+  private def controlTurn(playerAction: Either[Move, Pokemon]): Unit = {
+    val results = _battle.performTurn(playerAction)
     showResultsInDialog(results)
   }
 
@@ -195,22 +208,60 @@ class BattleController(
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
         _battleComponent.setStateDialog(results(currentIndex))
-        _scene.onKeyPressed = (_: KeyEvent) => showNextResult(currentIndex + 1)
+        updatePokemonViews()
+        setupKeyHandlers(currentIndex)
       } else {
         handleTurnEnd()
       }
     }
+
+    def setupKeyHandlers(currentIndex: Int): Unit = {
+      _scene.onKeyPressed = (event: KeyEvent) => {
+        val currentTime = System.currentTimeMillis()
+        if (isKeyReleased && currentTime - lastKeyPressTime > keyPressDelay) {
+          isKeyReleased = false
+          lastKeyPressTime = currentTime
+          showNextResult(currentIndex + 1)
+        }
+      }
+      _scene.onKeyReleased = (_: KeyEvent) => isKeyReleased = true
+    }
+
     showNextResult(0)
   }
 
   private def handleTurnEnd(): Unit = {
     if (_battle.isBattleOver) handleBattleOver() else handleMainMenu()
-    focusInputPane()
   }
 
-  private def handleBattleOver(): Unit = _battle.winner match {
-    case Some(trainer) => println(s"Battle Over! ${trainer.name} wins!")
-    case None => println("Battle Over! It's a tie!")
+  private def handleBattleOver(): Unit = {
+    _battle.winner match {
+      case Some(trainer) => showResultsInDialog(Seq(s"Battle Over! ${trainer.name} wins!"))
+      case None => showResultsInDialog(Seq("Battle Over! It's a tie!"))
+    }
+
+    // Disable input
+    _scene.onKeyPressed = null
+    _scene.onKeyReleased = null
+  }
+
+  private def switchPokemon(pokemon: Pokemon): Unit = {
+    val results = _battle.performTurn(Right(pokemon))
+    showResultsInDialog(results)
+  }
+
+  private def setPokemonSwitchBtns(): Unit = {
+    val availablePokemon = _battle.player.deck.filter(p => p.currentHP > 0 && p != _battle.player.activePokemon)
+
+    if (availablePokemon.isEmpty) {
+      showResultsInDialog(Seq("No available Pokemon to switch!"))
+    } else {
+      val pokemonBtns = availablePokemon.map { pokemon =>
+        DialogBtn(s"${pokemon.pName}", () => switchPokemon(pokemon))
+      }.toArray
+
+      _dialogManager.setLeftDialogBtns(pokemonBtns)
+    }
   }
 
   initialize()

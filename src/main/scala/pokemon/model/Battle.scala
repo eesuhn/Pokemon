@@ -28,32 +28,37 @@ class Battle() {
   /**
     * Perform a turn in the battle
     *
+    * - Handle switching
     * - Decide who attacks first based on speed
     * - Check if defender fainted
     *
     * @return
     */
-  def performTurn(): List[String] = {
+  def performTurn(playerAction: Either[Move, Pokemon]): List[String] = {
     val results = ListBuffer[String]()
 
-    val playerMove = player.chooseMove()
-    val botMove = bot.chooseMove()
+    val botMove = _bot.chooseMove()
 
-    val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirstBySpeed(
-      player, playerMove, bot, botMove)
+    playerAction match {
+      // Handle switching
+      case Right(pokemon) =>
+        results ++= switchPokemon(_player, pokemon)
+        results ++= performAttack(_bot, _player, botMove)
 
-    // First attack
-    results ++= performAttack(firstAttacker, if (firstAttacker == player) bot else player, firstMove)
+      // Handle attacking
+      case Left(playerMove) =>
+        val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirstBySpeed(
+          _player, playerMove, _bot, botMove)
 
-    // Check if the second Pokemon fainted
-    if ((secondAttacker == player && player.hasActivePokemon) ||
-        (secondAttacker == bot && bot.hasActivePokemon)) {
-      // Second attack
-      results ++= performAttack(secondAttacker, if (secondAttacker == player) bot else player, secondMove)
+        results ++= performAttack(firstAttacker, secondAttacker, firstMove)
+
+        if (secondAttacker.hasActivePokemon) {
+          results ++= performAttack(secondAttacker, firstAttacker, secondMove)
+        }
     }
 
-    results ++= handleFaintSwitch(player)
-    results ++= handleFaintSwitch(bot)
+    results ++= handleFaintSwitch(_player)
+    results ++= handleFaintSwitch(_bot)
 
     results.toList
   }
@@ -105,6 +110,15 @@ class Battle() {
       }
     }
 
+    messages.toList
+  }
+
+  private def switchPokemon(trainer: Trainer, pokemon: Pokemon): List[String] = {
+    val messages = ListBuffer[String]()
+
+    messages += s"${trainer.name} withdrew ${trainer.activePokemon.pName}!"
+    trainer.switchActivePokemon(pokemon)
+    messages += s"${trainer.name} sent out ${pokemon.pName}!"
     messages.toList
   }
 
