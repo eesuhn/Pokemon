@@ -2,6 +2,7 @@ package pokemon.util
 
 import pokemon.MainApp
 import scalafx.scene.image.Image
+import scalafx.scene.media.{Media, MediaPlayer}
 import scalafx.scene.text.Font
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 
@@ -51,5 +52,20 @@ object ResourceUtil {
     if (fontResource == null) throw new Exception(s"Cannot load font: $path")
 
     Font.loadFont(fontResource, 1)
+  }
+
+  def playSound(target: String, loop: Boolean = false): Unit = {
+    val resource = MainApp.getClass.getResource(s"sfx/$target")
+    if (resource == null) throw new Exception(s"Resource: Cannot load sound: $target")
+
+    val media: Media = new Media(resource.toURI.toString)
+    if (media == null) throw new Exception(s"Media: Cannot load sound: $target")
+
+    val player: MediaPlayer = new MediaPlayer(media)
+    if (player == null) throw new Exception(s"Player: Cannot load sound: $target")
+
+    if (loop) player.setCycleCount(MediaPlayer.Indefinite)
+    player.stop()
+    player.play()
   }
 }

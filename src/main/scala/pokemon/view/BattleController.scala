@@ -1,6 +1,7 @@
 package pokemon.view
 
 import pokemon.model.Battle
+import pokemon.util.ResourceUtil
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene
@@ -68,6 +69,7 @@ class BattleController(
   private val keyPressDelay: Long = 80
 
   def initialize(): Unit = {
+    ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
     _battle.start()
     _battleComponent.setup()
     _dialogManager.setup()
