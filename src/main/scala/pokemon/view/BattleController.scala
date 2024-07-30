@@ -66,7 +66,7 @@ class BattleController(
   // Handle key press delay
   private var isKeyReleased: Boolean = true
   private var lastKeyPressTime: Long = 0
-  private val keyPressDelay: Long = 80
+  private val keyPressDelay: Long = 120
 
   def initialize(): Unit = {
     ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
@@ -211,8 +211,16 @@ class BattleController(
 
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
-        _battleComponent.setStateDialog(results(currentIndex))
+        val result = results(currentIndex)
+        _battleComponent.setStateDialog(result)
         updatePokemonViews()
+
+        // Play sound effect for move
+        if (result.contains("used")) {
+          val moveName = result.split(" used ")(1).split("!")(0)
+          playMoveSound(moveName)
+        }
+
         setupKeyHandlers(currentIndex)
       } else {
         handleTurnEnd()
@@ -232,6 +240,11 @@ class BattleController(
     }
 
     showNextResult(0)
+  }
+
+  private def playMoveSound(moveName: String): Unit = {
+    val formattedMoveName = moveName.toLowerCase.replace(" ", "-")
+    ResourceUtil.playSound(s"moves/$formattedMoveName.mp3")
   }
 
   private def handleTurnEnd(): Unit = {

@@ -10,14 +10,11 @@ abstract class Trainer {
 
   def chooseMove(): Move
 
-  /**
-    * Generates a deck of 3 random Pokemon
-    */
   def generateDeck(): Unit = {
     val pokemons = PokemonRegistry.pokemons
       .map(pokemon => pokemon.getDeclaredConstructor().newInstance())
       .toList
-    val randomPokemons = Random.shuffle(pokemons).take(4)
+    val randomPokemons = Random.shuffle(pokemons).take(5)
 
     addPokemons(randomPokemons)
   }
