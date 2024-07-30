@@ -17,12 +17,16 @@ class BattleController(
   val battleDialogLeft: ImageView,
   val battleDialogRight: ImageView,
 
-  // pokemon
-  val pokemonLeftPane: AnchorPane,
-  val pokemonRightPane: AnchorPane,
-  val pokemonLeftHpBar: ProgressBar,
+  // left pokemon
+  val pokemonLeftStatBg: ImageView,
   val pokemonLeft: ImageView,
+  val pokemonLeftPane: AnchorPane,
+  val pokemonLeftHpBar: ProgressBar,
+
+  // right pokemon
+  val pokemonRightStatBg: ImageView,
   val pokemonRight: ImageView,
+  val pokemonRightPane: AnchorPane,
   val pokemonRightHpBar: ProgressBar,
 
   // input
@@ -115,7 +119,9 @@ class BattleController(
 
       // pokemon
       pokemonLeftView,
+      pokemonLeftStatBg,
       pokemonRightView,
+      pokemonRightStatBg,
 
       // left dialog
       stateDialogTxt,
@@ -149,7 +155,7 @@ class BattleController(
   }
 
   private def hookKeyPress(): Unit = {
-    if (_dialogManager.isInAttackMenu) showStats()
+    if (_dialogManager.isInAttackMenu) showMoveStats()
   }
 
   private def handleMainMenu(): Unit = {
@@ -158,7 +164,7 @@ class BattleController(
     _battleComponent.setStateDialog(s"What will ${_battle.player.activePokemon.pName} do?")
   }
 
-  private def showStats(): Unit = {
+  private def showMoveStats(): Unit = {
     val currentSelection = _dialogManager.leftBtnState.currentSelection
     val moveName = _battle.player.activePokemon.moves(currentSelection).moveName
 
@@ -173,7 +179,7 @@ class BattleController(
   }
 
   private def setMoveBtns(): Unit = {
-    showStats()
+    showMoveStats()
     val moves = _battle.player.activePokemon.moves
     val dialogBtns = moves
       .zipWithIndex

@@ -20,13 +20,21 @@
     <!-- pokemon -->
     <Pane maxHeight="540.0" maxWidth="960.0" minHeight="540.0" minWidth="960.0" prefHeight="540.0" prefWidth="960.0">
       <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="280.0" prefWidth="280.0">
-        <ProgressBar fx:id="pokemonLeftHpBar" styleClass="hp-bar" layoutY="268.0" prefHeight="12.0" prefWidth="180.0" />
         <ImageView fx:id="pokemonLeft" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="30.0" />
       </AnchorPane>
+      <!-- left stats -->
+      <Pane layoutX="560.0" layoutY="340.0" maxHeight="103.2" maxWidth="348.8" minHeight="103.2" minWidth="348.8" prefHeight="103.2" prefWidth="348.8">
+        <ImageView fx:id="pokemonLeftStatBg" fitHeight="103.2" fitWidth="348.8" pickOnBounds="true" preserveRatio="true" />
+        <ProgressBar fx:id="pokemonLeftHpBar" layoutX="146.0" layoutY="61.0" styleClass="hp-bar" prefHeight="8.0" prefWidth="170.0" />
+      </Pane>
       <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="70.0" prefHeight="280.0" prefWidth="280.0">
-        <ProgressBar fx:id="pokemonRightHpBar" styleClass="hp-bar" layoutY="268.0" prefHeight="12.0" prefWidth="180.0" />
         <ImageView fx:id="pokemonRight" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="30.0" />
       </AnchorPane>
+      <!-- right stats -->
+      <Pane layoutX="120.0" layoutY="150.0" maxHeight="103.2" maxWidth="339.2" minHeight="103.2" minWidth="339.2" prefHeight="103.2" prefWidth="339.2">
+        <ImageView fx:id="pokemonRightStatBg" fitHeight="103.2" fitWidth="339.2" pickOnBounds="true" preserveRatio="true" />
+        <ProgressBar fx:id="pokemonRightHpBar" layoutX="114.0" layoutY="64.0" styleClass="hp-bar" prefHeight="8.0" prefWidth="170.0" />
+      </Pane>
     </Pane>
 
     <!-- input -->

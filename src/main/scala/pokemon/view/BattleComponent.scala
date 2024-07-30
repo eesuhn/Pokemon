@@ -14,7 +14,9 @@ class BattleComponent(
 
   // pokemon
   val pokemonLeft: BattlePokemonView,
+  val pokemonLeftStatBg: ImageView,
   val pokemonRight: BattlePokemonView,
+  val pokemonRightStatBg: ImageView,
 
   // left dialog
   val stateDialogTxt: Label,
@@ -33,6 +35,10 @@ class BattleComponent(
     battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
     battleDialogLeft.image = ResourceUtil.resouceImage("misc/battle-dialog-left.png")
     battleDialogRight.image = ResourceUtil.resouceImage("misc/battle-dialog-right.png")
+
+    // Pokemon stat background
+    pokemonLeftStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-left.png")
+    pokemonRightStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-right.png")
   }
 
   def pokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
@@ -163,7 +169,7 @@ case class BattlePokemonView(
       val leftAnchor = (paneWidth - pokemonImg.fitWidth.value) / 2
       AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
 
-      positionHpBar()
+      // positionHpBar()
     }
   }
 
