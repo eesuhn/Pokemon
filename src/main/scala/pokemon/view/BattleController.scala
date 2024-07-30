@@ -1,6 +1,6 @@
 package pokemon.view
 
-import pokemon.model.Battle
+import pokemon.model.{Battle, Move, Pokemon}
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene
@@ -96,7 +96,8 @@ class BattleController(
       _battleComponent,
       leftDialogBtns,
       rightDialogBtns,
-      setMoveBtns
+      setMoveBtns,
+      switchPokemon
     )
   }
 
@@ -184,14 +185,13 @@ class BattleController(
     val dialogBtns = moves
       .zipWithIndex
       .map { case (move, index) =>
-        new DialogBtn(move.moveName, () => controlTurn(index))
+        new DialogBtn(move.moveName, () => controlTurn(Left(move)))
       }
-    _dialogManager.setDialogBtns(dialogBtns.toArray)
+    _dialogManager.setLeftDialogBtns(dialogBtns.toArray)
   }
 
-  private def controlTurn(moveIndex: Int): Unit = {
-    _battle.player.moveIndex(moveIndex)
-    val results = _battle.performTurn()
+  private def controlTurn(playerAction: Either[Move, Pokemon]): Unit = {
+    val results = _battle.performTurn(playerAction)
     showResultsInDialog(results)
   }
 
@@ -207,6 +207,7 @@ class BattleController(
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
         _battleComponent.setStateDialog(results(currentIndex))
+        updatePokemonViews()
         setupKeyHandlers(currentIndex)
       } else {
         handleTurnEnd()
@@ -236,6 +237,11 @@ class BattleController(
   private def handleBattleOver(): Unit = _battle.winner match {
     case Some(trainer) => println(s"Battle Over! ${trainer.name} wins!")
     case None => println("Battle Over! It's a tie!")
+  }
+
+  private def switchPokemon(pokemon: Pokemon): Unit = {
+    val results = _battle.performTurn(Right(pokemon))
+    showResultsInDialog(results)
   }
 
   initialize()

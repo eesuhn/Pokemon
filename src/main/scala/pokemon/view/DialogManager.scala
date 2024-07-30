@@ -1,6 +1,6 @@
 package pokemon.view
 
-import pokemon.model.Battle
+import pokemon.model.{Battle, Pokemon}
 import scalafx.scene.control.Label
 import scalafx.scene.input.{KeyCode, KeyEvent}
 
@@ -9,7 +9,8 @@ class DialogManager(
   val battleComponent: BattleComponent,
   val leftDialogBtns: Array[Label],
   val rightDialogBtns: Array[Label],
-  val setMoveBtns: () => Unit
+  val setMoveBtns: () => Unit,
+  val switchPokemon: Pokemon => Unit
 ) {
 
   case class DialogBtnState(
@@ -20,6 +21,7 @@ class DialogManager(
   )
 
   private var _isInAttackMenu = false
+  private var _isInPokemonMenu = false
   private var _leftBtnState: DialogBtnState = _
   private var _rightBtnState: DialogBtnState = _
 
@@ -54,7 +56,7 @@ class DialogManager(
       lastPressedKey = Some(event.code)
       lastKeyPressTime = currentTime
 
-      val currentState = if (_isInAttackMenu) _leftBtnState else _rightBtnState
+      val currentState = if (_isInAttackMenu || _isInPokemonMenu) _leftBtnState else _rightBtnState
       val newSelection = getNewSelection(currentState, event.code)
 
       updateCurrentState(newSelection)
@@ -62,7 +64,7 @@ class DialogManager(
 
       event.code match {
         case KeyCode.Enter => executeCurrent()
-        case KeyCode.Escape if _isInAttackMenu => {
+        case KeyCode.Escape if _isInAttackMenu || _isInPokemonMenu => {
           resetToMainMenu()
           battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
         }
@@ -122,14 +124,14 @@ class DialogManager(
   }
 
   private def updateCurrentState(newSelection: Int): Unit = {
-    if (_isInAttackMenu) {
+    if (_isInAttackMenu || _isInPokemonMenu) {
       _leftBtnState = _leftBtnState.copy(currentSelection = newSelection)
     } else {
       _rightBtnState = _rightBtnState.copy(currentSelection = newSelection)
     }
   }
 
-  def setDialogBtns(dialogBtns: Array[DialogBtn]): Unit = {
+  def setLeftDialogBtns(dialogBtns: Array[DialogBtn]): Unit = {
     val activeButtonCount = dialogBtns.length
     _leftBtnState = _leftBtnState.copy(dialogBtns = dialogBtns, activeButtonCount = activeButtonCount)
     _rightBtnState = _rightBtnState.copy(dialogBtns = Array.empty)
@@ -141,6 +143,7 @@ class DialogManager(
     _leftBtnState = _leftBtnState.copy(dialogBtns = Array.empty, currentSelection = 0, activeButtonCount = 0)
     _rightBtnState = _rightBtnState.copy(dialogBtns = menuBtns(), currentSelection = 0, activeButtonCount = 4)
     _isInAttackMenu = false
+    _isInPokemonMenu = false
     updateView()
   }
 
@@ -162,7 +165,7 @@ class DialogManager(
   }
 
   private def updateSelectedButton(): Unit = {
-    val currentState = if (_isInAttackMenu) _leftBtnState else _rightBtnState
+    val currentState = if (_isInAttackMenu || _isInPokemonMenu) _leftBtnState else _rightBtnState
     currentState.texts.zipWithIndex.foreach { case (button, index) =>
       button.style = if (index < currentState.activeButtonCount) {
         if (index == currentState.currentSelection) _selectedBtnStyle else _defaultBtnStyle
@@ -172,7 +175,7 @@ class DialogManager(
   }
 
   private def executeCurrent(): Unit = {
-    if (_isInAttackMenu) {
+    if (_isInAttackMenu || _isInPokemonMenu) {
       _leftBtnState.dialogBtns(_leftBtnState.currentSelection).execute()
     } else {
       _rightBtnState.dialogBtns(_rightBtnState.currentSelection).execute()
@@ -182,7 +185,7 @@ class DialogManager(
   private def menuBtns(): Array[DialogBtn] = Array(
     DialogBtn("Attack", () => handleAttackBtn()),
     DialogBtn("Bag", () => println("Bag action")),
-    DialogBtn("Pokémon", () => println("Pokémon action")),
+    DialogBtn("Pokémon", () => handlePokemonBtn()),
     DialogBtn("Run", () => println("Run action"))
   )
 
@@ -195,6 +198,21 @@ class DialogManager(
   def clearMoveBtns(): Unit = {
     _leftBtnState = _leftBtnState.copy(dialogBtns = Array.empty)
     updateView()
+  }
+
+  private def handlePokemonBtn(): Unit = {
+    battleComponent.clearLeftDialogPane()
+    _isInPokemonMenu = true
+    setPokemonSwitchBtns()
+  }
+
+  private def setPokemonSwitchBtns(): Unit = {
+    val availablePokemon = battle.player.deck.filter(p => p.currentHP > 0 && p != battle.player.activePokemon)
+    val pokemonBtns = availablePokemon.map { pokemon =>
+      DialogBtn(s"${pokemon.pName}", () => switchPokemon(pokemon))
+    }.toArray
+
+    setLeftDialogBtns(pokemonBtns)
   }
 }
 

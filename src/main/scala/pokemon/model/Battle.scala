@@ -28,28 +28,29 @@ class Battle() {
   /**
     * Perform a turn in the battle
     *
+    * - Handle switching
     * - Decide who attacks first based on speed
     * - Check if defender fainted
     *
     * @return
     */
-  def performTurn(): List[String] = {
+  def performTurn(playerAction: Either[Move, Pokemon]): List[String] = {
     val results = ListBuffer[String]()
 
-    val playerMove = player.chooseMove()
     val botMove = bot.chooseMove()
 
-    val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirstBySpeed(
-      player, playerMove, bot, botMove)
+    playerAction match {
+      // Handle switching
+      case Right(pokemon) =>
+        results ++= switchPokemon(player, pokemon)
+        results ++= performAttack(bot, player, botMove)
 
-    // First attack
-    results ++= performAttack(firstAttacker, if (firstAttacker == player) bot else player, firstMove)
-
-    // Check if the second Pokemon fainted
-    if ((secondAttacker == player && player.hasActivePokemon) ||
-        (secondAttacker == bot && bot.hasActivePokemon)) {
-      // Second attack
-      results ++= performAttack(secondAttacker, if (secondAttacker == player) bot else player, secondMove)
+      // Handle attacking
+      case Left(playerMove) =>
+        val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirstBySpeed(
+          player, playerMove, bot, botMove)
+        results ++= performAttack(firstAttacker, secondAttacker, firstMove)
+        results ++= performAttack(secondAttacker, firstAttacker, secondMove)
     }
 
     results ++= handleFaintSwitch(player)
@@ -105,6 +106,15 @@ class Battle() {
       }
     }
 
+    messages.toList
+  }
+
+  private def switchPokemon(trainer: Trainer, pokemon: Pokemon): List[String] = {
+    val messages = ListBuffer[String]()
+
+    messages += s"${trainer.name} withdrew ${trainer.activePokemon.pName}!"
+    trainer.switchActivePokemon(pokemon)
+    messages += s"${trainer.name} sent out ${pokemon.pName}!"
     messages.toList
   }
 
