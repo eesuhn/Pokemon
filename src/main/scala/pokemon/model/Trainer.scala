@@ -17,21 +17,21 @@ abstract class Trainer {
     val pokemons = PokemonRegistry.pokemons
       .map(pokemon => pokemon.getDeclaredConstructor().newInstance())
       .toList
-    val randomPokemons = Random.shuffle(pokemons).take(3)
+    val randomPokemons = Random.shuffle(pokemons).take(4)
 
     addPokemons(randomPokemons)
   }
 
   /**
-    * Adds a list of Pokemon to the deck
+    * Adds a list of Pokemon to the deck, not more than 5
     *
     * @param pokemons
     *
-    * @throws Exception if `pokemon == 0` || `deck.size + pokemons.size > 3`
+    * @throws Exception if `pokemon == 0` || `deck.size + pokemons.size > 5`
     */
   protected def addPokemons(pokemons: List[Pokemon]): Unit = {
     if (pokemons.size == 0) throw new Exception("Cannot add 0 Pokemon")
-    if (deck.size + pokemons.size > 3) throw new Exception(s"$name can only have 3 Pokemon")
+    if (deck.size + pokemons.size > 5) throw new Exception(s"$name can only have 5 Pokemon")
     deck ++= pokemons
     activePokemon = deck.head
   }
@@ -67,12 +67,12 @@ class Player extends Trainer {
   def moveIndex(index: Int): Unit = _moveIndex = index
 
   // DEBUG: Defined list of Pokemon
-  override def generateDeck(): Unit = {
-    val pokemons = List(
-      new Mewtwo()
-    )
-    addPokemons(pokemons)
-  }
+  // override def generateDeck(): Unit = {
+  //   val pokemons = List(
+  //     new Mewtwo()
+  //   )
+  //   addPokemons(pokemons)
+  // }
 
   override def chooseMove(): Move = activePokemon.moves(_moveIndex)
 }
@@ -81,13 +81,13 @@ class Bot extends Trainer {
   val name: String = "Bot"
 
   // DEBUG: Defined list of Pokemon
-  override def generateDeck(): Unit = {
-    val pokemons = List(
-      new Pikachu(),
-      new Charmander()
-    )
-    addPokemons(pokemons)
-  }
+  // override def generateDeck(): Unit = {
+  //   val pokemons = List(
+  //     new Pikachu(),
+  //     new Charmander()
+  //   )
+  //   addPokemons(pokemons)
+  // }
 
   override def chooseMove(): Move = {
     randomMove()
