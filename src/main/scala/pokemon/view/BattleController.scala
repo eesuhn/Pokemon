@@ -163,6 +163,7 @@ class BattleController(
     updatePokemonViews()
     _dialogManager.resetToMainMenu()
     _battleComponent.setStateDialog(s"What will ${_battle.player.activePokemon.pName} do?")
+    focusInputPane()
   }
 
   private def showMoveStats(): Unit = {
@@ -231,12 +232,17 @@ class BattleController(
 
   private def handleTurnEnd(): Unit = {
     if (_battle.isBattleOver) handleBattleOver() else handleMainMenu()
-    focusInputPane()
   }
 
-  private def handleBattleOver(): Unit = _battle.winner match {
-    case Some(trainer) => println(s"Battle Over! ${trainer.name} wins!")
-    case None => println("Battle Over! It's a tie!")
+  private def handleBattleOver(): Unit = {
+    _battle.winner match {
+      case Some(trainer) => showResultsInDialog(Seq(s"Battle Over! ${trainer.name} wins!"))
+      case None => showResultsInDialog(Seq("Battle Over! It's a tie!"))
+    }
+
+    // Disable input
+    _scene.onKeyPressed = null
+    _scene.onKeyReleased = null
   }
 
   private def switchPokemon(pokemon: Pokemon): Unit = {
