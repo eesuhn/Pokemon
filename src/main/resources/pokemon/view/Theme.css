@@ -57,9 +57,17 @@
 .hp-bar {
 	-fx-accent: #00FF00; /* filled */
     -fx-control-inner-background: white; /* not filled */
-	-fx-effect: dropshadow(three-pass-box, rgba(24 ,24 ,24 , 0.6), 6, 0.4, 1, 1);
 }
 
 .hp-bar > .bar {
 	-fx-background-insets: 1;
+}
+
+.pokemon-name {
+	-fx-font-size: 24px;
+	-fx-font-family: 'Minecraft Bold';
+	-fx-text-fill: black;
+	-fx-alignment: center-left;
+	-fx-letter-spacing: 2px;
+	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.2), 4, 0, 1, 1);
 }

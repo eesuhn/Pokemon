@@ -1,6 +1,7 @@
 package pokemon.view
 
-import pokemon.model.{Battle, Move, Pokemon}
+import pokemon.model.Battle
+import pokemon.util.ResourceUtil
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene
@@ -19,13 +20,15 @@ class BattleController(
 
   // left pokemon
   val pokemonLeftStatBg: ImageView,
-  val pokemonLeft: ImageView,
+  val pokemonLeftName: Label,
+  val pokemonLeftImg: ImageView,
   val pokemonLeftPane: AnchorPane,
   val pokemonLeftHpBar: ProgressBar,
 
   // right pokemon
   val pokemonRightStatBg: ImageView,
-  val pokemonRight: ImageView,
+  val pokemonRightName: Label,
+  val pokemonRightImg: ImageView,
   val pokemonRightPane: AnchorPane,
   val pokemonRightHpBar: ProgressBar,
 
@@ -63,9 +66,10 @@ class BattleController(
   // Handle key press delay
   private var isKeyReleased: Boolean = true
   private var lastKeyPressTime: Long = 0
-  private val keyPressDelay: Long = 200
+  private val keyPressDelay: Long = 120
 
   def initialize(): Unit = {
+    ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
     _battle.start()
     _battleComponent.setup()
     _dialogManager.setup()
@@ -102,13 +106,15 @@ class BattleController(
   }
 
   private def initBattleComponent(): BattleComponent = {
-    val pokemonLeftView: BattlePokemonView = new BattlePokemonView(
-      pokemonLeft,
+    val pokemonLeftView: PokemonView = new PokemonView(
+      pokemonLeftName,
+      pokemonLeftImg,
       pokemonLeftPane,
       pokemonLeftHpBar
     )
-    val pokemonRightView: BattlePokemonView = new BattlePokemonView(
-      pokemonRight,
+    val pokemonRightView: PokemonView = new PokemonView(
+      pokemonRightName,
+      pokemonRightImg,
       pokemonRightPane,
       pokemonRightHpBar
     )
@@ -186,14 +192,12 @@ class BattleController(
     val dialogBtns = moves
       .zipWithIndex
       .map { case (move, index) =>
-        new DialogBtn(move.moveName, () => controlTurn(Left(move)))
+        new DialogBtn(move.moveName, () => {
+          val results = _battle.performTurn(Left(move))
+          showResultsInDialog(results)
+        })
       }
     _dialogManager.setLeftDialogBtns(dialogBtns.toArray)
-  }
-
-  private def controlTurn(playerAction: Either[Move, Pokemon]): Unit = {
-    val results = _battle.performTurn(playerAction)
-    showResultsInDialog(results)
   }
 
   /**
@@ -207,8 +211,16 @@ class BattleController(
 
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
-        _battleComponent.setStateDialog(results(currentIndex))
+        val result = results(currentIndex)
+        _battleComponent.setStateDialog(result)
         updatePokemonViews()
+
+        // Play sound effect for move
+        if (result.contains("used")) {
+          val moveName = result.split(" used ")(1).split("!")(0)
+          playMoveSound(moveName)
+        }
+
         setupKeyHandlers(currentIndex)
       } else {
         handleTurnEnd()
@@ -230,6 +242,11 @@ class BattleController(
     showNextResult(0)
   }
 
+  private def playMoveSound(moveName: String): Unit = {
+    val formattedMoveName = moveName.toLowerCase.replace(" ", "-")
+    ResourceUtil.playSound(s"moves/$formattedMoveName.mp3")
+  }
+
   private def handleTurnEnd(): Unit = {
     if (_battle.isBattleOver) handleBattleOver() else handleMainMenu()
   }
@@ -245,11 +262,6 @@ class BattleController(
     _scene.onKeyReleased = null
   }
 
-  private def switchPokemon(pokemon: Pokemon): Unit = {
-    val results = _battle.performTurn(Right(pokemon))
-    showResultsInDialog(results)
-  }
-
   private def setPokemonSwitchBtns(): Unit = {
     val availablePokemon = _battle.player.deck.filter(p => p.currentHP > 0 && p != _battle.player.activePokemon)
 
@@ -257,7 +269,10 @@ class BattleController(
       showResultsInDialog(Seq("No available Pokemon to switch!"))
     } else {
       val pokemonBtns = availablePokemon.map { pokemon =>
-        DialogBtn(s"${pokemon.pName}", () => switchPokemon(pokemon))
+        DialogBtn(s"${pokemon.pName}", () => {
+          val results = _battle.performTurn(Right(pokemon))
+          showResultsInDialog(results)
+        })
       }.toArray
 
       _dialogManager.setLeftDialogBtns(pokemonBtns)

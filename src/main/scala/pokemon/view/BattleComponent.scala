@@ -13,9 +13,9 @@ class BattleComponent(
   val battleDialogRight: ImageView,
 
   // pokemon
-  val pokemonLeft: BattlePokemonView,
+  val pokemonLeft: PokemonView,
   val pokemonLeftStatBg: ImageView,
-  val pokemonRight: BattlePokemonView,
+  val pokemonRight: PokemonView,
   val pokemonRightStatBg: ImageView,
 
   // left dialog
@@ -127,7 +127,8 @@ class BattleComponent(
   }
 }
 
-case class BattlePokemonView(
+case class PokemonView(
+  pokemonName: Label,
   pokemonImg: ImageView,
   anchorPane: AnchorPane,
   hpBar: ProgressBar
@@ -136,10 +137,13 @@ case class BattlePokemonView(
   /**
     * Source from `pokes` directory with `.gif` extension
     *
-    * @param imagePath
+    * @param target
     */
-  def setup(imagePath: String): Unit = {
-    val image = ResourceUtil.resouceImage(s"pokes/${imagePath}.gif")
+  def setup(target: String): Unit = {
+    val pokemonNameText = target.split("-").head
+    pokemonName.text = pokemonNameText.capitalize
+
+    val image = ResourceUtil.resouceImage(s"pokes/${target}.gif")
     pokemonImg.image = image
     pokemonImg.preserveRatio = true
     pokemonImg.smooth = true
@@ -168,28 +172,6 @@ case class BattlePokemonView(
 
       val leftAnchor = (paneWidth - pokemonImg.fitWidth.value) / 2
       AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
-
-      // positionHpBar()
-    }
-  }
-
-  /**
-    * Position Pokemon HP bar within the AnchorPane
-    *
-    * - Center horizontally
-    */
-  def positionHpBar(): Unit = {
-    Option(pokemonImg.image.value).foreach { _ =>
-
-      // Anchor based on Pokemon image height
-      // val imageHeight = pokemonImg.fitHeight.value
-      // val paneHeight = anchorPane.height.value
-
-      // val topAnchor = paneHeight - imageHeight - hpBar.getHeight - 30
-      // AnchorPane.setTopAnchor(hpBar, topAnchor)
-
-      val leftAnchor = (anchorPane.width.value - hpBar.getWidth) / 2
-      AnchorPane.setLeftAnchor(hpBar, leftAnchor)
     }
   }
 }

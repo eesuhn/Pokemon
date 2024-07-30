@@ -375,7 +375,7 @@ object HeartStamp extends PhysicalMove {
 }
 
 object XScissor extends PhysicalMove {
-  val moveName: String = "X-Scissor"
+  val moveName: String = "X Scissor"
   val accuracy: Int = 100
   val moveType: Bug.type = Bug
   override def basePower: Int = 80

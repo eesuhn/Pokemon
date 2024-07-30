@@ -29,7 +29,7 @@ class DialogManager(
   private var lastPressedKey: Option[KeyCode] = None
   private var isKeyReleased: Boolean = true
   private var lastKeyPressTime: Long = 0
-  private val keyPressDelay: Long = 200
+  private val keyPressDelay: Long = 120
 
   private val _selectedBtnStyle = """
     -fx-text-fill: #f84620;
