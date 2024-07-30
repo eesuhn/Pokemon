@@ -97,7 +97,7 @@ class BattleController(
       leftDialogBtns,
       rightDialogBtns,
       setMoveBtns,
-      switchPokemon
+      setPokemonSwitchBtns
     )
   }
 
@@ -242,6 +242,20 @@ class BattleController(
   private def switchPokemon(pokemon: Pokemon): Unit = {
     val results = _battle.performTurn(Right(pokemon))
     showResultsInDialog(results)
+  }
+
+  private def setPokemonSwitchBtns(): Unit = {
+    val availablePokemon = _battle.player.deck.filter(p => p.currentHP > 0 && p != _battle.player.activePokemon)
+
+    if (availablePokemon.isEmpty) {
+      showResultsInDialog(Seq("No available Pokemon to switch!"))
+    } else {
+      val pokemonBtns = availablePokemon.map { pokemon =>
+        DialogBtn(s"${pokemon.pName}", () => switchPokemon(pokemon))
+      }.toArray
+
+      _dialogManager.setLeftDialogBtns(pokemonBtns)
+    }
   }
 
   initialize()

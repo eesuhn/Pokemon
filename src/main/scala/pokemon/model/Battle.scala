@@ -37,24 +37,28 @@ class Battle() {
   def performTurn(playerAction: Either[Move, Pokemon]): List[String] = {
     val results = ListBuffer[String]()
 
-    val botMove = bot.chooseMove()
+    val botMove = _bot.chooseMove()
 
     playerAction match {
       // Handle switching
       case Right(pokemon) =>
-        results ++= switchPokemon(player, pokemon)
-        results ++= performAttack(bot, player, botMove)
+        results ++= switchPokemon(_player, pokemon)
+        results ++= performAttack(_bot, _player, botMove)
 
       // Handle attacking
       case Left(playerMove) =>
         val (firstAttacker, firstMove, secondAttacker, secondMove) = decideFirstBySpeed(
-          player, playerMove, bot, botMove)
+          _player, playerMove, _bot, botMove)
+
         results ++= performAttack(firstAttacker, secondAttacker, firstMove)
-        results ++= performAttack(secondAttacker, firstAttacker, secondMove)
+
+        if (secondAttacker.hasActivePokemon) {
+          results ++= performAttack(secondAttacker, firstAttacker, secondMove)
+        }
     }
 
-    results ++= handleFaintSwitch(player)
-    results ++= handleFaintSwitch(bot)
+    results ++= handleFaintSwitch(_player)
+    results ++= handleFaintSwitch(_bot)
 
     results.toList
   }

@@ -69,7 +69,8 @@ class Player extends Trainer {
   // DEBUG: Defined list of Pokemon
   override def generateDeck(): Unit = {
     val pokemons = List(
-      new Blaziken()
+      new Pikachu(),
+      new Charmander()
     )
     addPokemons(pokemons)
   }
@@ -83,7 +84,8 @@ class Bot extends Trainer {
   // DEBUG: Defined list of Pokemon
   override def generateDeck(): Unit = {
     val pokemons = List(
-      new Slowpoke()
+      new Mewtwo(),
+      new Exploud()
     )
     addPokemons(pokemons)
   }

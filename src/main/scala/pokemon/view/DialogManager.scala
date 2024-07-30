@@ -1,6 +1,6 @@
 package pokemon.view
 
-import pokemon.model.{Battle, Pokemon}
+import pokemon.model.Battle
 import scalafx.scene.control.Label
 import scalafx.scene.input.{KeyCode, KeyEvent}
 
@@ -10,7 +10,7 @@ class DialogManager(
   val leftDialogBtns: Array[Label],
   val rightDialogBtns: Array[Label],
   val setMoveBtns: () => Unit,
-  val switchPokemon: Pokemon => Unit
+  val setPokemonSwitchBtns: () => Unit
 ) {
 
   case class DialogBtnState(
@@ -202,17 +202,9 @@ class DialogManager(
 
   private def handlePokemonBtn(): Unit = {
     battleComponent.clearLeftDialogPane()
+    _rightBtnState = _rightBtnState.copy(dialogBtns = Array.empty)
     _isInPokemonMenu = true
     setPokemonSwitchBtns()
-  }
-
-  private def setPokemonSwitchBtns(): Unit = {
-    val availablePokemon = battle.player.deck.filter(p => p.currentHP > 0 && p != battle.player.activePokemon)
-    val pokemonBtns = availablePokemon.map { pokemon =>
-      DialogBtn(s"${pokemon.pName}", () => switchPokemon(pokemon))
-    }.toArray
-
-    setLeftDialogBtns(pokemonBtns)
   }
 }
 
