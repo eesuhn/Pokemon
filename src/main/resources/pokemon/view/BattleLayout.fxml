@@ -19,8 +19,8 @@
     <!-- pokemon -->
     <Pane maxHeight="540.0" maxWidth="960.0" minHeight="540.0" minWidth="960.0" prefHeight="540.0" prefWidth="960.0">
       <!-- left pokemon -->
-      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="280.0" prefWidth="280.0">
-        <ImageView fx:id="pokemonLeftImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="30.0" />
+      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="250.0" prefWidth="280.0">
+        <ImageView fx:id="pokemonLeftImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
       </AnchorPane>
       <!-- left stats -->
       <Pane layoutX="550.0" layoutY="330.0" maxHeight="103.2" maxWidth="348.8" minHeight="103.2" minWidth="348.8" prefHeight="103.2" prefWidth="348.8">
@@ -30,8 +30,8 @@
       </Pane>
 
       <!-- right pokemon -->
-      <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="60.0" prefHeight="280.0" prefWidth="280.0">
-        <ImageView fx:id="pokemonRightImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="30.0" />
+      <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="60.0" prefHeight="250.0" prefWidth="280.0">
+        <ImageView fx:id="pokemonRightImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
       </AnchorPane>
       <!-- right stats -->
       <Pane layoutX="120.0" layoutY="150.0" maxHeight="103.2" maxWidth="339.2" minHeight="103.2" minWidth="339.2" prefHeight="103.2" prefWidth="339.2">
@@ -85,6 +85,14 @@
             <RowConstraints vgrow="NEVER" />
           </rowConstraints>
         </GridPane>
+
+        <!-- pokemon current stats -->
+        <!-- <AnchorPane fx:id="pokemonCurrentPane" prefHeight="110.0" prefWidth="123.2">
+          <ImageView fx:id="pokemonCurrentImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
+        </AnchorPane> -->
+        <ImageView fx:id="pokemonCurrentImg" fitWidth="96.0" layoutX="50.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="pokemonCurrentTypeImg1" fitWidth="42.0" pickOnBounds="true" preserveRatio="true" layoutX="178.0" layoutY="34.0" />
+        <ImageView fx:id="pokemonCurrentTypeImg2" fitWidth="42.0" pickOnBounds="true" preserveRatio="true" layoutX="222.0" layoutY="34.0" />
 
         <!-- right buttons -->
         <GridPane alignment="CENTER" hgap="16" layoutX="42.0" layoutY="32.0" vgap="10">

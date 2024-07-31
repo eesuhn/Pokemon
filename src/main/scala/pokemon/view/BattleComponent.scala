@@ -15,16 +15,23 @@ class BattleComponent(
   val pokemonRight: PokemonView,
 
   // left dialog
+  // state
   val stateDialogTxt: Label,
 
   // right dialog
+  // move stats
   val moveTypeImg: ImageView,
   val moveTypeTxt: Label,
   val moveCat: ImageView,
   val powerTxtLabel: Label,
   val powerTxt: Label,
   val accuracyTxtLabel: Label,
-  val accuracyTxt: Label
+  val accuracyTxt: Label,
+
+  // pokemon current stats
+  val pokemonCurrentImg: ImageView,
+  val pokemonCurrentTypeImg1: ImageView,
+  val pokemonCurrentTypeImg2: ImageView
 ) {
 
   def pokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
@@ -33,10 +40,8 @@ class BattleComponent(
   }
 
   def pokemonHpBars(leftHp: Double, rightHp: Double): Unit = {
-    pokemonLeft.hpBar.progress = leftHp
-    pokemonLeft.hpBar.style = s"-fx-accent: ${hpBarColor(leftHp)}"
-    pokemonRight.hpBar.progress = rightHp
-    pokemonRight.hpBar.style = s"-fx-accent: ${hpBarColor(rightHp)}"
+    pokemonLeft.pokemonHpBar(leftHp)
+    pokemonRight.pokemonHpBar(rightHp)
   }
 
   def setStateDialog(text: String): Unit = stateDialogTxt.text = text
@@ -50,12 +55,15 @@ class BattleComponent(
 
   def clearLeftDialogPane(): Unit = stateDialogTxt.text = ""
 
-  def clearRightDialogPane(): Unit = updateMoveStats("", "", "", "")
+  def clearRightDialogPane(): Unit = {
+    updateMoveStats("", "", "", "")
+    updatePokemonCurrentStats("", "", "")
+  }
 
-  private def hpBarColor(hp: Double): String = {
-    if (hp > 0.7) "#3cda38"
-    else if (hp > 0.3) "#f4b848"
-    else "#de6248"
+  def updatePokemonCurrentStats(pokemonName: String, type1: String, type2: String): Unit = {
+    pokemonCurrentImg.image = if (pokemonName.nonEmpty) ResourceUtil.resouceImage(s"pokes-static/${pokemonName}.png") else null
+    pokemonCurrentTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"misc/${type1}-type.png") else null
+    pokemonCurrentTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"misc/${type2}-type.png") else null
   }
 
   private def powerTxt(text: String): Unit = {
@@ -134,10 +142,10 @@ case class PokemonView(
     pokemonImg.preserveRatio = true
     pokemonImg.smooth = true
 
-    Platform.runLater(positionPokemon())
+    Platform.runLater(position())
 
     pokemonImg.image.onChange { (_, _, newImage) =>
-      if (newImage != null) positionPokemon()
+      if (newImage != null) position()
     }
   }
 
@@ -147,7 +155,7 @@ case class PokemonView(
     * - Center horizontally
     * - Anchor to bottom
     */
-  private def positionPokemon(): Unit = {
+  private def position(): Unit = {
     Option(pokemonImg.image.value).foreach { newImage =>
       val imageWidth = newImage.getWidth()
       val imageHeight = newImage.getHeight()
@@ -159,6 +167,17 @@ case class PokemonView(
       val leftAnchor = (paneWidth - pokemonImg.fitWidth.value) / 2
       AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
     }
+  }
+
+  def pokemonHpBar(hp: Double): Unit = {
+    hpBar.progress = hp
+    hpBar.style = s"-fx-accent: ${hpBarColor(hp)}"
+  }
+
+  private def hpBarColor(hp: Double): String = {
+    if (hp > 0.7) "#3cda38"
+    else if (hp > 0.3) "#f4b848"
+    else "#de6248"
   }
 }
 

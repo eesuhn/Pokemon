@@ -1,6 +1,6 @@
 package pokemon.model
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 class Battle() {
   private var _player: Player = _
@@ -62,6 +62,8 @@ class Battle() {
 
     results.toList
   }
+
+  def availablePlayerPokemon(): ArrayBuffer[Pokemon] = _player.deck.filter(p => p.currentHP > 0 && p != _player.activePokemon)
 
   private def decideFirstBySpeed(
     attacker1: Trainer,

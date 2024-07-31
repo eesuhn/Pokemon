@@ -55,6 +55,11 @@ class BattleController(
   val accuracyTxtLabel: Label,
   val accuracyTxt: Label,
 
+  // pokemon current stats
+  val pokemonCurrentImg: ImageView,
+  val pokemonCurrentTypeImg1: ImageView,
+  val pokemonCurrentTypeImg2: ImageView,
+
   // right buttons
   val rightDialogBtn1: Label,
   val rightDialogBtn2: Label,
@@ -147,7 +152,12 @@ class BattleController(
       powerTxtLabel,
       powerTxt,
       accuracyTxtLabel,
-      accuracyTxt
+      accuracyTxt,
+
+      // pokemon current stats
+      pokemonCurrentImg,
+      pokemonCurrentTypeImg1,
+      pokemonCurrentTypeImg2
     )
   }
 
@@ -169,7 +179,15 @@ class BattleController(
   }
 
   private def hookKeyPress(): Unit = {
+    // In attack menu
     if (_dialogManager.isInAttackMenu) showMoveStats()
+
+    // In switching menu
+    if (_dialogManager.isInPokemonMenu) {
+      val currentSelection = _dialogManager.leftBtnState.currentSelection
+      val pokemonName = _battle.availablePlayerPokemon()(currentSelection).pName
+      showCurrentPokemonStats(pokemonName)
+    }
   }
 
   private def handleMainMenu(): Unit = {
@@ -195,6 +213,7 @@ class BattleController(
 
   private def setMoveBtns(): Unit = {
     showMoveStats()
+
     val moves = _battle.player.activePokemon.moves
     val dialogBtns = moves
       .zipWithIndex
@@ -278,13 +297,13 @@ class BattleController(
   }
 
   private def setPokemonSwitchBtns(): Unit = {
-    val availablePokemon = _battle.player.deck.filter(p => p.currentHP > 0 && p != _battle.player.activePokemon)
-
+    val availablePokemon = _battle.availablePlayerPokemon()
     if (availablePokemon.isEmpty) {
       showResultsInDialog(Seq("No available Pokemon to switch!"))
     } else {
       val pokemonBtns = availablePokemon.map { pokemon =>
         DialogBtn(s"${pokemon.pName}", () => {
+          showCurrentPokemonStats(pokemon.pName)
           val results = _battle.performTurn(Right(pokemon))
           showResultsInDialog(results)
         })
@@ -292,6 +311,20 @@ class BattleController(
 
       _dialogManager.setLeftDialogBtns(pokemonBtns)
       _dialogManager.updateBtnsView()
+
+      showCurrentPokemonStats(availablePokemon.head.pName)
+    }
+  }
+
+  private def showCurrentPokemonStats(pokemonName: String): Unit = {
+    _battle.player.deck.find(_.pName == pokemonName).foreach { pokemon =>
+      val pTypes = pokemon.pTypeNames
+
+      _battleComponent.updatePokemonCurrentStats(
+        pokemonName.toLowerCase,
+        pTypes.head,
+        if (pTypes.length > 1) pTypes(1) else ""
+      )
     }
   }
 
