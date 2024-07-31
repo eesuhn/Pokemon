@@ -10,7 +10,7 @@ import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 
 object ResourceUtil {
 
-  private val soundPlayers = Map[String, List[MediaPlayer]]()
+  private val _soundPlayers = Map[String, List[MediaPlayer]]()
 
   /**
     * Load a resource layout from "view" folder
@@ -73,10 +73,10 @@ object ResourceUtil {
     val media: Media = new Media(resource.toURI.toString)
     if (media == null) throw new Exception(s"Media: Cannot load sound: $target")
 
-    val availablePlayer = soundPlayers.getOrElseUpdate(target, List.empty).find(!_.status.value.equals(MediaPlayer.Status.PLAYING))
+    val availablePlayer = _soundPlayers.getOrElseUpdate(target, List.empty).find(!_.status.value.equals(MediaPlayer.Status.PLAYING))
     val player = availablePlayer.getOrElse {
       val newPlayer = new MediaPlayer(media)
-      soundPlayers(target) = newPlayer :: soundPlayers.getOrElse(target, List.empty)
+      _soundPlayers(target) = newPlayer :: _soundPlayers.getOrElse(target, List.empty)
       newPlayer
     }
 
@@ -86,20 +86,20 @@ object ResourceUtil {
   }
 
   def stopSound(target: String): Unit = {
-    soundPlayers.get(target).foreach(_.foreach(_.stop()))
+    _soundPlayers.get(target).foreach(_.foreach(_.stop()))
   }
 
   def stopAllSounds(): Unit = {
-    soundPlayers.values.foreach(_.foreach(_.stop()))
+    _soundPlayers.values.foreach(_.foreach(_.stop()))
   }
 
   def disposeSound(target: String): Unit = {
-    soundPlayers.get(target).foreach(_.foreach(_.dispose()))
-    soundPlayers.remove(target)
+    _soundPlayers.get(target).foreach(_.foreach(_.dispose()))
+    _soundPlayers.remove(target)
   }
 
   def disposeAllSounds(): Unit = {
-    soundPlayers.values.foreach(_.foreach(_.dispose()))
-    soundPlayers.clear()
+    _soundPlayers.values.foreach(_.foreach(_.dispose()))
+    _soundPlayers.clear()
   }
 }

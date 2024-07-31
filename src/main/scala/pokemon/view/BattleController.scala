@@ -64,9 +64,9 @@ class BattleController(
   private var _scene: Scene = null
 
   // Handle key press delay
-  private var isKeyReleased: Boolean = true
-  private var lastKeyPressTime: Long = 0
-  private val keyPressDelay: Long = 120
+  private var _isKeyReleased: Boolean = true
+  private var _lastKeyPressTime: Long = 0
+  private val _keyPressDelay: Long = 120
 
   def initialize(): Unit = {
     ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
@@ -100,8 +100,7 @@ class BattleController(
       _battleComponent,
       leftDialogBtns,
       rightDialogBtns,
-      setMoveBtns,
-      setPokemonSwitchBtns
+      menuBtns()
     )
   }
 
@@ -198,6 +197,8 @@ class BattleController(
         })
       }
     _dialogManager.setLeftDialogBtns(dialogBtns.toArray)
+    _dialogManager.setRightDialogBtns(Array.empty)
+    _dialogManager.updateBtnsView()
   }
 
   /**
@@ -230,13 +231,13 @@ class BattleController(
     def setupKeyHandlers(currentIndex: Int): Unit = {
       _scene.onKeyPressed = (event: KeyEvent) => {
         val currentTime = System.currentTimeMillis()
-        if (isKeyReleased && currentTime - lastKeyPressTime > keyPressDelay) {
-          isKeyReleased = false
-          lastKeyPressTime = currentTime
+        if (_isKeyReleased && currentTime - _lastKeyPressTime > _keyPressDelay) {
+          _isKeyReleased = false
+          _lastKeyPressTime = currentTime
           showNextResult(currentIndex + 1)
         }
       }
-      _scene.onKeyReleased = (_: KeyEvent) => isKeyReleased = true
+      _scene.onKeyReleased = (_: KeyEvent) => _isKeyReleased = true
     }
 
     showNextResult(0)
@@ -276,7 +277,29 @@ class BattleController(
       }.toArray
 
       _dialogManager.setLeftDialogBtns(pokemonBtns)
+      _dialogManager.setRightDialogBtns(Array.empty)
+      _dialogManager.updateBtnsView()
     }
+  }
+
+  private def menuBtns(): Array[DialogBtn] = Array(
+    DialogBtn("Attack", () => handleAttackBtn()),
+    DialogBtn("Bag", () => println("Bag action")),
+    DialogBtn("Pokémon", () => handlePokemonBtn()),
+    DialogBtn("Run", () => println("Run action"))
+  )
+
+  private def handleAttackBtn(): Unit = {
+    _battleComponent.clearLeftDialogPane()
+    _dialogManager.isInAttackMenu(true)
+    setMoveBtns()
+  }
+
+  private def handlePokemonBtn(): Unit = {
+    _battleComponent.clearLeftDialogPane()
+    _dialogManager.setRightDialogBtns(Array.empty)
+    _dialogManager.isInPokemonMenu(true)
+    setPokemonSwitchBtns()
   }
 
   initialize()
