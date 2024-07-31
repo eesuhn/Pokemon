@@ -36,14 +36,17 @@ class BattleController(
   val inputPane: Pane,
 
   // left dialog
+  // state
   val stateDialogTxt: Label,
-  // left dialog buttons
+
+  // left buttons
   val leftDialogBtn1: Label,
   val leftDialogBtn2: Label,
   val leftDialogBtn3: Label,
   val leftDialogBtn4: Label,
 
   // right dialog
+  // move stats
   val moveTypeImg: ImageView,
   val moveTypeTxt: Label,
   val moveCat: ImageView,
@@ -51,7 +54,8 @@ class BattleController(
   val powerTxt: Label,
   val accuracyTxtLabel: Label,
   val accuracyTxt: Label,
-  // right dialog buttons
+
+  // right buttons
   val rightDialogBtn1: Label,
   val rightDialogBtn2: Label,
   val rightDialogBtn3: Label,
@@ -132,9 +136,11 @@ class BattleController(
       pokemonRightView,
 
       // left dialog
+      // state
       stateDialogTxt,
 
       // right dialog
+      // move stats
       moveTypeImg,
       moveTypeTxt,
       moveCat,
@@ -258,12 +264,17 @@ class BattleController(
       case None => showResultsInDialog(Seq("Battle Over! It's a tie!"))
     }
 
-    // Disable input
+    // Disable key handlers
     _scene.onKeyPressed = null
     _scene.onKeyReleased = null
 
     ResourceUtil.stopSound("misc/battle-theme.mp3")
     ResourceUtil.playSound("misc/ending-theme.mp3")
+
+    // Any key to exit game
+    Platform.runLater {
+      _scene.onKeyPressed = (event: KeyEvent) => Platform.exit()
+    }
   }
 
   private def setPokemonSwitchBtns(): Unit = {

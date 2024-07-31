@@ -11,7 +11,6 @@
 
 <AnchorPane maxHeight="720.0" maxWidth="960.0" minHeight="720.0" minWidth="960.0" prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.BattleController">
   <children>
-
     <!-- background -->
     <ImageView fx:id="battleBg" fitHeight="540.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true" />
     <ImageView fx:id="battleDialogLeft" fitHeight="180.0" fitWidth="580.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
@@ -44,13 +43,12 @@
 
     <!-- input -->
     <Pane fx:id="inputPane" layoutY="540.0" prefHeight="180.0" prefWidth="960.0">
-      <!-- left dialog text -->
+      <!-- left dialog -->
       <Pane prefHeight="180.0" prefWidth="580.0">
+        <!-- state -->
         <Label fx:id="stateDialogTxt" layoutX="38.0" layoutY="36.0" prefHeight="120.0" prefWidth="480.0" styleClass="left-battle-text" wrapText="true" />
-      </Pane>
 
-      <!-- left buttons -->
-      <Pane prefHeight="180.0" prefWidth="580.0">
+        <!-- left buttons -->
         <GridPane alignment="CENTER" hgap="18" layoutX="38.0" layoutY="32.0" vgap="10">
           <Label fx:id="leftDialogBtn1" styleClass="left-battle-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="leftDialogBtn2" styleClass="left-battle-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -67,13 +65,12 @@
         </GridPane>
       </Pane>
 
-      <!-- right dialog text -->
+      <!-- right dialog -->
       <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
+        <!-- move stats -->
         <ImageView fx:id="moveTypeImg" fitWidth="38.0" layoutX="38.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" />
         <Label fx:id="moveTypeTxt" layoutX="76.0" layoutY="40.0" styleClass="move-type-text" />
         <ImageView fx:id="moveCat" fitWidth="74.0" layoutX="206.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
-
-        <!-- move stats -->
         <GridPane hgap="10" layoutX="40.0" layoutY="82.0" prefHeight="180.0" prefWidth="380.0" vgap="2">
           <Label fx:id="powerTxtLabel" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="powerTxt" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
@@ -88,10 +85,8 @@
             <RowConstraints vgrow="NEVER" />
           </rowConstraints>
         </GridPane>
-      </Pane>
 
-      <!-- right buttons -->
-      <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
+        <!-- right buttons -->
         <GridPane alignment="CENTER" hgap="16" layoutX="42.0" layoutY="32.0" vgap="10">
           <Label fx:id="rightDialogBtn1" styleClass="right-dialog-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="rightDialogBtn2" styleClass="right-dialog-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -107,8 +102,6 @@
           </rowConstraints>
         </GridPane>
       </Pane>
-
     </Pane>
-
   </children>
 </AnchorPane>
