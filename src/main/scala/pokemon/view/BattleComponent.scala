@@ -8,15 +8,11 @@ import scalafx.scene.layout.AnchorPane
 
 class BattleComponent(
   // background
-  val battleBg: ImageView,
-  val battleDialogLeft: ImageView,
-  val battleDialogRight: ImageView,
+  val background: BackgroundView,
 
   // pokemon
   val pokemonLeft: PokemonView,
-  val pokemonLeftStatBg: ImageView,
   val pokemonRight: PokemonView,
-  val pokemonRightStatBg: ImageView,
 
   // left dialog
   val stateDialogTxt: Label,
@@ -30,16 +26,6 @@ class BattleComponent(
   val accuracyTxtLabel: Label,
   val accuracyTxt: Label
 ) {
-
-  def setup(): Unit = {
-    battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
-    battleDialogLeft.image = ResourceUtil.resouceImage("misc/battle-dialog-left.png")
-    battleDialogRight.image = ResourceUtil.resouceImage("misc/battle-dialog-right.png")
-
-    // Pokemon stat background
-    pokemonLeftStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-left.png")
-    pokemonRightStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-right.png")
-  }
 
   def pokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
     pokemonLeft.setup(s"${leftPokemon}-back")
@@ -174,4 +160,23 @@ case class PokemonView(
       AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
     }
   }
+}
+
+case class BackgroundView(
+  battleBg: ImageView,
+  battleDialogLeft: ImageView,
+  battleDialogRight: ImageView,
+  pokemonLeftStatBg: ImageView,
+  pokemonRightStatBg: ImageView
+) {
+
+  private def initialize(): Unit = {
+    battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
+    battleDialogLeft.image = ResourceUtil.resouceImage("misc/battle-dialog-left.png")
+    battleDialogRight.image = ResourceUtil.resouceImage("misc/battle-dialog-right.png")
+    pokemonLeftStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-left.png")
+    pokemonRightStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-right.png")
+  }
+
+  initialize()
 }

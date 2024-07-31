@@ -12,13 +12,6 @@ class DialogManager(
   val menuBtns: Array[DialogBtn]
 ) {
 
-  case class DialogBtnState(
-    texts: Array[Label],
-    dialogBtns: Array[DialogBtn],
-    currentSelection: Int = 0,
-    activeButtonCount: Int = 0
-  )
-
   private var _isInAttackMenu = false
   private var _isInPokemonMenu = false
   private var _leftBtnState: DialogBtnState = _
@@ -45,7 +38,7 @@ class DialogManager(
   def isInAttackMenu(value: Boolean): Unit = _isInAttackMenu = value
   def isInPokemonMenu(value: Boolean): Unit = _isInPokemonMenu = value
 
-  def setup(): Unit = {
+  private def initialize(): Unit = {
     _leftBtnState = DialogBtnState(leftDialogBtns, Array.empty)
     _rightBtnState = DialogBtnState(rightDialogBtns, menuBtns, activeButtonCount = 4)
     updateBtnsView()
@@ -53,6 +46,8 @@ class DialogManager(
 
   def handleKeyPress(event: KeyEvent, hookKeyPress: () => Unit): Unit = {
     val currentTime = System.currentTimeMillis()
+
+    // Handle key press delay
     if ((_isKeyReleased || _lastPressedKey != Some(event.code)) &&
         currentTime - _lastKeyPressTime > _keyPressDelay) {
       _isKeyReleased = false
@@ -67,8 +62,8 @@ class DialogManager(
 
       event.code match {
         case KeyCode.Enter => executeCurrent()
-        case KeyCode.Escape if _isInAttackMenu || _isInPokemonMenu => {
-          resetToMainMenu()
+        case KeyCode.Escape if (_isInAttackMenu || _isInPokemonMenu) => {
+          toMainMenu()
           battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
         }
         case _ =>
@@ -85,9 +80,7 @@ class DialogManager(
   }
 
   /**
-    * Keyboard navigation
-    *
-    * `moveVertically` and `moveHorizontally` keep navigation wrap around
+    * - Keep navigation horizontally and vertically wrap around
     *
     * @param state
     * @param keyCode
@@ -135,18 +128,28 @@ class DialogManager(
   }
 
   def setLeftDialogBtns(dialogBtns: Array[DialogBtn]): Unit = _leftBtnState = _leftBtnState.copy(
-    dialogBtns = dialogBtns, activeButtonCount = dialogBtns.length)
+    dialogBtns = dialogBtns, currentSelection = 0, activeButtonCount = dialogBtns.length)
 
   def setRightDialogBtns(dialogBtns: Array[DialogBtn]): Unit = _rightBtnState = _rightBtnState.copy(
-    dialogBtns = dialogBtns, activeButtonCount = dialogBtns.length)
+    dialogBtns = dialogBtns, currentSelection = 0, activeButtonCount = dialogBtns.length)
 
-  def resetToMainMenu(): Unit = {
-    battleComponent.clearRightDialogPane()
-    _leftBtnState = _leftBtnState.copy(dialogBtns = Array.empty, currentSelection = 0, activeButtonCount = 0)
-    _rightBtnState = _rightBtnState.copy(dialogBtns = menuBtns, currentSelection = 0, activeButtonCount = 4)
+  def toMainMenu(): Unit = {
+    clearAll()
     _isInAttackMenu = false
     _isInPokemonMenu = false
+    setRightDialogBtns(menuBtns)
     updateBtnsView()
+  }
+
+  /**
+    * Clear all dialog buttons and dialog panes
+    */
+  def clearAll(): Unit = {
+    setLeftDialogBtns(Array.empty)
+    setRightDialogBtns(Array.empty)
+    updateBtnsView()
+    battleComponent.clearLeftDialogPane()
+    battleComponent.clearRightDialogPane()
   }
 
   def updateBtnsView(): Unit = {
@@ -184,10 +187,7 @@ class DialogManager(
     }
   }
 
-  def clearMoveBtns(): Unit = {
-    _leftBtnState = _leftBtnState.copy(dialogBtns = Array.empty)
-    updateBtnsView()
-  }
+  initialize()
 }
 
 case class DialogBtn(
@@ -196,3 +196,10 @@ case class DialogBtn(
 ) {
   def execute(): Unit = action()
 }
+
+case class DialogBtnState(
+  texts: Array[Label],
+  dialogBtns: Array[DialogBtn],
+  currentSelection: Int = 0,
+  activeButtonCount: Int = 0
+)

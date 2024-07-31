@@ -71,8 +71,6 @@ class BattleController(
   def initialize(): Unit = {
     ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
     _battle.start()
-    _battleComponent.setup()
-    _dialogManager.setup()
     updatePokemonViews()
 
     Platform.runLater {
@@ -105,6 +103,13 @@ class BattleController(
   }
 
   private def initBattleComponent(): BattleComponent = {
+    val background: BackgroundView = new BackgroundView(
+      battleBg,
+      battleDialogLeft,
+      battleDialogRight,
+      pokemonLeftStatBg,
+      pokemonRightStatBg
+    )
     val pokemonLeftView: PokemonView = new PokemonView(
       pokemonLeftName,
       pokemonLeftImg,
@@ -119,15 +124,11 @@ class BattleController(
     )
     new BattleComponent(
       // background
-      battleBg,
-      battleDialogLeft,
-      battleDialogRight,
+      background,
 
       // pokemon
       pokemonLeftView,
-      pokemonLeftStatBg,
       pokemonRightView,
-      pokemonRightStatBg,
 
       // left dialog
       stateDialogTxt,
@@ -166,7 +167,7 @@ class BattleController(
 
   private def handleMainMenu(): Unit = {
     updatePokemonViews()
-    _dialogManager.resetToMainMenu()
+    _dialogManager.toMainMenu()
     _battleComponent.setStateDialog(s"What will ${_battle.player.activePokemon.pName} do?")
     focusInputPane()
   }
@@ -197,7 +198,6 @@ class BattleController(
         })
       }
     _dialogManager.setLeftDialogBtns(dialogBtns.toArray)
-    _dialogManager.setRightDialogBtns(Array.empty)
     _dialogManager.updateBtnsView()
   }
 
@@ -206,9 +206,8 @@ class BattleController(
     *
     * @param results
     */
-  private def showResultsInDialog(results: Seq[String]): Unit = {
-    _dialogManager.clearMoveBtns()
-    _battleComponent.clearRightDialogPane()
+    private def showResultsInDialog(results: Seq[String]): Unit = {
+    _dialogManager.clearAll()
 
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
@@ -277,29 +276,37 @@ class BattleController(
       }.toArray
 
       _dialogManager.setLeftDialogBtns(pokemonBtns)
-      _dialogManager.setRightDialogBtns(Array.empty)
       _dialogManager.updateBtnsView()
     }
   }
 
   private def menuBtns(): Array[DialogBtn] = Array(
     DialogBtn("Attack", () => handleAttackBtn()),
-    DialogBtn("Bag", () => println("Bag action")),
+    DialogBtn("Bag", () => handleBagBtn()),
     DialogBtn("Pokémon", () => handlePokemonBtn()),
-    DialogBtn("Run", () => println("Run action"))
+    DialogBtn("Run", () => handleRunBtn())
   )
 
   private def handleAttackBtn(): Unit = {
-    _battleComponent.clearLeftDialogPane()
+    _dialogManager.clearAll()
     _dialogManager.isInAttackMenu(true)
     setMoveBtns()
   }
 
+  private def handleBagBtn(): Unit = {
+    _dialogManager.clearAll()
+    showResultsInDialog(Seq("You don't have any items!"))
+  }
+
   private def handlePokemonBtn(): Unit = {
-    _battleComponent.clearLeftDialogPane()
-    _dialogManager.setRightDialogBtns(Array.empty)
+    _dialogManager.clearAll()
     _dialogManager.isInPokemonMenu(true)
     setPokemonSwitchBtns()
+  }
+
+  private def handleRunBtn(): Unit = {
+    _dialogManager.clearAll()
+    showResultsInDialog(Seq("You couldn't get away!"))
   }
 
   initialize()
