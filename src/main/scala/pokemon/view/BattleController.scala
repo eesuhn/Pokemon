@@ -69,7 +69,9 @@ class BattleController(
   private val _keyPressDelay: Long = 120
 
   def initialize(): Unit = {
+    // Battle BGM
     ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
+
     _battle.start()
     updatePokemonViews()
 
@@ -215,8 +217,8 @@ class BattleController(
         _battleComponent.setStateDialog(result)
         updatePokemonViews()
 
-        // Play sound effect for move
-        if (result.contains("used")) {
+        // Move SFX if it didn't miss
+        if (!result.contains("missed") && result.contains("used")) {
           val moveName = result.split(" used ")(1).split("!")(0)
           playMoveSound(moveName)
         }
@@ -260,6 +262,13 @@ class BattleController(
     // Disable input
     _scene.onKeyPressed = null
     _scene.onKeyReleased = null
+
+    // Dispose SFX
+    ResourceUtil.stopAllSounds()
+    ResourceUtil.disposeAllSounds()
+
+    // Ending BGM
+    ResourceUtil.playSound("misc/ending-theme.mp3")
   }
 
   private def setPokemonSwitchBtns(): Unit = {

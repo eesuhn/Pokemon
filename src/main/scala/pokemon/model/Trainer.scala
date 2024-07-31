@@ -80,8 +80,7 @@ class Bot extends Trainer {
   // DEBUG: Defined list of Pokemon
   // override def generateDeck(): Unit = {
   //   val pokemons = List(
-  //     new Pikachu(),
-  //     new Charmander()
+  //     new Pikachu()
   //   )
   //   addPokemons(pokemons)
   // }
