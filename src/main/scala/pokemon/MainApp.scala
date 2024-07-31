@@ -4,6 +4,7 @@ import java.net.URL
 
 import javafx.scene.layout.BorderPane
 import pokemon.model.Layout
+import pokemon.util.ResourceUtil
 import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
@@ -16,6 +17,7 @@ object MainApp extends JFXApp {
     title = "Pokemon"
     scene = new Scene {
       root = rootLayout
+      icons += ResourceUtil.resouceImage("misc/app-icon.png")
       stylesheets = List(cssResource.toExternalForm)
     }
   }

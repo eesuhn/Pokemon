@@ -69,7 +69,6 @@ class BattleController(
   private val _keyPressDelay: Long = 120
 
   def initialize(): Unit = {
-    // Battle BGM
     ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
 
     _battle.start()
@@ -263,11 +262,7 @@ class BattleController(
     _scene.onKeyPressed = null
     _scene.onKeyReleased = null
 
-    // Dispose SFX
-    ResourceUtil.stopAllSounds()
-    ResourceUtil.disposeAllSounds()
-
-    // Ending BGM
+    ResourceUtil.stopSound("misc/battle-theme.mp3")
     ResourceUtil.playSound("misc/ending-theme.mp3")
   }
 
