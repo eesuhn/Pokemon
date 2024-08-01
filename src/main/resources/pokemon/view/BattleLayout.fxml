@@ -53,14 +53,14 @@
         <Label fx:id="stateDialogTxt" layoutX="38.0" layoutY="36.0" prefHeight="120.0" prefWidth="480.0" styleClass="left-battle-text" wrapText="true" />
 
         <!-- left buttons -->
-        <GridPane alignment="CENTER" hgap="10" layoutX="38.0" layoutY="32.0" vgap="10">
+        <GridPane alignment="CENTER" hgap="2" layoutX="38.0" layoutY="32.0" vgap="10">
           <Label fx:id="leftDialogBtn1" styleClass="left-battle-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="leftDialogBtn2" styleClass="left-battle-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
           <Label fx:id="leftDialogBtn3" styleClass="left-battle-btn" GridPane.columnIndex="0" GridPane.rowIndex="1" />
           <Label fx:id="leftDialogBtn4" styleClass="left-battle-btn" GridPane.columnIndex="1" GridPane.rowIndex="1" />
           <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" minWidth="234.0" prefWidth="234.0" />
-            <ColumnConstraints hgrow="NEVER" minWidth="234.0" prefWidth="234.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="238.0" prefWidth="238.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="238.0" prefWidth="238.0" />
           </columnConstraints>
           <rowConstraints>
             <RowConstraints vgrow="NEVER" />
