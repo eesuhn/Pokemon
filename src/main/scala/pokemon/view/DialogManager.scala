@@ -61,8 +61,8 @@ class DialogManager(
       hookKeyPress()
 
       event.code match {
-        case KeyCode.Enter => executeCurrent()
-        case KeyCode.Escape if (_isInAttackMenu || _isInPokemonMenu) => {
+        case KeyCode.Enter | KeyCode.Space => executeCurrent()
+        case KeyCode.Escape | KeyCode.BackSpace if (_isInAttackMenu || _isInPokemonMenu) => {
           toMainMenu()
           battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
         }
@@ -88,10 +88,10 @@ class DialogManager(
     */
   private def getNewSelection(state: DialogBtnState, keyCode: KeyCode): Int = {
     keyCode match {
-      case KeyCode.UP => moveVertically(state, -2)
-      case KeyCode.DOWN => moveVertically(state, 2)
-      case KeyCode.LEFT => moveHorizontally(state, -1)
-      case KeyCode.RIGHT => moveHorizontally(state, 1)
+      case KeyCode.UP | KeyCode.W => moveVertically(state, -2)
+      case KeyCode.DOWN | KeyCode.S => moveVertically(state, 2)
+      case KeyCode.LEFT | KeyCode.A => moveHorizontally(state, -1)
+      case KeyCode.RIGHT | KeyCode.D => moveHorizontally(state, 1)
       case _ => state.currentSelection
     }
   }
