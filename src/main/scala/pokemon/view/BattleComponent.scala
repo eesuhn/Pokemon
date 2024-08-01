@@ -8,38 +8,29 @@ import scalafx.scene.layout.AnchorPane
 
 class BattleComponent(
   // background
-  val battleBg: ImageView,
-  val battleDialogLeft: ImageView,
-  val battleDialogRight: ImageView,
+  val background: BackgroundView,
 
   // pokemon
   val pokemonLeft: PokemonView,
-  val pokemonLeftStatBg: ImageView,
   val pokemonRight: PokemonView,
-  val pokemonRightStatBg: ImageView,
 
   // left dialog
+  // state
   val stateDialogTxt: Label,
 
   // right dialog
+  // move stats
   val moveTypeImg: ImageView,
   val moveTypeTxt: Label,
   val moveCat: ImageView,
   val powerTxtLabel: Label,
   val powerTxt: Label,
   val accuracyTxtLabel: Label,
-  val accuracyTxt: Label
+  val accuracyTxt: Label,
+
+  // pokemon current stats
+  val pokemonCurrentStats: PokemonStatsView
 ) {
-
-  def setup(): Unit = {
-    battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
-    battleDialogLeft.image = ResourceUtil.resouceImage("misc/battle-dialog-left.png")
-    battleDialogRight.image = ResourceUtil.resouceImage("misc/battle-dialog-right.png")
-
-    // Pokemon stat background
-    pokemonLeftStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-left.png")
-    pokemonRightStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-right.png")
-  }
 
   def pokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
     pokemonLeft.setup(s"${leftPokemon}-back")
@@ -47,11 +38,13 @@ class BattleComponent(
   }
 
   def pokemonHpBars(leftHp: Double, rightHp: Double): Unit = {
-    pokemonLeft.hpBar.progress = leftHp
-    pokemonLeft.hpBar.style = s"-fx-accent: ${hpBarColor(leftHp)}"
-    pokemonRight.hpBar.progress = rightHp
-    pokemonRight.hpBar.style = s"-fx-accent: ${hpBarColor(rightHp)}"
+    pokemonLeft.pokemonHpBar(leftHp)
+    pokemonRight.pokemonHpBar(rightHp)
   }
+
+  def leftPokemonTypes(type1: String, type2: String): Unit = pokemonLeft.pokemonTypeImgs(type1, type2)
+
+  def rightPokemonTypes(type1: String, type2: String): Unit = pokemonRight.pokemonTypeImgs(type1, type2)
 
   def setStateDialog(text: String): Unit = stateDialogTxt.text = text
 
@@ -64,12 +57,28 @@ class BattleComponent(
 
   def clearLeftDialogPane(): Unit = stateDialogTxt.text = ""
 
-  def clearRightDialogPane(): Unit = updateMoveStats("", "", "", "")
+  def clearRightDialogPane(): Unit = {
+    updateMoveStats("", "", "", "")
+    updatePokemonCurrentStats("", "", "", "", "", "")
+  }
 
-  private def hpBarColor(hp: Double): String = {
-    if (hp > 0.7) "#3cda38"
-    else if (hp > 0.3) "#f4b848"
-    else "#de6248"
+  def updatePokemonCurrentStats(
+    pokemonName: String,
+    type1: String,
+    type2: String,
+    hp: String,
+    attack: String,
+    defense: String
+  ): Unit = {
+
+    pokemonCurrentStats.updatePokemonCurrentStats(
+      pokemonName,
+      type1,
+      type2,
+      hp,
+      attack,
+      defense
+    )
   }
 
   private def powerTxt(text: String): Unit = {
@@ -129,6 +138,8 @@ class BattleComponent(
 
 case class PokemonView(
   pokemonName: Label,
+  pokemonTypeImg1: ImageView,
+  pokemonTypeImg2: ImageView,
   pokemonImg: ImageView,
   anchorPane: AnchorPane,
   hpBar: ProgressBar
@@ -148,10 +159,10 @@ case class PokemonView(
     pokemonImg.preserveRatio = true
     pokemonImg.smooth = true
 
-    Platform.runLater(positionPokemon())
+    Platform.runLater(position())
 
     pokemonImg.image.onChange { (_, _, newImage) =>
-      if (newImage != null) positionPokemon()
+      if (newImage != null) position()
     }
   }
 
@@ -161,7 +172,7 @@ case class PokemonView(
     * - Center horizontally
     * - Anchor to bottom
     */
-  private def positionPokemon(): Unit = {
+  private def position(): Unit = {
     Option(pokemonImg.image.value).foreach { newImage =>
       val imageWidth = newImage.getWidth()
       val imageHeight = newImage.getHeight()
@@ -173,5 +184,85 @@ case class PokemonView(
       val leftAnchor = (paneWidth - pokemonImg.fitWidth.value) / 2
       AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
     }
+  }
+
+  def pokemonHpBar(hp: Double): Unit = {
+    hpBar.progress = hp
+    hpBar.style = s"-fx-accent: ${hpBarColor(hp)}"
+  }
+
+  private def hpBarColor(hp: Double): String = {
+    if (hp > 0.7) "#3cda38"
+    else if (hp > 0.3) "#f4b848"
+    else "#de6248"
+  }
+
+  def pokemonTypeImgs(type1: String, type2: String): Unit = {
+    pokemonTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"misc/${type1}-type.png") else null
+    pokemonTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"misc/${type2}-type.png") else null
+  }
+}
+
+case class BackgroundView(
+  battleBg: ImageView,
+  battleDialogLeft: ImageView,
+  battleDialogRight: ImageView,
+  pokemonLeftStatBg: ImageView,
+  pokemonRightStatBg: ImageView
+) {
+
+  private def initialize(): Unit = {
+    battleBg.image = ResourceUtil.resouceImage("misc/battle-bg.gif")
+    battleDialogLeft.image = ResourceUtil.resouceImage("misc/battle-dialog-left.png")
+    battleDialogRight.image = ResourceUtil.resouceImage("misc/battle-dialog-right.png")
+    pokemonLeftStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-left.png")
+    pokemonRightStatBg.image = ResourceUtil.resouceImage("misc/stat-bg-right.png")
+  }
+
+  initialize()
+}
+
+case class PokemonStatsView(
+  currentImg: ImageView,
+  currentTypeImg1: ImageView,
+  currentTypeImg2: ImageView,
+  currentHpTxt: Label,
+  currentHp: Label,
+  currentAttackTxt: Label,
+  currentAttack: Label,
+  currentDefenseTxt: Label,
+  currentDefense: Label
+) {
+
+  def updatePokemonCurrentStats(
+    pokemonName: String,
+    type1: String,
+    type2: String,
+    hp: String,
+    attack: String,
+    defense: String
+  ): Unit = {
+    currentImg.image = if (pokemonName.nonEmpty) ResourceUtil.resouceImage(s"pokes-static/${pokemonName}.png") else null
+    currentTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"misc/${type1}-type.png") else null
+    currentTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"misc/${type2}-type.png") else null
+
+    hpTxt(hp)
+    attackTxt(attack)
+    defenseTxt(defense)
+  }
+
+  private def hpTxt(text: String): Unit = {
+    currentHp.text = text
+    currentHpTxt.text = if (text.nonEmpty) "HP" else ""
+  }
+
+  private def attackTxt(text: String): Unit = {
+    currentAttack.text = text
+    currentAttackTxt.text = if (text.nonEmpty) "Atk." else ""
+  }
+
+  private def defenseTxt(text: String): Unit = {
+    currentDefense.text = text
+    currentDefenseTxt.text = if (text.nonEmpty) "Def." else ""
   }
 }

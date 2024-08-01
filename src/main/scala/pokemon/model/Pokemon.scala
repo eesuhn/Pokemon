@@ -36,6 +36,8 @@ abstract class Pokemon {
   def pTypes: List[Type] = _pTypes
   def moves: List[Move] = _moves
 
+  def pTypeNames: List[String] = pTypes.map(_.name.toLowerCase)
+
   /**
     * Set the types for the Pokemon, at most 2 types can be set
     *

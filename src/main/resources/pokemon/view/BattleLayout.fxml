@@ -11,7 +11,6 @@
 
 <AnchorPane maxHeight="720.0" maxWidth="960.0" minHeight="720.0" minWidth="960.0" prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.BattleController">
   <children>
-
     <!-- background -->
     <ImageView fx:id="battleBg" fitHeight="540.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true" />
     <ImageView fx:id="battleDialogLeft" fitHeight="180.0" fitWidth="580.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
@@ -20,37 +19,40 @@
     <!-- pokemon -->
     <Pane maxHeight="540.0" maxWidth="960.0" minHeight="540.0" minWidth="960.0" prefHeight="540.0" prefWidth="960.0">
       <!-- left pokemon -->
-      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="280.0" prefWidth="280.0">
-        <ImageView fx:id="pokemonLeftImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="30.0" />
+      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="250.0" prefWidth="280.0">
+        <ImageView fx:id="pokemonLeftImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
       </AnchorPane>
       <!-- left stats -->
       <Pane layoutX="550.0" layoutY="330.0" maxHeight="103.2" maxWidth="348.8" minHeight="103.2" minWidth="348.8" prefHeight="103.2" prefWidth="348.8">
         <ImageView fx:id="pokemonLeftStatBg" fitHeight="103.2" fitWidth="348.8" pickOnBounds="true" preserveRatio="true" />
         <Label fx:id="pokemonLeftName" layoutX="56.0" layoutY="16.0" styleClass="pokemon-name" />
-        <ProgressBar fx:id="pokemonLeftHpBar" layoutX="146.0" layoutY="61.0" styleClass="hp-bar" prefHeight="8.0" prefWidth="170.0" />
+        <ImageView fx:id="pokemonLeftTypeImg1" fitHeight="34.0" fitWidth="34.0" layoutX="290.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="pokemonLeftTypeImg2" fitHeight="34.0" fitWidth="34.0" layoutX="252.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+        <ProgressBar fx:id="pokemonLeftHpBar" layoutX="146.0" layoutY="61.0" prefHeight="8.0" prefWidth="170.0" styleClass="hp-bar" />
       </Pane>
 
       <!-- right pokemon -->
-      <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="60.0" prefHeight="280.0" prefWidth="280.0">
-        <ImageView fx:id="pokemonRightImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="30.0" />
+      <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="60.0" prefHeight="250.0" prefWidth="280.0">
+        <ImageView fx:id="pokemonRightImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
       </AnchorPane>
       <!-- right stats -->
       <Pane layoutX="120.0" layoutY="150.0" maxHeight="103.2" maxWidth="339.2" minHeight="103.2" minWidth="339.2" prefHeight="103.2" prefWidth="339.2">
         <ImageView fx:id="pokemonRightStatBg" fitHeight="103.2" fitWidth="339.2" pickOnBounds="true" preserveRatio="true" />
         <Label fx:id="pokemonRightName" layoutX="22.0" layoutY="16.0" styleClass="pokemon-name" />
-        <ProgressBar fx:id="pokemonRightHpBar" layoutX="114.0" layoutY="64.0" styleClass="hp-bar" prefHeight="8.0" prefWidth="170.0" />
+        <ImageView fx:id="pokemonRightTypeImg1" fitHeight="34.0" fitWidth="34.0" layoutX="258.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="pokemonRightTypeImg2" fitHeight="34.0" fitWidth="34.0" layoutX="220.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+        <ProgressBar fx:id="pokemonRightHpBar" layoutX="114.0" layoutY="64.0" prefHeight="8.0" prefWidth="170.0" styleClass="hp-bar" />
       </Pane>
     </Pane>
 
     <!-- input -->
     <Pane fx:id="inputPane" layoutY="540.0" prefHeight="180.0" prefWidth="960.0">
-      <!-- left dialog text -->
+      <!-- left dialog -->
       <Pane prefHeight="180.0" prefWidth="580.0">
+        <!-- state -->
         <Label fx:id="stateDialogTxt" layoutX="38.0" layoutY="36.0" prefHeight="120.0" prefWidth="480.0" styleClass="left-battle-text" wrapText="true" />
-      </Pane>
 
-      <!-- left buttons -->
-      <Pane prefHeight="180.0" prefWidth="580.0">
+        <!-- left buttons -->
         <GridPane alignment="CENTER" hgap="18" layoutX="38.0" layoutY="32.0" vgap="10">
           <Label fx:id="leftDialogBtn1" styleClass="left-battle-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="leftDialogBtn2" styleClass="left-battle-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -67,13 +69,12 @@
         </GridPane>
       </Pane>
 
-      <!-- right dialog text -->
+      <!-- right dialog -->
       <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
+        <!-- move stats -->
         <ImageView fx:id="moveTypeImg" fitWidth="38.0" layoutX="38.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" />
         <Label fx:id="moveTypeTxt" layoutX="76.0" layoutY="40.0" styleClass="move-type-text" />
         <ImageView fx:id="moveCat" fitWidth="74.0" layoutX="206.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
-
-        <!-- move stats -->
         <GridPane hgap="10" layoutX="40.0" layoutY="82.0" prefHeight="180.0" prefWidth="380.0" vgap="2">
           <Label fx:id="powerTxtLabel" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="powerTxt" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
@@ -88,10 +89,29 @@
             <RowConstraints vgrow="NEVER" />
           </rowConstraints>
         </GridPane>
-      </Pane>
 
-      <!-- right buttons -->
-      <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
+        <!-- pokemon current stats -->
+        <ImageView fx:id="pokemonCurrentImg" fitWidth="106.0" layoutX="48.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="pokemonCurrentTypeImg1" fitWidth="38.0" layoutX="176.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="pokemonCurrentTypeImg2" fitWidth="38.0" layoutX="220.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+        <GridPane hgap="6" layoutX="184.0" layoutY="80.0" vgap="4">
+          <Label fx:id="pokemonCurrentHpTxt" styleClass="poke-cur-stats" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+          <Label fx:id="pokemonCurrentHp" styleClass="poke-cur-stats" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+          <Label fx:id="pokemonCurrentAttackTxt" styleClass="poke-cur-stats" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+          <Label fx:id="pokemonCurrentAttack" styleClass="poke-cur-stats" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+          <Label fx:id="pokemonCurrentDefenseTxt" styleClass="poke-cur-stats" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+          <Label fx:id="pokemonCurrentDefense" styleClass="poke-cur-stats" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+          <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="40.0" prefWidth="40.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="60.0" prefWidth="60.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="NEVER" />
+            <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="NEVER" />
+          </rowConstraints>
+        </GridPane>
+
+        <!-- right buttons -->
         <GridPane alignment="CENTER" hgap="16" layoutX="42.0" layoutY="32.0" vgap="10">
           <Label fx:id="rightDialogBtn1" styleClass="right-dialog-btn" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="rightDialogBtn2" styleClass="right-dialog-btn" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -107,8 +127,6 @@
           </rowConstraints>
         </GridPane>
       </Pane>
-
     </Pane>
-
   </children>
 </AnchorPane>

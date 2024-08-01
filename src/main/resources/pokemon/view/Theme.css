@@ -71,3 +71,10 @@
 	-fx-letter-spacing: 2px;
 	-fx-effect: dropshadow(three-pass-box, rgba(24, 24, 24, 0.2), 4, 0, 1, 1);
 }
+
+.poke-cur-stats {
+	-fx-font-size: 20px;
+	-fx-font-family: 'Minecraft Regular';
+	-fx-text-fill: black;
+	-fx-padding: -4 0;
+}
