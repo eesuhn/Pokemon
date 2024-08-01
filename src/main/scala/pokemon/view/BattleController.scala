@@ -59,6 +59,12 @@ class BattleController(
   val pokemonCurrentImg: ImageView,
   val pokemonCurrentTypeImg1: ImageView,
   val pokemonCurrentTypeImg2: ImageView,
+  val pokemonCurrentHpTxt: Label,
+  val pokemonCurrentHp: Label,
+  val pokemonCurrentAttackTxt: Label,
+  val pokemonCurrentAttack: Label,
+  val pokemonCurrentDefenseTxt: Label,
+  val pokemonCurrentDefense: Label,
 
   // right buttons
   val rightDialogBtn1: Label,
@@ -132,6 +138,17 @@ class BattleController(
       pokemonRightPane,
       pokemonRightHpBar
     )
+    val pokemonCurrentStats: PokemonStatsView = new PokemonStatsView(
+      pokemonCurrentImg,
+      pokemonCurrentTypeImg1,
+      pokemonCurrentTypeImg2,
+      pokemonCurrentHpTxt,
+      pokemonCurrentHp,
+      pokemonCurrentAttackTxt,
+      pokemonCurrentAttack,
+      pokemonCurrentDefenseTxt,
+      pokemonCurrentDefense
+    )
     new BattleComponent(
       // background
       background,
@@ -155,9 +172,7 @@ class BattleController(
       accuracyTxt,
 
       // pokemon current stats
-      pokemonCurrentImg,
-      pokemonCurrentTypeImg1,
-      pokemonCurrentTypeImg2
+      pokemonCurrentStats
     )
   }
 
@@ -323,7 +338,10 @@ class BattleController(
       _battleComponent.updatePokemonCurrentStats(
         pokemonName.toLowerCase,
         pTypes.head,
-        if (pTypes.length > 1) pTypes(1) else ""
+        if (pTypes.length > 1) pTypes(1) else "",
+        pokemon.currentHP.toString,
+        pokemon.attack.value.toString,
+        pokemon.defense.value.toString
       )
     }
   }

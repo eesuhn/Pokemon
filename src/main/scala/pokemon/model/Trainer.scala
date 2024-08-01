@@ -64,15 +64,15 @@ class Player extends Trainer {
   def moveIndex(index: Int): Unit = _moveIndex = index
 
   // DEBUG: Defined list of Pokemon
-  override def generateDeck(): Unit = {
-    val pokemons = List(
-      new Snorlax(),
-      new Blaziken(),
-      new Breloom(),
-      new Squirtle
-    )
-    addPokemons(pokemons)
-  }
+  // override def generateDeck(): Unit = {
+  //   val pokemons = List(
+  //     new Snorlax(),
+  //     new Blaziken(),
+  //     new Breloom(),
+  //     new Squirtle
+  //   )
+  //   addPokemons(pokemons)
+  // }
 
   override def chooseMove(): Move = activePokemon.moves(_moveIndex)
 }
@@ -81,12 +81,12 @@ class Bot extends Trainer {
   val name: String = "Bot"
 
   // DEBUG: Defined list of Pokemon
-  override def generateDeck(): Unit = {
-    val pokemons = List(
-      new Pikachu()
-    )
-    addPokemons(pokemons)
-  }
+  // override def generateDeck(): Unit = {
+  //   val pokemons = List(
+  //     new Pikachu()
+  //   )
+  //   addPokemons(pokemons)
+  // }
 
   override def chooseMove(): Move = {
     randomMove()

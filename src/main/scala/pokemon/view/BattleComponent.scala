@@ -29,9 +29,7 @@ class BattleComponent(
   val accuracyTxt: Label,
 
   // pokemon current stats
-  val pokemonCurrentImg: ImageView,
-  val pokemonCurrentTypeImg1: ImageView,
-  val pokemonCurrentTypeImg2: ImageView
+  val pokemonCurrentStats: PokemonStatsView
 ) {
 
   def pokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
@@ -57,13 +55,26 @@ class BattleComponent(
 
   def clearRightDialogPane(): Unit = {
     updateMoveStats("", "", "", "")
-    updatePokemonCurrentStats("", "", "")
+    updatePokemonCurrentStats("", "", "", "", "", "")
   }
 
-  def updatePokemonCurrentStats(pokemonName: String, type1: String, type2: String): Unit = {
-    pokemonCurrentImg.image = if (pokemonName.nonEmpty) ResourceUtil.resouceImage(s"pokes-static/${pokemonName}.png") else null
-    pokemonCurrentTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"misc/${type1}-type.png") else null
-    pokemonCurrentTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"misc/${type2}-type.png") else null
+  def updatePokemonCurrentStats(
+    pokemonName: String,
+    type1: String,
+    type2: String,
+    hp: String,
+    attack: String,
+    defense: String
+  ): Unit = {
+
+    pokemonCurrentStats.updatePokemonCurrentStats(
+      pokemonName,
+      type1,
+      type2,
+      hp,
+      attack,
+      defense
+    )
   }
 
   private def powerTxt(text: String): Unit = {
@@ -198,4 +209,49 @@ case class BackgroundView(
   }
 
   initialize()
+}
+
+case class PokemonStatsView(
+  currentImg: ImageView,
+  currentTypeImg1: ImageView,
+  currentTypeImg2: ImageView,
+  currentHpTxt: Label,
+  currentHp: Label,
+  currentAttackTxt: Label,
+  currentAttack: Label,
+  currentDefenseTxt: Label,
+  currentDefense: Label
+) {
+
+  def updatePokemonCurrentStats(
+    pokemonName: String,
+    type1: String,
+    type2: String,
+    hp: String,
+    attack: String,
+    defense: String
+  ): Unit = {
+    currentImg.image = if (pokemonName.nonEmpty) ResourceUtil.resouceImage(s"pokes-static/${pokemonName}.png") else null
+    currentTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"misc/${type1}-type.png") else null
+    currentTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"misc/${type2}-type.png") else null
+
+    hpTxt(hp)
+    attackTxt(attack)
+    defenseTxt(defense)
+  }
+
+  private def hpTxt(text: String): Unit = {
+    currentHp.text = text
+    currentHpTxt.text = if (text.nonEmpty) "HP" else ""
+  }
+
+  private def attackTxt(text: String): Unit = {
+    currentAttack.text = text
+    currentAttackTxt.text = if (text.nonEmpty) "Atk." else ""
+  }
+
+  private def defenseTxt(text: String): Unit = {
+    currentDefense.text = text
+    currentDefenseTxt.text = if (text.nonEmpty) "Def." else ""
+  }
 }
