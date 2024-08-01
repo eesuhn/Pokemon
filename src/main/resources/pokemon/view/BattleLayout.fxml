@@ -19,16 +19,16 @@
     <!-- pokemon -->
     <Pane maxHeight="540.0" maxWidth="960.0" minHeight="540.0" minWidth="960.0" prefHeight="540.0" prefWidth="960.0">
       <!-- left pokemon -->
-      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="200.0" prefHeight="250.0" prefWidth="280.0">
+      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="210.0" prefHeight="250.0" prefWidth="280.0">
         <ImageView fx:id="pokemonLeftImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
       </AnchorPane>
       <!-- left stats -->
-      <Pane layoutX="550.0" layoutY="330.0" maxHeight="103.2" maxWidth="348.8" minHeight="103.2" minWidth="348.8" prefHeight="103.2" prefWidth="348.8">
+      <Pane layoutX="550.0" layoutY="320.0" maxHeight="103.2" maxWidth="348.8" minHeight="103.2" minWidth="348.8" prefHeight="103.2" prefWidth="348.8">
         <ImageView fx:id="pokemonLeftStatBg" fitHeight="103.2" fitWidth="348.8" pickOnBounds="true" preserveRatio="true" />
         <Label fx:id="pokemonLeftName" layoutX="56.0" layoutY="16.0" styleClass="pokemon-name" />
         <ImageView fx:id="pokemonLeftTypeImg1" fitHeight="34.0" fitWidth="34.0" layoutX="290.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
         <ImageView fx:id="pokemonLeftTypeImg2" fitHeight="34.0" fitWidth="34.0" layoutX="252.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-        <ProgressBar fx:id="pokemonLeftHpBar" layoutX="146.0" layoutY="61.0" prefHeight="8.0" prefWidth="170.0" styleClass="hp-bar" />
+        <ProgressBar fx:id="pokemonLeftHpBar" layoutX="146.0" layoutY="63.0" prefHeight="8.0" prefWidth="170.0" styleClass="hp-bar" />
       </Pane>
 
       <!-- right pokemon -->
@@ -41,7 +41,7 @@
         <Label fx:id="pokemonRightName" layoutX="22.0" layoutY="16.0" styleClass="pokemon-name" />
         <ImageView fx:id="pokemonRightTypeImg1" fitHeight="34.0" fitWidth="34.0" layoutX="258.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
         <ImageView fx:id="pokemonRightTypeImg2" fitHeight="34.0" fitWidth="34.0" layoutX="220.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-        <ProgressBar fx:id="pokemonRightHpBar" layoutX="114.0" layoutY="64.0" prefHeight="8.0" prefWidth="170.0" styleClass="hp-bar" />
+        <ProgressBar fx:id="pokemonRightHpBar" layoutX="114.0" layoutY="65.0" prefHeight="8.0" prefWidth="170.0" styleClass="hp-bar" />
       </Pane>
     </Pane>
 
