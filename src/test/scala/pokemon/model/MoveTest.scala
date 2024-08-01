@@ -2,6 +2,7 @@ package pokemon.model
 
 import org.scalatest.funsuite.AnyFunSuite
 import scala.collection.mutable.ListBuffer
+import pokemon.MainApp
 
 class MoveTest extends AnyFunSuite {
 
@@ -35,6 +36,38 @@ class MoveTest extends AnyFunSuite {
           |$failureMessages
           |""".stripMargin
       )
+    }
+  }
+
+  test("Check all Move SFX") {
+    val moves = MoveRegistry.moves
+
+    assert(moves.nonEmpty)
+
+    val missingSFX = ListBuffer.empty[String]
+
+    moves.foreach { move =>
+      val sfxFileName = move.moveName.toLowerCase.replace(' ', '-') + ".mp3"
+      val sfxPath = s"sfx/moves/$sfxFileName"
+
+      if (MainApp.getClass.getResourceAsStream(sfxPath) == null) {
+        missingSFX += sfxFileName
+      }
+    }
+
+    if (missingSFX.nonEmpty) {
+      val failureMessages = missingSFX.map { fileName =>
+        s"Missing SFX file: $fileName"
+      }.mkString("\n")
+
+      fail(
+        s"""
+          |${missingSFX.size} out of ${moves.size} Move SFX files are missing:
+          |$failureMessages
+          |""".stripMargin
+      )
+    } else {
+      succeed
     }
   }
 

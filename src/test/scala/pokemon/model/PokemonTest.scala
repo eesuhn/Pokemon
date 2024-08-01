@@ -2,10 +2,11 @@ package pokemon.model
 
 import org.scalatest.funsuite.AnyFunSuite
 import scala.collection.mutable.ListBuffer
+import pokemon.MainApp
 
 class PokemonTest extends AnyFunSuite {
 
-  test("Initialize all Pokemon subclasses") {
+  test("Instantiate all Pokemon subclasses") {
     val pokemons = PokemonRegistry.pokemons
 
     assert(pokemons.nonEmpty)
@@ -36,6 +37,50 @@ class PokemonTest extends AnyFunSuite {
       fail(
         s"""
           |${failedInitializations.size} out of ${pokemons.size} Pokemon subclasses failed to initialize:
+          |$failureMessages
+          |""".stripMargin
+      )
+    }
+  }
+
+  test("Check all Pokemon assets") {
+    val pokemons = PokemonRegistry.pokemons
+
+    assert(pokemons.nonEmpty)
+
+    val failedAssetChecks = ListBuffer.empty[(Class[_], String)]
+
+    pokemons.foreach { subclass =>
+      try {
+        val pokemon = subclass.getDeclaredConstructor().newInstance()
+        assert(pokemon != null)
+
+        val frontImagePath = s"pokes/${pokemon.pName}-front.gif"
+        val backImagePath = s"pokes/${pokemon.pName}-back.gif"
+        val staticImagePath = s"pokes-static/${pokemon.pName.toLowerCase}.png"
+
+        List(frontImagePath, backImagePath, staticImagePath).foreach { path =>
+          if (MainApp.getClass.getResourceAsStream(path) == null) {
+            failedAssetChecks += ((subclass, path))
+          }
+        }
+      } catch {
+        case e: Throwable =>
+          failedAssetChecks += ((subclass, s"Initialization failed: ${e.getMessage}"))
+      }
+    }
+
+    if (failedAssetChecks.nonEmpty) {
+      val failureMessages = failedAssetChecks.map { case (clazz, path) =>
+        s"""
+          |Failed asset check for ${clazz.getSimpleName}:
+          |  Missing or failed to load: $path
+          |""".stripMargin
+      }.mkString
+
+      fail(
+        s"""
+          |${failedAssetChecks.size} asset checks failed out of ${pokemons.size * 3} total checks:
           |$failureMessages
           |""".stripMargin
       )
