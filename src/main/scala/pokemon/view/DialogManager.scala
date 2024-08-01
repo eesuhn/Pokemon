@@ -134,22 +134,27 @@ class DialogManager(
     dialogBtns = dialogBtns, currentSelection = 0, activeButtonCount = dialogBtns.length)
 
   def toMainMenu(): Unit = {
-    clearAll()
-    _isInAttackMenu = false
-    _isInPokemonMenu = false
+    clearAll(clearFlags = true)
     setRightDialogBtns(menuBtns)
     updateBtnsView()
   }
 
   /**
     * Clear all dialog buttons and dialog panes
+    *
+    * @param clearFlags
     */
-  def clearAll(): Unit = {
+  def clearAll(clearFlags: Boolean = false): Unit = {
     setLeftDialogBtns(Array.empty)
     setRightDialogBtns(Array.empty)
     updateBtnsView()
     battleComponent.clearLeftDialogPane()
     battleComponent.clearRightDialogPane()
+
+    if (clearFlags) {
+      _isInAttackMenu = false
+      _isInPokemonMenu = false
+    }
   }
 
   def updateBtnsView(): Unit = {

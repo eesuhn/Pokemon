@@ -118,7 +118,7 @@ class BattleController(
       _battleComponent,
       leftDialogBtns,
       rightDialogBtns,
-      menuBtns()
+      menuBtns
     )
   }
 
@@ -305,7 +305,27 @@ class BattleController(
   }
 
   private def handleTurnEnd(): Unit = {
-    if (_battle.isBattleOver) handleBattleOver() else handleMainMenu()
+    if (_battle.isBattleOver) handleBattleOver()
+    else if (_battle.opponentJustSwitched) promptPlayerSwitch()
+    else handleMainMenu()
+  }
+
+  private def promptPlayerSwitch(): Unit = {
+    _dialogManager.clearAll(clearFlags = true)
+    _battleComponent.setStateDialog("Do you want to switch Pokemon?")
+    val switchPromptBtns = Array(
+      DialogBtn("Yes", () => handlePokemonSwitchPrompt()),
+      DialogBtn("No", () => handleMainMenu())
+    )
+    _dialogManager.setRightDialogBtns(switchPromptBtns)
+    _dialogManager.updateBtnsView()
+    focusInputPane()
+  }
+
+  private def handlePokemonSwitchPrompt(): Unit = {
+    _dialogManager.clearAll()
+    _dialogManager.isInPokemonMenu(true)
+    setPokemonSwitchBtns(switchWithoutTurn = true)
   }
 
   private def handleBattleOver(): Unit = {
@@ -328,7 +348,10 @@ class BattleController(
     }
   }
 
-  private def setPokemonSwitchBtns(): Unit = {
+  /**
+    * @param switchWithoutTurn If true, switch Pokemon without performing turn
+    */
+  private def setPokemonSwitchBtns(switchWithoutTurn: Boolean = false): Unit = {
     val availablePokemon = _battle.availablePlayerPokemon()
     if (availablePokemon.isEmpty) {
       showResultsInDialog(Seq("No available Pokemon to switch!"))
@@ -336,7 +359,12 @@ class BattleController(
       val pokemonBtns = availablePokemon.map { pokemon =>
         DialogBtn(s"${pokemon.pName}", () => {
           showCurrentPokemonStats(pokemon.pName)
-          val results = _battle.performTurn(Right(pokemon))
+
+          val results = if (switchWithoutTurn) {
+            _battle.faintSwitchPokemon(_battle.player, pokemon)
+          } else {
+            _battle.performTurn(Right(pokemon))
+          }
           showResultsInDialog(results)
         })
       }.toArray

@@ -93,6 +93,8 @@ trait StatusMove extends Move {
 trait PhysicalMove extends Move {
   def basePower: Int
 
+  private val _controlDamage: Int = 10
+
   /**
     * Calculate modifier for the move based on target's type
     *
@@ -133,8 +135,7 @@ trait PhysicalMove extends Move {
   /**
     * Calculate damage for the move
     *
-    * Damage = (2 * Level / 5 + 2) * Attack * Power / Defense / 50 + 2
-    * - Adjusted to `20` cause the damage is too low
+    * Damage = (2 * Level / 5 + 2) * Attack * Power / Defense / 50 + Control
     *
     * @param attacker
     * @param target
@@ -143,7 +144,7 @@ trait PhysicalMove extends Move {
   def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): (Double, String) = {
     val (modifier, effectivenessMessage) = calculateEffectiveness(target)
     val damage: Double = (
-      (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / target.defense.value / 50 + 20
+      (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / target.defense.value / 50 + _controlDamage
     )
     (damage * modifier, effectivenessMessage)
   }
