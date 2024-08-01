@@ -142,7 +142,7 @@ trait PhysicalMove extends Move {
   def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): (Double, String) = {
     val (modifier, effectivenessMessage) = calculateEffectiveness(target)
     val damage: Double = (
-      (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / target.defense.value / 50 + 2
+      (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / target.defense.value / 50 + 10
     )
     (damage * modifier, effectivenessMessage)
   }
@@ -157,7 +157,7 @@ object Growl extends StatusMove {
   val moveName: String = "Growl"
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
-  override def effects: List[AttackEffect] = List(
+  override def effects: List[StatEffect] = List(
     AttackEffect(-1)
   )
   override def targetSelf: Boolean = false
@@ -167,7 +167,7 @@ object Leer extends StatusMove {
   val moveName: String = "Leer"
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
-  override def effects: List[DefenseEffect] = List(
+  override def effects: List[StatEffect] = List(
     DefenseEffect(-1)
   )
   override def targetSelf: Boolean = false
@@ -177,7 +177,7 @@ object Meditate extends StatusMove {
   val moveName: String = "Meditate"
   val accuracy: Int = 100
   val moveType: Psychic.type = Psychic
-  override def effects: List[AttackEffect] = List(
+  override def effects: List[StatEffect] = List(
     AttackEffect(1)
   )
   override def targetSelf: Boolean = true
@@ -187,7 +187,7 @@ object Harden extends StatusMove {
   val moveName: String = "Harden"
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
-  override def effects: List[DefenseEffect] = List(
+  override def effects: List[StatEffect] = List(
     DefenseEffect(1)
   )
   override def targetSelf: Boolean = true
@@ -197,7 +197,7 @@ object SwordsDance extends StatusMove {
   val moveName: String = "Swords Dance"
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
-  override def effects: List[AttackEffect] = List(
+  override def effects: List[StatEffect] = List(
     AttackEffect(2)
   )
   override def targetSelf: Boolean = true
@@ -207,7 +207,7 @@ object Charm extends StatusMove {
   val moveName: String = "Charm"
   val accuracy: Int = 100
   val moveType: Psychic.type = Psychic
-  override def effects: List[AttackEffect] = List(
+  override def effects: List[StatEffect] = List(
     AttackEffect(-2)
   )
   override def targetSelf: Boolean = false
@@ -217,7 +217,7 @@ object Screech extends StatusMove {
   val moveName: String = "Screech"
   val accuracy: Int = 85
   val moveType: Normal.type = Normal
-  override def effects: List[DefenseEffect] = List(
+  override def effects: List[StatEffect] = List(
     DefenseEffect(-2)
   )
   override def targetSelf: Boolean = false
@@ -227,7 +227,7 @@ object StringShot extends StatusMove {
   val moveName: String = "String Shot"
   val accuracy: Int = 95
   val moveType: Bug.type = Bug
-  override def effects: List[SpeedEffect] = List(
+  override def effects: List[StatEffect] = List(
     SpeedEffect(-2)
   )
   override def targetSelf: Boolean = false
@@ -237,7 +237,7 @@ object Agility extends StatusMove {
   val moveName: String = "Agility"
   val accuracy: Int = 100
   val moveType: Psychic.type = Psychic
-  override def effects: List[SpeedEffect] = List(
+  override def effects: List[StatEffect] = List(
     SpeedEffect(2)
   )
   override def targetSelf: Boolean = true
@@ -314,7 +314,7 @@ object Spark extends SpecialMove {
   val accuracy: Int = 100
   val moveType: Electric.type = Electric
   override def basePower: Int = 65
-  override def effects: List[SpeedEffect] = List(
+  override def effects: List[StatEffect] = List(
     SpeedEffect(1)
   )
   override def targetSelf: Boolean = true
@@ -332,7 +332,7 @@ object IcePunch extends SpecialMove {
   val accuracy: Int = 100
   val moveType: Ice.type = Ice
   override def basePower: Int = 75
-  override def effects: List[SpeedEffect] = List(
+  override def effects: List[StatEffect] = List(
     SpeedEffect(-1)
   )
   override def targetSelf: Boolean = false
@@ -350,7 +350,7 @@ object PoisonFang extends SpecialMove {
   val accuracy: Int = 100
   val moveType: Poison.type = Poison
   override def basePower: Int = 50
-  override def effects: List[DefenseEffect] = List(
+  override def effects: List[StatEffect] = List(
     DefenseEffect(-1)
   )
   override def targetSelf: Boolean = false
@@ -361,7 +361,7 @@ object PoisonSting extends SpecialMove {
   val accuracy: Int = 100
   val moveType: Poison.type = Poison
   override def basePower: Int = 15
-  override def effects: List[DefenseEffect] = List(
+  override def effects: List[StatEffect] = List(
     DefenseEffect(-2)
   )
   override def targetSelf: Boolean = false
@@ -386,7 +386,7 @@ object RockTomb extends SpecialMove {
   val accuracy: Int = 95
   val moveType: Rock.type = Rock
   override def basePower: Int = 60
-  override def effects: List[SpeedEffect] = List(
+  override def effects: List[StatEffect] = List(
     SpeedEffect(-1)
   )
   override def targetSelf: Boolean = false
@@ -396,7 +396,7 @@ object Growth extends StatusMove {
   val moveName: String = "Growth"
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
-  override def effects: List[AttackEffect] = List(
+  override def effects: List[StatEffect] = List(
     AttackEffect(1)
   )
   override def targetSelf: Boolean = true
@@ -407,7 +407,7 @@ object IcyWind extends SpecialMove {
   val accuracy: Int = 95
   val moveType: Ice.type = Ice
   override def basePower: Int = 55
-  override def effects: List[SpeedEffect] = List(
+  override def effects: List[StatEffect] = List(
     SpeedEffect(-1)
   )
   override def targetSelf: Boolean = false
@@ -438,7 +438,7 @@ object BodySlam extends SpecialMove {
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
   override def basePower: Int = 85
-  override def effects: List[SpeedEffect] = List(
+  override def effects: List[StatEffect] = List(
     SpeedEffect(-1)
   )
   override def targetSelf: Boolean = false
@@ -466,7 +466,7 @@ object Smokescreen extends StatusMove {
   val moveName: String = "Smokescreen"
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
-  override def effects: List[AccuracyEffect] = List(
+  override def effects: List[StatEffect] = List(
     AccuracyEffect(-1)
   )
   override def targetSelf: Boolean = false
@@ -477,8 +477,61 @@ object MuddyWater extends SpecialMove {
   val accuracy: Int = 85
   val moveType: Water.type = Water
   override def basePower: Int = 90
-  override def effects: List[AccuracyEffect] = List(
+  override def effects: List[StatEffect] = List(
     AccuracyEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object FireSpin extends SpecialMove {
+  val moveName: String = "Fire Spin"
+  val accuracy: Int = 85
+  val moveType: Fire.type = Fire
+  override def basePower: Int = 35
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object Bubble extends SpecialMove {
+  val moveName: String = "Bubble"
+  val accuracy: Int = 100
+  val moveType: Water.type = Water
+  override def basePower: Int = 40
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object PoisonPowder extends StatusMove {
+  val moveName: String = "Poison Powder"
+  val accuracy: Int = 75
+  val moveType: Poison.type = Poison
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-2)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object ThunderShock extends SpecialMove {
+  val moveName: String = "Thunder Shock"
+  val accuracy: Int = 100
+  val moveType: Electric.type = Electric
+  override def basePower: Int = 40
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object Sandstorm extends StatusMove {
+  val moveName: String = "Sandstorm"
+  val accuracy: Int = 100
+  val moveType: Rock.type = Rock
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-2)
   )
   override def targetSelf: Boolean = false
 }

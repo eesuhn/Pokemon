@@ -133,7 +133,8 @@ class Charmander extends Pokemon {
   moves(List(
     Growl,
     Scratch,
-    Ember
+    Ember,
+    FireSpin
   ))
 }
 
@@ -149,7 +150,8 @@ class Squirtle extends Pokemon {
   moves(List(
     Growl,
     Tackle,
-    WaterGun
+    WaterGun,
+    Bubble
   ))
 }
 
@@ -166,7 +168,8 @@ class Bulbasaur extends Pokemon {
   moves(List(
     Growl,
     Tackle,
-    VineWhip
+    VineWhip,
+    PoisonPowder
   ))
 }
 
@@ -182,7 +185,8 @@ class Geodude extends Pokemon {
   moves(List(
     Tackle,
     Pound,
-    RockTomb
+    RockTomb,
+    Harden
   ))
 }
 
@@ -198,7 +202,8 @@ class Pikachu extends Pokemon {
   moves(List(
     Growl,
     Charm,
-    Spark
+    Spark,
+    ThunderShock
   ))
 }
 
@@ -215,7 +220,8 @@ class Breloom extends Pokemon {
   moves(List(
     Tackle,
     Smokescreen,
-    VineWhip
+    VineWhip,
+    DoubleKick
   ))
 }
 
@@ -231,7 +237,8 @@ class Regice extends Pokemon {
   moves(List(
     Harden,
     Cut,
-    IcyWind
+    IcyWind,
+    AncientPower
   ))
 }
 
@@ -247,7 +254,8 @@ class Hitmonchan extends Pokemon {
   moves(List(
     Tackle,
     Agility,
-    DoubleKick
+    DoubleKick,
+    BulkUp
   ))
 }
 
@@ -263,7 +271,8 @@ class Nidorino extends Pokemon {
   moves(List(
     Leer,
     Tackle,
-    PoisonFang
+    PoisonFang,
+    DoubleKick
   ))
 }
 
@@ -280,7 +289,8 @@ class Dustox extends Pokemon {
   moves(List(
     Tackle,
     PoisonSting,
-    StringShot
+    StringShot,
+    Harden
   ))
 }
 
@@ -296,7 +306,8 @@ class Mewtwo extends Pokemon {
   moves(List(
     AncientPower,
     PsychoCut,
-    Agility
+    Agility,
+    BulkUp
   ))
 }
 
@@ -313,7 +324,8 @@ class Scyther extends Pokemon {
   moves(List(
     XScissor,
     VineWhip,
-    QuiverDance
+    QuiverDance,
+    DoubleKick
   ))
 }
 
@@ -330,7 +342,8 @@ class Heracross extends Pokemon {
   moves(List(
     Tackle,
     DoubleKick,
-    QuiverDance
+    QuiverDance,
+    BulkUp
   ))
 }
 
@@ -346,7 +359,8 @@ class Onix extends Pokemon {
   moves(List(
     Tackle,
     RockTomb,
-    Harden
+    Harden,
+    Sandstorm
   ))
 }
 
@@ -362,7 +376,8 @@ class Snorlax extends Pokemon {
   moves(List(
     BodySlam,
     Growl,
-    Screech
+    Screech,
+    BulkUp
   ))
 }
 
@@ -379,7 +394,8 @@ class Blaziken extends Pokemon {
   moves(List(
     BlazeKick,
     BulkUp,
-    DoubleKick
+    DoubleKick,
+    Screech
   ))
 }
 
@@ -396,7 +412,8 @@ class Toxicroak extends Pokemon {
   moves(List(
     Growth,
     BulkUp,
-    DoubleKick
+    DoubleKick,
+    Screech
   ))
 }
 
@@ -412,7 +429,8 @@ class Marshtomp extends Pokemon {
   moves(List(
     WaterGun,
     MuddyWater,
-    Leer
+    Leer,
+    Growl
   ))
 }
 
@@ -429,7 +447,8 @@ class Slowpoke extends Pokemon {
   moves(List(
     WaterGun,
     ShellSmash,
-    Growl
+    Growl,
+    Screech
   ))
 }
 
@@ -445,6 +464,7 @@ class Exploud extends Pokemon {
   moves(List(
     Growth,
     Screech,
-    Scratch
+    Scratch,
+    BulkUp
   ))
 }
