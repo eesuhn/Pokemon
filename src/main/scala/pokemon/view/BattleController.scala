@@ -21,6 +21,8 @@ class BattleController(
   // left pokemon
   val pokemonLeftStatBg: ImageView,
   val pokemonLeftName: Label,
+  val pokemonLeftTypeImg1: ImageView,
+  val pokemonLeftTypeImg2: ImageView,
   val pokemonLeftImg: ImageView,
   val pokemonLeftPane: AnchorPane,
   val pokemonLeftHpBar: ProgressBar,
@@ -28,6 +30,8 @@ class BattleController(
   // right pokemon
   val pokemonRightStatBg: ImageView,
   val pokemonRightName: Label,
+  val pokemonRightTypeImg1: ImageView,
+  val pokemonRightTypeImg2: ImageView,
   val pokemonRightImg: ImageView,
   val pokemonRightPane: AnchorPane,
   val pokemonRightHpBar: ProgressBar,
@@ -128,12 +132,16 @@ class BattleController(
     )
     val pokemonLeftView: PokemonView = new PokemonView(
       pokemonLeftName,
+      pokemonLeftTypeImg1,
+      pokemonLeftTypeImg2,
       pokemonLeftImg,
       pokemonLeftPane,
       pokemonLeftHpBar
     )
     val pokemonRightView: PokemonView = new PokemonView(
       pokemonRightName,
+      pokemonRightTypeImg1,
+      pokemonRightTypeImg2,
       pokemonRightImg,
       pokemonRightPane,
       pokemonRightHpBar
@@ -184,6 +192,14 @@ class BattleController(
     _battleComponent.pokemonHpBars(
       _battle.player.activePokemon.pokemonHpPercentage,
       _battle.bot.activePokemon.pokemonHpPercentage
+    )
+    _battleComponent.leftPokemonTypes(
+      _battle.player.activePokemon.pTypeNames.head,
+      if (_battle.player.activePokemon.pTypeNames.length > 1) _battle.player.activePokemon.pTypeNames(1) else ""
+    )
+    _battleComponent.rightPokemonTypes(
+      _battle.bot.activePokemon.pTypeNames.head,
+      if (_battle.bot.activePokemon.pTypeNames.length > 1) _battle.bot.activePokemon.pTypeNames(1) else ""
     )
   }
 
@@ -247,7 +263,7 @@ class BattleController(
     *
     * @param results
     */
-    private def showResultsInDialog(results: Seq[String]): Unit = {
+  private def showResultsInDialog(results: Seq[String]): Unit = {
     _dialogManager.clearAll()
 
     def showNextResult(currentIndex: Int): Unit = {
@@ -294,20 +310,21 @@ class BattleController(
 
   private def handleBattleOver(): Unit = {
     _battle.winner match {
-      case Some(trainer) => showResultsInDialog(Seq(s"Battle Over! ${trainer.name} wins!"))
-      case None => showResultsInDialog(Seq("Battle Over! It's a tie!"))
+      case Some(trainer) => _battleComponent.setStateDialog(s"Battle over! ${trainer.name} wins!")
+      case None => _battleComponent.setStateDialog("Battle over! It's a tie!")
     }
 
-    // Disable key handlers
     _scene.onKeyPressed = null
     _scene.onKeyReleased = null
 
     ResourceUtil.stopSound("misc/battle-theme.mp3")
     ResourceUtil.playSound("misc/ending-theme.mp3")
 
-    // Any key to exit game
     Platform.runLater {
-      _scene.onKeyPressed = (event: KeyEvent) => Platform.exit()
+      _scene.onKeyPressed = (event: KeyEvent) => {
+        _battleComponent.setStateDialog("Press any key to exit game...")
+        _scene.onKeyPressed = (_: KeyEvent) => Platform.exit()
+      }
     }
   }
 

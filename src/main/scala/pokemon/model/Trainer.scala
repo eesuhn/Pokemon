@@ -66,10 +66,7 @@ class Player extends Trainer {
   // DEBUG: Defined list of Pokemon
   // override def generateDeck(): Unit = {
   //   val pokemons = List(
-  //     new Snorlax(),
-  //     new Blaziken(),
-  //     new Breloom(),
-  //     new Squirtle
+  //     new Pikachu()
   //   )
   //   addPokemons(pokemons)
   // }

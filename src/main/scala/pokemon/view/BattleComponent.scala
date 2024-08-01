@@ -42,6 +42,10 @@ class BattleComponent(
     pokemonRight.pokemonHpBar(rightHp)
   }
 
+  def leftPokemonTypes(type1: String, type2: String): Unit = pokemonLeft.pokemonTypeImgs(type1, type2)
+
+  def rightPokemonTypes(type1: String, type2: String): Unit = pokemonRight.pokemonTypeImgs(type1, type2)
+
   def setStateDialog(text: String): Unit = stateDialogTxt.text = text
 
   def updateMoveStats(power: String, accuracy: String, category: String, typeOfMove: String): Unit = {
@@ -134,6 +138,8 @@ class BattleComponent(
 
 case class PokemonView(
   pokemonName: Label,
+  pokemonTypeImg1: ImageView,
+  pokemonTypeImg2: ImageView,
   pokemonImg: ImageView,
   anchorPane: AnchorPane,
   hpBar: ProgressBar
@@ -189,6 +195,11 @@ case class PokemonView(
     if (hp > 0.7) "#3cda38"
     else if (hp > 0.3) "#f4b848"
     else "#de6248"
+  }
+
+  def pokemonTypeImgs(type1: String, type2: String): Unit = {
+    pokemonTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"misc/${type1}-type.png") else null
+    pokemonTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"misc/${type2}-type.png") else null
   }
 }
 
