@@ -8,14 +8,12 @@ class PokemonTest extends AnyFunSuite {
 
   test("Instantiate all Pokemon subclasses") {
     val pokemons = PokemonRegistry.pokemons
-
     assert(pokemons.nonEmpty)
 
     // Restrict to only non-abstract classes
     // val instantiableClasses = pokemons.filter(c => !Modifier.isAbstract(c.getModifiers))
 
     val failedInitializations = ListBuffer.empty[(Class[_], Throwable)]
-
     pokemons.foreach { subclass =>
       try {
         val pokemon = subclass.getDeclaredConstructor().newInstance()
@@ -45,11 +43,9 @@ class PokemonTest extends AnyFunSuite {
 
   test("Check all Pokemon assets") {
     val pokemons = PokemonRegistry.pokemons
-
     assert(pokemons.nonEmpty)
 
     val failedAssetChecks = ListBuffer.empty[(Class[_], String)]
-
     pokemons.foreach { subclass =>
       try {
         val pokemon = subclass.getDeclaredConstructor().newInstance()
