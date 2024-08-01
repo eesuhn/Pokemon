@@ -7,7 +7,7 @@ import scalafx.application.Platform
 import scalafx.scene.Scene
 import scalafx.scene.control.{Label, ProgressBar}
 import scalafx.scene.image.ImageView
-import scalafx.scene.input.{KeyCode, KeyEvent}
+import scalafx.scene.input.KeyEvent
 import scalafx.scene.layout.{AnchorPane, Pane}
 import scalafxml.core.macros.sfxml
 
@@ -317,15 +317,6 @@ class BattleController(
       DialogBtn("Yes", () => handlePokemonSwitchPrompt()),
       DialogBtn("No", () => handleMainMenu())
     )
-
-    Platform.runLater {
-      _scene.onKeyPressed = (event: KeyEvent) => {
-        event.code match {
-          case KeyCode.Escape | KeyCode.BackSpace => handleMainMenu()
-          case _ =>
-        }
-      }
-    }
 
     _dialogManager.setRightDialogBtns(switchPromptBtns)
     _dialogManager.updateBtnsView()
