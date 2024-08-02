@@ -54,6 +54,7 @@ class DialogManager(
       _lastPressedKey = Some(event.code)
       _lastKeyPressTime = currentTime
 
+      // Check to focus on the left or right dialog buttons
       val currentState = if (_isInAttackMenu || _isInPokemonMenu) _leftBtnState else _rightBtnState
       val newSelection = getNewSelection(currentState, event.code)
 
@@ -63,6 +64,8 @@ class DialogManager(
       event.code match {
         case KeyCode.Enter | KeyCode.Space => executeCurrent()
         case KeyCode.Escape | KeyCode.BackSpace => {
+
+          // Redirect to main menu if in attack or pokemon menu AND the active Pokemon is alive
           if (battle.player.isActivePokemonAlive &&
             (_isInAttackMenu || _isInPokemonMenu)
           ) {

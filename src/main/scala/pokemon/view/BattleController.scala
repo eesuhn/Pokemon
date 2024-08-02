@@ -203,6 +203,9 @@ class BattleController(
     )
   }
 
+  /**
+    * Focus on updated input pane and event handlers
+    */
   private def focusInputPane(): Unit = {
     _scene.onKeyPressed = (event: KeyEvent) => _dialogManager.handleKeyPress(event, hookKeyPress)
     _scene.onKeyReleased = (event: KeyEvent) => _dialogManager.handleKeyRelease(event)
@@ -305,19 +308,32 @@ class BattleController(
   }
 
   private def handleTurnEnd(): Unit = {
+    // Battle is over
     if (_battle.isBattleOver) handleBattleOver()
+
+    // Check if Player current Pokemon is fainted
     else if (!_battle.player.isActivePokemonAlive) playerFaintSwitch()
+    
+    // Check if Player just switched Pokemon after fainted
     else if (_battle.playerJustSwitchedAfterFaint) handleMainMenu()
+
+    // Prompt Player to switch Pokemon after bot switched
     else if (_battle.opponentJustSwitched && _battle.player.moreThanOnePokemonAlive) promptPlayerSwitch()
+
+    // Just go back to main menu
     else handleMainMenu()
   }
 
+  /**
+    * Prompt to switch if player has more than one Pokemon alive
+    * 
+    * Otherwise switch to the only Pokemon alive
+    */
   private def playerFaintSwitch(): Unit = {
     if (_battle.player.moreThanOnePokemonAlive) {
       handlePokemonSwitchPrompt()
       focusInputPane()
     } else {
-      // Switch to the only alive Pokemon
       val results = _battle.switchPokemon(_battle.player, _battle.player.alivePokemons.head)
       showResultsInDialog(results)
     }
