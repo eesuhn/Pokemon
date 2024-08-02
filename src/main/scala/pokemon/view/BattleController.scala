@@ -313,12 +313,18 @@ class BattleController(
 
     // Check if Player current Pokemon is fainted
     else if (!_battle.player.isActivePokemonAlive) playerFaintSwitch()
-    
+
     // Check if Player just switched Pokemon after fainted
-    else if (_battle.playerJustSwitchedAfterFaint) handleMainMenu()
+    else if (_battle.playerJustSwitchedAfterFaint) {
+      _battle.opponentJustSwitched(false)
+      handleMainMenu()
+    }
 
     // Prompt Player to switch Pokemon after bot switched
-    else if (_battle.opponentJustSwitched && _battle.player.moreThanOnePokemonAlive) promptPlayerSwitch()
+    else if (_battle.opponentJustSwitched && _battle.player.moreThanOnePokemonAlive) {
+      promptPlayerSwitch()
+      _battle.opponentJustSwitched(false)
+    }
 
     // Just go back to main menu
     else handleMainMenu()
@@ -326,7 +332,7 @@ class BattleController(
 
   /**
     * Prompt to switch if player has more than one Pokemon alive
-    * 
+    *
     * Otherwise switch to the only Pokemon alive
     */
   private def playerFaintSwitch(): Unit = {

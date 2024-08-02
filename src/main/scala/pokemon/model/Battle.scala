@@ -5,13 +5,16 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 class Battle() {
   private var _player: Player = _
   private var _bot: Bot = _
-  private var botJustSwitched: Boolean = false
+  private var _botJustSwitched: Boolean = false
   private var _playerJustSwitchedAfterFaint: Boolean = false
 
   def player: Player = _player
   def bot: Bot = _bot
-  def opponentJustSwitched: Boolean = botJustSwitched
+  def opponentJustSwitched: Boolean = _botJustSwitched
   def playerJustSwitchedAfterFaint: Boolean = _playerJustSwitchedAfterFaint
+
+  def opponentJustSwitched(flag: Boolean): Unit = _botJustSwitched = flag
+  def playerJustSwitchedAfterFaint(flag: Boolean): Unit = _playerJustSwitchedAfterFaint = flag
 
   def start(): Unit = {
     _player = new Player()
@@ -40,7 +43,7 @@ class Battle() {
     */
   def performTurn(playerAction: Either[Move, Pokemon]): List[String] = {
     val results = ListBuffer[String]()
-    botJustSwitched = false
+    _botJustSwitched = false
     _playerJustSwitchedAfterFaint = false
 
     val botMove = _bot.chooseMove()
@@ -67,7 +70,7 @@ class Battle() {
 
     results ++= handleFaintSwitch(_bot)
 
-    botJustSwitched = _bot.activePokemon != botPokemonBeforeTurn
+    _botJustSwitched = _bot.activePokemon != botPokemonBeforeTurn
     _playerJustSwitchedAfterFaint = !_player.isActivePokemonAlive && _player.activePokemon != playerPokemonBeforeTurn
 
     results.toList
