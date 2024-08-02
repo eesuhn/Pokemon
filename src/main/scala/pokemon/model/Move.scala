@@ -74,7 +74,7 @@ trait StatusMove extends Move {
         case _: DefenseEffect => "defense"
         case _: AccuracyEffect => "accuracy"
         case _: SpeedEffect => "speed"
-        case _: CriticalHitEffect => "critical hit"
+        case _: CriticalHitEffect => "critical"
       }
       val changeType = if (effect.stage > 0) "rose" else "fell"
       val intensity = Math.abs(effect.stage) match {
@@ -134,9 +134,9 @@ trait PhysicalMove extends Move {
   }
 
   /**
-    * Calculate damage for the move
-    *
     * Damage = (2 * Level / 5 + 2) * Attack * Power / Defense / 50 + Control
+    *
+    * - If critical, halve target's defense, double damage
     *
     * @param attacker
     * @param target
@@ -144,13 +144,15 @@ trait PhysicalMove extends Move {
     */
   def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): (Double, String) = {
     val (modifier, effectivenessMessage) = calculateEffectiveness(target)
-    val damage: Double = (
-      (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / target.defense.value / 50 + _controlDamage
-    )
     val isCritical = attacker.criticalHit.isCritical
+    val targetDefense = if (isCritical) target.defense.value / 2 else target.defense.value
+
+    val damage: Double = (
+      (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / targetDefense / 50 + _controlDamage
+    )
     val finalDamage = if (isCritical) damage * 2 else damage
     val criticalMessage = if (isCritical) "A critical hit!" else ""
-    (finalDamage * modifier, List(effectivenessMessage, criticalMessage).filter(_.nonEmpty).mkString(" "))
+    (finalDamage * modifier, List(criticalMessage, effectivenessMessage).filter(_.nonEmpty).mkString(" "))
   }
 }
 
@@ -347,9 +349,9 @@ object IcePunch extends SpecialMove {
 
 object DoubleKick extends SpecialMove {
   val moveName: String = "Double Kick"
-  val accuracy: Int = 100
+  val accuracy: Int = 90
   val moveType: Fighting.type = Fighting
-  override def basePower: Int = 60
+  override def basePower: Int = 50
   override def effects: List[StatEffect] = List(
     CriticalHitEffect(1)
   )
@@ -569,7 +571,7 @@ object Explosion extends SpecialMove {
   val moveName: String = "Explosion"
   val accuracy: Int = 100
   val moveType: Normal.type = Normal
-  override def basePower: Int = 250
+  override def basePower: Int = 350
   override def effects: List[StatEffect] = List(
     DefenseEffect(-6)
   )
