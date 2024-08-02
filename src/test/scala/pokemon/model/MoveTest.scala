@@ -9,6 +9,7 @@ class MoveTest extends AnyFunSuite {
   test("All Move objects can be accessed") {
     val moves = MoveRegistry.moves
     assert(moves.nonEmpty)
+    println(s"No. of Move: ${moves.size}")
 
     val failedInitializations = ListBuffer.empty[(Move, Throwable)]
     moves.foreach { move =>

@@ -9,6 +9,7 @@ class PokemonTest extends AnyFunSuite {
   test("All Pokemon subclasses can be instantiated") {
     val pokemons = PokemonRegistry.pokemons
     assert(pokemons.nonEmpty)
+    println(s"No. of Pokemon: ${pokemons.size}")
 
     // Restrict to only non-abstract classes
     // val instantiableClasses = pokemons.filter(c => !Modifier.isAbstract(c.getModifiers))
