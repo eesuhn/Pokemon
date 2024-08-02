@@ -268,12 +268,12 @@ class BattleController(
     */
   private def showResultsInDialog(results: Seq[String]): Unit = {
     _dialogManager.clearAll()
+    updatePokemonViews()
 
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
         val result = results(currentIndex)
         _battleComponent.setStateDialog(result)
-        updatePokemonViews()
 
         // Move SFX if it didn't miss
         if (!result.contains("missed") && result.contains("used")) {
