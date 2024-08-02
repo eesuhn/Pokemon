@@ -214,7 +214,8 @@ object Charm extends StatusMove {
   val accuracy: Int = 90
   val moveType: Psychic.type = Psychic
   override def effects: List[StatEffect] = List(
-    AttackEffect(-2)
+    AttackEffect(-1),
+    CriticalHitEffect(-1)
   )
   override def targetSelf: Boolean = false
 }
@@ -344,11 +345,15 @@ object IcePunch extends SpecialMove {
   override def targetSelf: Boolean = false
 }
 
-object DoubleKick extends PhysicalMove {
+object DoubleKick extends SpecialMove {
   val moveName: String = "Double Kick"
   val accuracy: Int = 100
   val moveType: Fighting.type = Fighting
   override def basePower: Int = 60
+  override def effects: List[StatEffect] = List(
+    CriticalHitEffect(1)
+  )
+  override def targetSelf: Boolean = true
 }
 
 object PoisonFang extends SpecialMove {
@@ -573,11 +578,12 @@ object Explosion extends SpecialMove {
 
 object ArmThrust extends SpecialMove {
   val moveName: String = "Arm Thrust"
-  val accuracy: Int = 100
+  val accuracy: Int = 90
   val moveType: Fighting.type = Fighting
   override def basePower: Int = 45
   override def effects: List[StatEffect] = List(
-    AttackEffect(1)
+    AttackEffect(1),
+    CriticalHitEffect(1)
   )
   override def targetSelf: Boolean = true
 }

@@ -88,15 +88,14 @@ case class CriticalHit(
 
   override protected def minValue: Int = 1
 
-  private def probability: Double = _value.toDouble / 16.0
+  private def probability: Double = _value.toDouble / 10.0
 
   def isCritical: Boolean = {
     val random = new Random()
-    random.nextDouble() < probability
+    random.nextDouble() <= probability
   }
 
   override def value(stage: Int): Unit = {
-    _value = Math.min(Math.max(_value + stage, 1), 6)
-    println(_value)
+    _value = Math.min(Math.max(_value + stage, 0), 6)
   }
 }

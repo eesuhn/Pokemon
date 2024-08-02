@@ -213,6 +213,7 @@ class Breloom extends Pokemon {
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(80)
   val speed: Speed = Speed(70)
+  override val criticalHit: CriticalHit = CriticalHit(2)
   override def initHP: Int = 60
   pTypes(List(
     Grass,
@@ -248,6 +249,7 @@ class Hitmonchan extends Pokemon {
   val attack: Attack = Attack(105)
   val defense: Defense = Defense(79)
   val speed: Speed = Speed(76)
+  override val criticalHit: CriticalHit = CriticalHit(2)
   override def initHP: Int = 50
   pTypes(List(
     Fighting
@@ -576,6 +578,7 @@ class Hariyama extends Pokemon {
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(60)
   val speed: Speed = Speed(50)
+  override val criticalHit: CriticalHit = CriticalHit(2)
   override def initHP: Int = 144
   pTypes(List(
     Fighting
