@@ -1,7 +1,5 @@
 package pokemon.model
 
-import scalafx.scene.input.KeyCode.S
-
 /**
   * Represents the type for move or Pokemon
   *
