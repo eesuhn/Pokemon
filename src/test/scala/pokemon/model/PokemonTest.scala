@@ -67,16 +67,13 @@ class PokemonTest extends AnyFunSuite {
     }
 
     if (failedAssetChecks.nonEmpty) {
-      val failureMessages = failedAssetChecks.map { case (clazz, path) =>
-        s"""
-          |Failed asset check for ${clazz.getSimpleName}:
-          |  Missing or failed to load: $path
-          |""".stripMargin
-      }.mkString
+      val failureMessages = failedAssetChecks.map { case (_, path) =>
+        s"Missing asset: $path"
+      }.mkString("\n")
 
       fail(
         s"""
-          |${failedAssetChecks.size} asset checks failed out of ${pokemons.size * 3} total checks:
+          |${failedAssetChecks.size} out of ${pokemons.size * 3} Pokemon assets are missing:
           |$failureMessages
           |""".stripMargin
       )

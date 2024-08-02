@@ -53,12 +53,12 @@ class MoveTest extends AnyFunSuite {
 
     if (missingSFX.nonEmpty) {
       val failureMessages = missingSFX.map { fileName =>
-        s"Missing SFX file: $fileName"
+        s"Missing SFX: $fileName"
       }.mkString("\n")
 
       fail(
         s"""
-          |${missingSFX.size} out of ${moves.size} Move SFX files are missing:
+          |${missingSFX.size} out of ${moves.size} Move SFX are missing:
           |$failureMessages
           |""".stripMargin
       )
