@@ -1,5 +1,7 @@
 package pokemon.model
 
+import scalafx.scene.input.KeyCode.S
+
 /**
   * Represents the type for move or Pokemon
   *
@@ -20,7 +22,8 @@ object Normal extends Type {
   val name: String = "Normal"
   val strongAgainst: List[Type] = List()
   val weakAgainst: List[Type] = List(
-    Rock
+    Rock,
+    Steel
   )
 }
 
@@ -29,12 +32,14 @@ object Fire extends Type {
   val strongAgainst: List[Type] = List(
     Grass,
     Ice,
-    Bug
+    Bug,
+    Steel
   )
   val weakAgainst: List[Type] = List(
     Fire,
     Water,
-    Rock
+    Rock,
+    Dragon
   )
 }
 
@@ -46,18 +51,21 @@ object Water extends Type {
   )
   val weakAgainst: List[Type] = List(
     Water,
-    Grass
+    Grass,
+    Dragon
   )
 }
 
 object Electric extends Type {
   val name: String = "Electric"
   val strongAgainst: List[Type] = List(
-    Water
+    Water,
+    Steel
   )
   val weakAgainst: List[Type] = List(
     Electric,
-    Grass
+    Grass,
+    Dragon
   )
 }
 
@@ -71,19 +79,22 @@ object Grass extends Type {
     Fire,
     Grass,
     Poison,
-    Bug
+    Bug,
+    Steel
   )
 }
 
 object Ice extends Type {
   val name: String = "Ice"
   val strongAgainst: List[Type] = List(
-    Grass
+    Grass,
+    Dragon
   )
   val weakAgainst: List[Type] = List(
     Fire,
     Water,
-    Ice
+    Ice,
+    Steel
   )
 }
 
@@ -92,7 +103,8 @@ object Fighting extends Type {
   val strongAgainst: List[Type] = List(
     Normal,
     Ice,
-    Rock
+    Rock,
+    Steel
   )
   val weakAgainst: List[Type] = List(
     Poison,
@@ -108,7 +120,8 @@ object Poison extends Type {
   )
   val weakAgainst: List[Type] = List(
     Poison,
-    Rock
+    Rock,
+    Steel
   )
 }
 
@@ -119,7 +132,8 @@ object Psychic extends Type {
     Poison
   )
   val weakAgainst: List[Type] = List(
-    Psychic
+    Psychic,
+    Steel
   )
 }
 
@@ -132,7 +146,8 @@ object Bug extends Type {
   val weakAgainst: List[Type] = List(
     Fire,
     Fighting,
-    Poison
+    Poison,
+    Steel
   )
 }
 
@@ -144,6 +159,31 @@ object Rock extends Type {
     Bug
   )
   val weakAgainst: List[Type] = List(
-    Fighting
+    Fighting,
+    Steel
+  )
+}
+
+object Dragon extends Type {
+  val name: String = "Dragon"
+  val strongAgainst: List[Type] = List(
+    Dragon
+  )
+  val weakAgainst: List[Type] = List(
+    Steel
+  )
+}
+
+object Steel extends Type {
+  val name: String = "Steel"
+  val strongAgainst: List[Type] = List(
+    Ice,
+    Rock
+  )
+  val weakAgainst: List[Type] = List(
+    Fire,
+    Water,
+    Electric,
+    Steel
   )
 }

@@ -107,7 +107,7 @@ class BattleComponent(
     */
   private def setMoveType(typeOfMove: String): Unit = {
     if (!typeOfMove.isEmpty()) {
-      moveTypeImg.image = ResourceUtil.resouceImage(s"misc/${typeOfMove}-type.png")
+      moveTypeImg.image = ResourceUtil.resouceImage(s"types/${typeOfMove}-type.png")
       moveTypeTxt.text = typeOfMove.toUpperCase()
       moveTypeTextColor(typeOfMove)
     } else {
@@ -198,8 +198,8 @@ case class PokemonView(
   }
 
   def pokemonTypeImgs(type1: String, type2: String): Unit = {
-    pokemonTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"misc/${type1}-type.png") else null
-    pokemonTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"misc/${type2}-type.png") else null
+    pokemonTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"types/${type1}-type.png") else null
+    pokemonTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"types/${type2}-type.png") else null
   }
 }
 
@@ -243,8 +243,8 @@ case class PokemonStatsView(
     defense: String
   ): Unit = {
     currentImg.image = if (pokemonName.nonEmpty) ResourceUtil.resouceImage(s"pokes-static/${pokemonName}.png") else null
-    currentTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"misc/${type1}-type.png") else null
-    currentTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"misc/${type2}-type.png") else null
+    currentTypeImg1.image = if (type1.nonEmpty) ResourceUtil.resouceImage(s"types/${type1}-type.png") else null
+    currentTypeImg2.image = if (type2.nonEmpty) ResourceUtil.resouceImage(s"types/${type2}-type.png") else null
 
     hpTxt(hp)
     attackTxt(attack)
