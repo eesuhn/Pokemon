@@ -6,7 +6,7 @@ import pokemon.MainApp
 
 class PokemonTest extends AnyFunSuite {
 
-  test("Instantiate all Pokemon subclasses") {
+  test("All Pokemon subclasses can be instantiated") {
     val pokemons = PokemonRegistry.pokemons
     assert(pokemons.nonEmpty)
 
@@ -41,7 +41,7 @@ class PokemonTest extends AnyFunSuite {
     }
   }
 
-  test("Check all Pokemon assets") {
+  test("All Pokemon assets are present") {
     val pokemons = PokemonRegistry.pokemons
     assert(pokemons.nonEmpty)
 

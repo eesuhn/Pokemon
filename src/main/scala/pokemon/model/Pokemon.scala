@@ -275,7 +275,7 @@ class Nidorino extends Pokemon {
     Leer,
     Tackle,
     PoisonFang,
-    DoubleKick
+    Toxic
   ))
 }
 
@@ -328,7 +328,7 @@ class Scyther extends Pokemon {
     XScissor,
     SwordsDance,
     QuiverDance,
-    DoubleKick
+    RazorLeaf
   ))
 }
 
@@ -569,8 +569,7 @@ class Arbok extends Pokemon {
   moves(List(
     IceFang,
     PoisonFang,
-    Screech,
-    BulkUp
+    Screech
   ))
 }
 
@@ -586,7 +585,7 @@ class Hariyama extends Pokemon {
   ))
   moves(List(
     ArmThrust,
-    Brine,
+    BulkUp,
     FocusEnergy,
     SandAttack
   ))
@@ -797,7 +796,7 @@ class Emboar extends Pokemon {
   ))
   moves(List(
     ArmThrust,
-    Brine,
+    FireSpin,
     FocusEnergy,
     ScaryFace
   ))

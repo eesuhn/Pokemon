@@ -6,7 +6,7 @@ import pokemon.MainApp
 
 class MoveTest extends AnyFunSuite {
 
-  test("Check all Move objects") {
+  test("All Move objects can be accessed") {
     val moves = MoveRegistry.moves
     assert(moves.nonEmpty)
 
@@ -37,7 +37,7 @@ class MoveTest extends AnyFunSuite {
     }
   }
 
-  test("Check all Move SFX") {
+  test("All Move SFX files are present") {
     val moves = MoveRegistry.moves
     assert(moves.nonEmpty)
 
