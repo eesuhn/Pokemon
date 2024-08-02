@@ -5,11 +5,13 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 class Battle() {
   private var _player: Player = _
   private var _bot: Bot = _
-  private var _opponentJustSwitched: Boolean = false
+  private var botJustSwitched: Boolean = false
+  private var _playerJustSwitchedAfterFaint: Boolean = false
 
   def player: Player = _player
   def bot: Bot = _bot
-  def opponentJustSwitched: Boolean = _opponentJustSwitched
+  def opponentJustSwitched: Boolean = botJustSwitched
+  def playerJustSwitchedAfterFaint: Boolean = _playerJustSwitchedAfterFaint
 
   def start(): Unit = {
     _player = new Player()
@@ -38,9 +40,12 @@ class Battle() {
     */
   def performTurn(playerAction: Either[Move, Pokemon]): List[String] = {
     val results = ListBuffer[String]()
+    botJustSwitched = false
+    _playerJustSwitchedAfterFaint = false
 
     val botMove = _bot.chooseMove()
     val botPokemonBeforeTurn = _bot.activePokemon
+    val playerPokemonBeforeTurn = _player.activePokemon
 
     playerAction match {
       // Handle switching
@@ -55,15 +60,15 @@ class Battle() {
 
         results ++= performAttack(firstAttacker, secondAttacker, firstMove)
 
-        if (secondAttacker.hasActivePokemon) {
+        if (secondAttacker.isActivePokemonAlive) {
           results ++= performAttack(secondAttacker, firstAttacker, secondMove)
         }
     }
 
-    results ++= handleFaintSwitch(_player)
     results ++= handleFaintSwitch(_bot)
 
-    _opponentJustSwitched = _bot.activePokemon != botPokemonBeforeTurn
+    botJustSwitched = _bot.activePokemon != botPokemonBeforeTurn
+    _playerJustSwitchedAfterFaint = !_player.isActivePokemonAlive && _player.activePokemon != playerPokemonBeforeTurn
 
     results.toList
   }
@@ -120,19 +125,12 @@ class Battle() {
     messages.toList
   }
 
-  private def switchPokemon(trainer: Trainer, pokemon: Pokemon): List[String] = {
+  def switchPokemon(trainer: Trainer, pokemon: Pokemon): List[String] = {
     val messages = ListBuffer[String]()
 
     messages += s"${trainer.name} withdrew ${trainer.activePokemon.pName}!"
     trainer.switchActivePokemon(pokemon)
     messages += s"${trainer.name} sent out ${pokemon.pName}!"
-    messages.toList
-  }
-
-  def faintSwitchPokemon(trainer: Trainer, pokemon: Pokemon): List[String] = {
-    val messages = ListBuffer[String]()
-    messages ++= this.switchPokemon(trainer, pokemon)
-    _opponentJustSwitched = false
     messages.toList
   }
 
@@ -143,7 +141,7 @@ class Battle() {
     * @return
     */
   private def handleFaintSwitch(trainer: Trainer): List[String] = {
-    if (!trainer.hasActivePokemon) {
+    if (!trainer.isActivePokemonAlive) {
       trainer.switchToNextAlivePokemon() match {
         case Some(pokemon) => List(s"${trainer.name}'s ${pokemon.pName} was sent out!")
         case None => List()

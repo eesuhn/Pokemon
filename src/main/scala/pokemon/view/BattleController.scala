@@ -306,8 +306,21 @@ class BattleController(
 
   private def handleTurnEnd(): Unit = {
     if (_battle.isBattleOver) handleBattleOver()
+    else if (!_battle.player.isActivePokemonAlive) playerFaintSwitch()
+    else if (_battle.playerJustSwitchedAfterFaint) handleMainMenu()
     else if (_battle.opponentJustSwitched && _battle.player.moreThanOnePokemonAlive) promptPlayerSwitch()
     else handleMainMenu()
+  }
+
+  private def playerFaintSwitch(): Unit = {
+    if (_battle.player.moreThanOnePokemonAlive) {
+      handlePokemonSwitchPrompt()
+      focusInputPane()
+    } else {
+      // Switch to the only alive Pokemon
+      val results = _battle.switchPokemon(_battle.player, _battle.player.alivePokemons.head)
+      showResultsInDialog(results)
+    }
   }
 
   private def promptPlayerSwitch(): Unit = {
@@ -324,7 +337,7 @@ class BattleController(
   }
 
   private def handlePokemonSwitchPrompt(): Unit = {
-    _dialogManager.clearAll()
+    _dialogManager.clearAll(clearFlags = true)
     _dialogManager.isInPokemonMenu(true)
     setPokemonSwitchBtns(switchWithoutTurn = true)
   }
@@ -362,7 +375,7 @@ class BattleController(
           showCurrentPokemonStats(pokemon.pName)
 
           val results = if (switchWithoutTurn) {
-            _battle.faintSwitchPokemon(_battle.player, pokemon)
+            _battle.switchPokemon(_battle.player, pokemon)
           } else {
             _battle.performTurn(Right(pokemon))
           }

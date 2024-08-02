@@ -52,11 +52,13 @@ abstract class Trainer {
     }
   }
 
-  def hasActivePokemon: Boolean = activePokemon != null && activePokemon.currentHP > 0
+  def isActivePokemonAlive: Boolean = activePokemon != null && activePokemon.currentHP > 0
 
   def moreThanOnePokemonAlive: Boolean = deck.count(_.currentHP > 0) > 1
 
   def isDefeated: Boolean = deck.forall(_.currentHP == 0)
+
+  def alivePokemons: List[Pokemon] = deck.filter(_.currentHP > 0).toList
 }
 
 class Player extends Trainer {

@@ -62,9 +62,13 @@ class DialogManager(
 
       event.code match {
         case KeyCode.Enter | KeyCode.Space => executeCurrent()
-        case KeyCode.Escape | KeyCode.BackSpace if (_isInAttackMenu || _isInPokemonMenu) => {
-          toMainMenu()
-          battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
+        case KeyCode.Escape | KeyCode.BackSpace => {
+          if (battle.player.isActivePokemonAlive &&
+            (_isInAttackMenu || _isInPokemonMenu)
+          ) {
+            toMainMenu()
+            battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
+          }
         }
         case _ =>
       }
