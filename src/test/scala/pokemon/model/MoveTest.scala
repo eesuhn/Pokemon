@@ -6,7 +6,7 @@ import pokemon.MainApp
 
 class MoveTest extends AnyFunSuite {
 
-  test("Check all Move objects") {
+  test("All Move objects can be accessed") {
     val moves = MoveRegistry.moves
     assert(moves.nonEmpty)
 
@@ -37,7 +37,7 @@ class MoveTest extends AnyFunSuite {
     }
   }
 
-  test("Check all Move SFX") {
+  test("All Move SFX files are present") {
     val moves = MoveRegistry.moves
     assert(moves.nonEmpty)
 
@@ -53,12 +53,12 @@ class MoveTest extends AnyFunSuite {
 
     if (missingSFX.nonEmpty) {
       val failureMessages = missingSFX.map { fileName =>
-        s"Missing SFX file: $fileName"
+        s"Missing SFX: $fileName"
       }.mkString("\n")
 
       fail(
         s"""
-          |${missingSFX.size} out of ${moves.size} Move SFX files are missing:
+          |${missingSFX.size} out of ${moves.size} Move SFX are missing:
           |$failureMessages
           |""".stripMargin
       )
