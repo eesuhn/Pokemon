@@ -22,6 +22,7 @@ abstract class Pokemon {
   val defense: Defense
   val accuracy: Accuracy = Accuracy(100)
   val speed: Speed
+  val criticalHit: CriticalHit = CriticalHit()
   private val _level: Int = 5
   private val _baseHP: Int = initHP
   private var _currentHP: Int = initHP
@@ -67,7 +68,7 @@ abstract class Pokemon {
     *
     * @param damage
     */
-  def takeDamage(damage: Int): Unit = {
+  private def takeDamage(damage: Int): Unit = {
     _currentHP = Math.max(currentHP - damage, 0)
   }
 

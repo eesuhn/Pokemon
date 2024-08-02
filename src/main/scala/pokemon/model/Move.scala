@@ -74,6 +74,7 @@ trait StatusMove extends Move {
         case _: DefenseEffect => "defense"
         case _: AccuracyEffect => "accuracy"
         case _: SpeedEffect => "speed"
+        case _: CriticalHitEffect => "critical hit"
       }
       val changeType = if (effect.stage > 0) "rose" else "fell"
       val intensity = Math.abs(effect.stage) match {
@@ -146,7 +147,10 @@ trait PhysicalMove extends Move {
     val damage: Double = (
       (2 * attacker.level / 5 + 2) * attacker.attack.value * basePower / target.defense.value / 50 + _controlDamage
     )
-    (damage * modifier, effectivenessMessage)
+    val isCritical = attacker.criticalHit.isCritical
+    val finalDamage = if (isCritical) damage * 2 else damage
+    val criticalMessage = if (isCritical) "A critical hit!" else ""
+    (finalDamage * modifier, List(effectivenessMessage, criticalMessage).filter(_.nonEmpty).mkString(" "))
   }
 }
 
