@@ -118,7 +118,7 @@ class BattleController(
       _battleComponent,
       leftDialogBtns,
       rightDialogBtns,
-      menuBtns()
+      menuBtns
     )
   }
 
@@ -203,6 +203,9 @@ class BattleController(
     )
   }
 
+  /**
+    * Focus on updated input pane and event handlers
+    */
   private def focusInputPane(): Unit = {
     _scene.onKeyPressed = (event: KeyEvent) => _dialogManager.handleKeyPress(event, hookKeyPress)
     _scene.onKeyReleased = (event: KeyEvent) => _dialogManager.handleKeyRelease(event)
@@ -305,7 +308,60 @@ class BattleController(
   }
 
   private def handleTurnEnd(): Unit = {
-    if (_battle.isBattleOver) handleBattleOver() else handleMainMenu()
+    // Battle is over
+    if (_battle.isBattleOver) handleBattleOver()
+
+    // Check if Player current Pokemon is fainted
+    else if (!_battle.player.isActivePokemonAlive) playerFaintSwitch()
+
+    // Check if Player just switched Pokemon after fainted
+    else if (_battle.playerJustSwitchedAfterFaint) {
+      _battle.opponentJustSwitched(false)
+      handleMainMenu()
+    }
+
+    // Prompt Player to switch Pokemon after bot switched
+    else if (_battle.opponentJustSwitched && _battle.player.moreThanOnePokemonAlive) {
+      promptPlayerSwitch()
+      _battle.opponentJustSwitched(false)
+    }
+
+    // Just go back to main menu
+    else handleMainMenu()
+  }
+
+  /**
+    * Prompt to switch if player has more than one Pokemon alive
+    *
+    * Otherwise switch to the only Pokemon alive
+    */
+  private def playerFaintSwitch(): Unit = {
+    if (_battle.player.moreThanOnePokemonAlive) {
+      handlePokemonSwitchPrompt()
+      focusInputPane()
+    } else {
+      val results = _battle.switchPokemon(_battle.player, _battle.player.alivePokemons.head)
+      showResultsInDialog(results)
+    }
+  }
+
+  private def promptPlayerSwitch(): Unit = {
+    _dialogManager.clearAll(clearFlags = true)
+    _battleComponent.setStateDialog("Do you want to switch Pokemon?")
+    val switchPromptBtns = Array(
+      DialogBtn("Yes", () => handlePokemonSwitchPrompt()),
+      DialogBtn("No", () => handleMainMenu())
+    )
+
+    _dialogManager.setRightDialogBtns(switchPromptBtns)
+    _dialogManager.updateBtnsView()
+    focusInputPane()
+  }
+
+  private def handlePokemonSwitchPrompt(): Unit = {
+    _dialogManager.clearAll(clearFlags = true)
+    _dialogManager.isInPokemonMenu(true)
+    setPokemonSwitchBtns(switchWithoutTurn = true)
   }
 
   private def handleBattleOver(): Unit = {
@@ -328,7 +384,10 @@ class BattleController(
     }
   }
 
-  private def setPokemonSwitchBtns(): Unit = {
+  /**
+    * @param switchWithoutTurn If true, switch Pokemon without performing turn
+    */
+  private def setPokemonSwitchBtns(switchWithoutTurn: Boolean = false): Unit = {
     val availablePokemon = _battle.availablePlayerPokemon()
     if (availablePokemon.isEmpty) {
       showResultsInDialog(Seq("No available Pokemon to switch!"))
@@ -336,7 +395,12 @@ class BattleController(
       val pokemonBtns = availablePokemon.map { pokemon =>
         DialogBtn(s"${pokemon.pName}", () => {
           showCurrentPokemonStats(pokemon.pName)
-          val results = _battle.performTurn(Right(pokemon))
+
+          val results = if (switchWithoutTurn) {
+            _battle.switchPokemon(_battle.player, pokemon)
+          } else {
+            _battle.performTurn(Right(pokemon))
+          }
           showResultsInDialog(results)
         })
       }.toArray

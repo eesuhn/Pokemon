@@ -54,6 +54,7 @@ class DialogManager(
       _lastPressedKey = Some(event.code)
       _lastKeyPressTime = currentTime
 
+      // Check to focus on the left or right dialog buttons
       val currentState = if (_isInAttackMenu || _isInPokemonMenu) _leftBtnState else _rightBtnState
       val newSelection = getNewSelection(currentState, event.code)
 
@@ -61,10 +62,16 @@ class DialogManager(
       hookKeyPress()
 
       event.code match {
-        case KeyCode.Enter => executeCurrent()
-        case KeyCode.Escape if (_isInAttackMenu || _isInPokemonMenu) => {
-          toMainMenu()
-          battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
+        case KeyCode.Enter | KeyCode.Space => executeCurrent()
+        case KeyCode.Escape | KeyCode.BackSpace => {
+
+          // Redirect to main menu if in attack or pokemon menu AND the active Pokemon is alive
+          if (battle.player.isActivePokemonAlive &&
+            (_isInAttackMenu || _isInPokemonMenu)
+          ) {
+            toMainMenu()
+            battleComponent.setStateDialog(s"What will ${battle.player.activePokemon.pName} do?")
+          }
         }
         case _ =>
       }
@@ -88,10 +95,10 @@ class DialogManager(
     */
   private def getNewSelection(state: DialogBtnState, keyCode: KeyCode): Int = {
     keyCode match {
-      case KeyCode.UP => moveVertically(state, -2)
-      case KeyCode.DOWN => moveVertically(state, 2)
-      case KeyCode.LEFT => moveHorizontally(state, -1)
-      case KeyCode.RIGHT => moveHorizontally(state, 1)
+      case KeyCode.UP | KeyCode.W => moveVertically(state, -2)
+      case KeyCode.DOWN | KeyCode.S => moveVertically(state, 2)
+      case KeyCode.LEFT | KeyCode.A => moveHorizontally(state, -1)
+      case KeyCode.RIGHT | KeyCode.D => moveHorizontally(state, 1)
       case _ => state.currentSelection
     }
   }
@@ -134,22 +141,27 @@ class DialogManager(
     dialogBtns = dialogBtns, currentSelection = 0, activeButtonCount = dialogBtns.length)
 
   def toMainMenu(): Unit = {
-    clearAll()
-    _isInAttackMenu = false
-    _isInPokemonMenu = false
+    clearAll(clearFlags = true)
     setRightDialogBtns(menuBtns)
     updateBtnsView()
   }
 
   /**
     * Clear all dialog buttons and dialog panes
+    *
+    * @param clearFlags
     */
-  def clearAll(): Unit = {
+  def clearAll(clearFlags: Boolean = false): Unit = {
     setLeftDialogBtns(Array.empty)
     setRightDialogBtns(Array.empty)
     updateBtnsView()
     battleComponent.clearLeftDialogPane()
     battleComponent.clearRightDialogPane()
+
+    if (clearFlags) {
+      _isInAttackMenu = false
+      _isInPokemonMenu = false
+    }
   }
 
   def updateBtnsView(): Unit = {

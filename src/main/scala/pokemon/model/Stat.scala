@@ -1,8 +1,10 @@
 package pokemon.model
 
+import scala.util.Random
+
 abstract class Stat {
   private val _baseValue: Int = initValue
-  private var _value: Int = initValue
+  protected var _value: Int = initValue
   private var _currentStage: Int = 0
 
   protected def initValue: Int
@@ -78,4 +80,22 @@ case class Speed(
   initValue: Int
 ) extends Stat {
   override protected def minValue: Int = 10
+}
+
+case class CriticalHit(
+  initValue: Int = 1
+) extends Stat {
+
+  override protected def minValue: Int = 1
+
+  private def probability: Double = _value.toDouble / 10.0
+
+  def isCritical: Boolean = {
+    val random = new Random()
+    random.nextDouble() <= probability
+  }
+
+  override def value(stage: Int): Unit = {
+    _value = Math.min(Math.max(_value + stage, 0), 6)
+  }
 }
