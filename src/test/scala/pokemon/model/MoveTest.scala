@@ -53,6 +53,28 @@ class MoveTest extends AnyFunSuite {
     }
   }
 
+  test("Count each Pokemon type") {
+    val pokemons = PokemonRegistry.pokemons
+    val count = MutableMap.empty[String, Int]
+
+    pokemons.foreach { pokemonClass =>
+      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+      pokemon.pTypes.foreach { pType =>
+        count(pType.name) = count.getOrElse(pType.name, 0) + 1
+      }
+    }
+
+    val msg = count.toSeq.sortBy(-_._2).map { case (pType, num) =>
+      s"${YELLOW}$pType:${NC} $num"
+    }.mkString("\n")
+
+    println(
+      s"""
+        |${PURPLE}Pokemon type count:${NC}
+        |$msg""".stripMargin
+    )
+  }
+
   test("Compare moves within each Pokemon moveset") {
     val pokemons = PokemonRegistry.pokemons
     val fMoves = MutableMap.empty[String, ListBuffer[(String, String, String)]]
