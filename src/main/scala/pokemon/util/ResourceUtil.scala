@@ -73,16 +73,20 @@ object ResourceUtil {
     val media: Media = new Media(resource.toURI.toString)
     if (media == null) throw new Exception(s"Media: Cannot load sound: $target")
 
-    val availablePlayer = _soundPlayers.getOrElseUpdate(target, List.empty).find(!_.status.value.equals(MediaPlayer.Status.PLAYING))
-    val player = availablePlayer.getOrElse {
-      val newPlayer = new MediaPlayer(media)
-      _soundPlayers(target) = newPlayer :: _soundPlayers.getOrElse(target, List.empty)
-      newPlayer
-    }
+    // Stop previous player if exists
+    stopSound(target)
 
-    if (loop) player.setCycleCount(MediaPlayer.Indefinite)
-    player.seek(player.getStartTime)
-    player.play()
+    val newPlayer = new MediaPlayer(media)
+    _soundPlayers(target) = newPlayer :: _soundPlayers.getOrElse(target, List.empty)
+
+    if (loop) newPlayer.setCycleCount(MediaPlayer.Indefinite)
+    newPlayer.seek(newPlayer.getStartTime)
+    newPlayer.play()
+
+    // DEBUG: Remove stopped players to avoid memory leaks
+    newPlayer.onEndOfMedia = () => {
+      _soundPlayers(target) = _soundPlayers(target).filter(_ != newPlayer)
+    }
   }
 
   def stopSound(target: String): Unit = {
