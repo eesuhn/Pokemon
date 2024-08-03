@@ -974,3 +974,69 @@ object BlueFlare extends SpecialMove {
   )
   override def targetSelf: Boolean = false
 }
+
+object ShadowBall extends SpecialMove {
+  val moveName: String = "Shadow Ball"
+  val accuracy: Int = 90
+  val moveType: Ghost.type = Ghost
+  override def basePower: Int = 80
+  override def effects: List[StatEffect] = List(
+    AttackEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object Lick extends SpecialMove {
+  val moveName: String = "Lick"
+  val accuracy: Int = 90
+  val moveType: Ghost.type = Ghost
+  override def basePower: Int = 30
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-2)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object ConfuseRay extends StatusMove {
+  val moveName: String = "Confuse Ray"
+  val accuracy: Int = 85
+  val moveType: Ghost.type = Ghost
+  override def effects: List[StatEffect] = List(
+    AccuracyEffect(-2),
+    SpeedEffect(-2)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object FirePunch extends SpecialMove {
+  val moveName: String = "Fire Punch"
+  val accuracy: Int = 90
+  val moveType: Fire.type = Fire
+  override def basePower: Int = 75
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object ThunderPunch extends SpecialMove {
+  val moveName: String = "Thunder Punch"
+  val accuracy: Int = 90
+  val moveType: Electric.type = Electric
+  override def basePower: Int = 75
+  override def effects: List[StatEffect] = List(
+    AttackEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object Curse extends StatusMove {
+  val moveName: String = "Curse"
+  val accuracy: Int = 85
+  val moveType: Ghost.type = Ghost
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-1),
+    AttackEffect(2)
+  )
+  override def targetSelf: Boolean = true
+}
