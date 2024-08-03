@@ -889,3 +889,83 @@ object ExtremeSpeed extends StatusMove {
   )
   override def targetSelf: Boolean = true
 }
+
+object AuroraBeam extends SpecialMove {
+  val moveName: String = "Aurora Beam"
+  val accuracy: Int = 90
+  val moveType: Ice.type = Ice
+  override def basePower: Int = 65
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object SheerCold extends SpecialMove {
+  val moveName: String = "Sheer Cold"
+  val accuracy: Int = 50
+  val moveType: Ice.type = Ice
+  override def basePower: Int = 50
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-6)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object BulletPunch extends PhysicalMove {
+  val moveName: String = "Bullet Punch"
+  val accuracy: Int = 65
+  val moveType: Steel.type = Steel
+  override def basePower: Int = 120
+}
+
+object QuickAttack extends PhysicalMove {
+  val moveName: String = "Quick Attack"
+  val accuracy: Int = 100
+  val moveType: Normal.type = Normal
+  override def basePower: Int = 55
+}
+
+object GigaImpact extends SpecialMove {
+  val moveName: String = "Giga Impact"
+  val accuracy: Int = 90
+  val moveType: Normal.type = Normal
+  override def basePower: Int = 170
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-2)
+  )
+  override def targetSelf: Boolean = true
+}
+
+object Eruption extends SpecialMove {
+  val moveName: String = "Eruption"
+  val accuracy: Int = 80
+  val moveType: Fire.type = Fire
+  override def basePower: Int = 150
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-1)
+  )
+  override def targetSelf: Boolean = true
+}
+
+object Outrage extends SpecialMove {
+  val moveName: String = "Outrage"
+  val accuracy: Int = 90
+  val moveType: Dragon.type = Dragon
+  override def basePower: Int = 130
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(3)
+  )
+  override def targetSelf: Boolean = true
+}
+
+object BlueFlare extends SpecialMove {
+  val moveName: String = "Blue Flare"
+  val accuracy: Int = 85
+  val moveType: Fire.type = Fire
+  override def basePower: Int = 130
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-3)
+  )
+  override def targetSelf: Boolean = false
+}
