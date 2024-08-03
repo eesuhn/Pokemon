@@ -7,6 +7,7 @@ package pokemon.model
   *
   * - strongAgainst: List of types that the move is strong against
   * - weakAgainst: List of types that the move is weak against
+  * - noEffectAgainst: List of types that the move has no effect against
   *
   * Pokemon: Pokemon's type determines how much damage it takes from a move
   */
@@ -14,6 +15,7 @@ abstract class Type {
   val name: String
   val strongAgainst: List[Type]
   val weakAgainst: List[Type]
+  val noEffectAgainst: List[Type] = List()
 }
 
 object Normal extends Type {
@@ -22,6 +24,9 @@ object Normal extends Type {
   val weakAgainst: List[Type] = List(
     Rock,
     Steel
+  )
+  override val noEffectAgainst: List[Type] = List(
+    Ghost
   )
 }
 
@@ -57,8 +62,7 @@ object Water extends Type {
 object Electric extends Type {
   val name: String = "Electric"
   val strongAgainst: List[Type] = List(
-    Water,
-    Steel
+    Water
   )
   val weakAgainst: List[Type] = List(
     Electric,
@@ -78,6 +82,7 @@ object Grass extends Type {
     Grass,
     Poison,
     Bug,
+    Dragon,
     Steel
   )
 }
@@ -109,6 +114,9 @@ object Fighting extends Type {
     Psychic,
     Bug
   )
+  override val noEffectAgainst: List[Type] = List(
+    Ghost
+  )
 }
 
 object Poison extends Type {
@@ -119,7 +127,7 @@ object Poison extends Type {
   val weakAgainst: List[Type] = List(
     Poison,
     Rock,
-    Steel
+    Ghost
   )
 }
 
@@ -145,6 +153,7 @@ object Bug extends Type {
     Fire,
     Fighting,
     Poison,
+    Ghost,
     Steel
   )
 }
@@ -183,5 +192,17 @@ object Steel extends Type {
     Water,
     Electric,
     Steel
+  )
+}
+
+object Ghost extends Type {
+  val name: String = "Ghost"
+  val strongAgainst: List[Type] = List(
+    Psychic,
+    Ghost
+  )
+  val weakAgainst: List[Type] = List()
+  override val noEffectAgainst: List[Type] = List(
+    Normal
   )
 }

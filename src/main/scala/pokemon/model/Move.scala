@@ -101,6 +101,7 @@ trait PhysicalMove extends Move {
     *
     * - multiply by 2 if move is strong against target type
     * - multiply by 0.5 if move is weak against target type
+    * - multiply by 0 if move has no effect against target type
     *
     * @param target
     * @return
@@ -112,6 +113,7 @@ trait PhysicalMove extends Move {
         modifier * (
           if (moveType.strongAgainst.contains(t)) 2.0
           else if (moveType.weakAgainst.contains(t)) 0.5
+          else if (moveType.noEffectAgainst.contains(t)) 0.0
           else 1.0
         )
       }
@@ -126,8 +128,9 @@ trait PhysicalMove extends Move {
   private def calculateEffectiveness(target: Pokemon): (Double, String) = {
     val modifier = calculateModifier(target)
     val effectivenessMessage = modifier match {
-      case m if m > 1 => "It's super effective!"
-      case m if m < 1 => "It's not very effective..."
+      case m if m >= 2 => "It's super effective!"
+      case m if (m > 0 && m < 1) => "It's not very effective..."
+      case m if m == 0.0 => "It doesn't affect..."
       case _ => ""
     }
     (modifier, effectivenessMessage)
@@ -144,7 +147,9 @@ trait PhysicalMove extends Move {
     */
   def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): (Double, String) = {
     val (modifier, effectivenessMessage) = calculateEffectiveness(target)
-    val isCritical = attacker.criticalHit.isCritical
+
+    // Never critical if noEffectAgainst
+    val isCritical = if (modifier > 0) attacker.criticalHit.isCritical else false
     val targetDefense = if (isCritical) target.defense.value / 2 else target.defense.value
 
     val damage: Double = (
@@ -635,7 +640,7 @@ object DragonBreath extends SpecialMove {
 object ShadowForce extends PhysicalMove {
   val moveName: String = "Shadow Force"
   val accuracy: Int = 90
-  val moveType: Psychic.type = Psychic
+  val moveType: Ghost.type = Ghost
   override def basePower: Int = 120
 }
 

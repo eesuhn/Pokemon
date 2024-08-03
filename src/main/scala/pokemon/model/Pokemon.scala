@@ -546,8 +546,7 @@ class Charizard extends Pokemon {
   val speed: Speed = Speed(100)
   override def initHP: Int = 78
   pTypes(List(
-    Fire,
-    Dragon
+    Fire
   ))
   moves(List(
     Growl,
@@ -598,7 +597,8 @@ class Giratina extends Pokemon {
   val speed: Speed = Speed(90)
   override def initHP: Int = 150
   pTypes(List(
-    Dragon
+    Dragon,
+    Ghost
   ))
   moves(List(
     DragonBreath,
