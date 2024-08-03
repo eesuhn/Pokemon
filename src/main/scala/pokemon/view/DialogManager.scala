@@ -1,7 +1,6 @@
 package pokemon.view
 
 import pokemon.model.Battle
-import pokemon.util.ResourceUtil
 import scalafx.scene.control.Label
 import scalafx.scene.input.{KeyCode, KeyEvent}
 
@@ -55,7 +54,7 @@ class DialogManager(
       _lastPressedKey = Some(event.code)
       _lastKeyPressTime = currentTime
 
-      buttonASound(event.code)
+      // buttonASound(event.code)
 
       // Check to focus on the left or right dialog buttons
       val currentState = if (_isInAttackMenu || _isInPokemonMenu) _leftBtnState else _rightBtnState
@@ -89,23 +88,24 @@ class DialogManager(
     }
   }
 
-  private def buttonASound(keyCode: KeyCode): Unit = {
-    keyCode match {
-      case KeyCode.Up
-        | KeyCode.Down
-        | KeyCode.Left
-        | KeyCode.Right
-        | KeyCode.W
-        | KeyCode.S
-        | KeyCode.A
-        | KeyCode.D
-        | KeyCode.Enter
-        | KeyCode.Space
-        | KeyCode.Escape
-        | KeyCode.BackSpace => ResourceUtil.playSound("misc/button-a.mp3")
-      case _ =>
-    }
-  }
+  // BUG: Create memory exhaustion
+  // private def buttonASound(keyCode: KeyCode): Unit = {
+  //   keyCode match {
+  //     case KeyCode.Up
+  //       | KeyCode.Down
+  //       | KeyCode.Left
+  //       | KeyCode.Right
+  //       | KeyCode.W
+  //       | KeyCode.S
+  //       | KeyCode.A
+  //       | KeyCode.D
+  //       | KeyCode.Enter
+  //       | KeyCode.Space
+  //       | KeyCode.Escape
+  //       | KeyCode.BackSpace => ResourceUtil.playSound("misc/button-a.mp3")
+  //     case _ =>
+  //   }
+  // }
 
   /**
     * - Keep navigation horizontally and vertically wrap around
