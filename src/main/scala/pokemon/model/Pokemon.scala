@@ -546,8 +546,7 @@ class Charizard extends Pokemon {
   val speed: Speed = Speed(100)
   override def initHP: Int = 78
   pTypes(List(
-    Fire,
-    Dragon
+    Fire
   ))
   moves(List(
     Growl,
@@ -598,7 +597,8 @@ class Giratina extends Pokemon {
   val speed: Speed = Speed(90)
   override def initHP: Int = 150
   pTypes(List(
-    Dragon
+    Dragon,
+    Ghost
   ))
   moves(List(
     DragonBreath,
@@ -777,7 +777,7 @@ class Infernape extends Pokemon {
     Fighting
   ))
   moves(List(
-    BlazeKick,
+    FirePunch,
     BulkUp,
     DoubleKick,
     FlameWheel
@@ -798,7 +798,7 @@ class Emboar extends Pokemon {
     ArmThrust,
     FireSpin,
     FocusEnergy,
-    ScaryFace
+    FirePunch
   ))
 }
 
@@ -1056,5 +1056,350 @@ class Arceus extends Pokemon {
     ScaryFace,
     HyperBeam,
     ExtremeSpeed
+  ))
+}
+
+class Dewgong extends Pokemon {
+  val pName: String = "Dewgong"
+  val attack: Attack = Attack(70)
+  val defense: Defense = Defense(80)
+  val speed: Speed = Speed(70)
+  override def initHP: Int = 90
+  pTypes(List(
+    Water,
+    Ice
+  ))
+  moves(List(
+    BodySlam,
+    IceBeam,
+    Screech,
+    AuroraBeam
+  ))
+}
+
+class Walrein extends Pokemon {
+  val pName: String = "Walrein"
+  val attack: Attack = Attack(80)
+  val defense: Defense = Defense(90)
+  val speed: Speed = Speed(65)
+  override def initHP: Int = 110
+  pTypes(List(
+    Water,
+    Ice
+  ))
+  moves(List(
+    IceBeam,
+    Screech,
+    AuroraBeam,
+    SheerCold
+  ))
+}
+
+class Spheal extends Pokemon {
+  val pName: String = "Spheal"
+  val attack: Attack = Attack(40)
+  val defense: Defense = Defense(50)
+  val speed: Speed = Speed(25)
+  override def initHP: Int = 70
+  pTypes(List(
+    Water,
+    Ice
+  ))
+  moves(List(
+    IceBeam,
+    Charm,
+    Pound
+  ))
+}
+
+class Scizor extends Pokemon {
+  val pName: String = "Scizor"
+  val attack: Attack = Attack(130)
+  val defense: Defense = Defense(100)
+  val speed: Speed = Speed(65)
+  override def initHP: Int = 70
+  pTypes(List(
+    Bug,
+    Steel
+  ))
+  moves(List(
+    XScissor,
+    IronDefense,
+    ScaryFace,
+    BulletPunch
+  ))
+}
+
+class Armaldo extends Pokemon {
+  val pName: String = "Armaldo"
+  val attack: Attack = Attack(125)
+  val defense: Defense = Defense(100)
+  val speed: Speed = Speed(45)
+  override def initHP: Int = 75
+  pTypes(List(
+    Bug,
+    Rock
+  ))
+  moves(List(
+    SwordsDance,
+    RockTomb,
+    ScaryFace,
+    Harden
+  ))
+}
+
+class Pinsir extends Pokemon {
+  val pName: String = "Pinsir"
+  val attack: Attack = Attack(125)
+  val defense: Defense = Defense(100)
+  val speed: Speed = Speed(85)
+  override def initHP: Int = 65
+  pTypes(List(
+    Bug
+  ))
+  moves(List(
+    XScissor,
+    SwordsDance,
+    ScaryFace,
+    Harden
+  ))
+}
+
+class Kakuna extends Pokemon {
+  val pName: String = "Kakuna"
+  val attack: Attack = Attack(25)
+  val defense: Defense = Defense(50)
+  val speed: Speed = Speed(35)
+  override def initHP: Int = 45
+  pTypes(List(
+    Bug,
+    Poison
+  ))
+  moves(List(
+    Harden,
+    StringShot
+  ))
+}
+
+class Jolteon extends Pokemon {
+  val pName: String = "Jolteon"
+  val attack: Attack = Attack(65)
+  val defense: Defense = Defense(60)
+  val speed: Speed = Speed(130)
+  override def initHP: Int = 65
+  pTypes(List(
+    Electric
+  ))
+  moves(List(
+    ThunderShock,
+    ThunderWave,
+    Screech,
+    Growl
+  ))
+}
+
+class Electabuzz extends Pokemon {
+  val pName: String = "Electabuzz"
+  val attack: Attack = Attack(83)
+  val defense: Defense = Defense(57)
+  val speed: Speed = Speed(105)
+  override def initHP: Int = 65
+  pTypes(List(
+    Electric
+  ))
+  moves(List(
+    ThunderPunch,
+    ThunderWave,
+    Screech,
+    QuickAttack
+  ))
+}
+
+class Regigigas extends Pokemon {
+  val pName: String = "Regigigas"
+  val attack: Attack = Attack(160)
+  val defense: Defense = Defense(110)
+  val speed: Speed = Speed(100)
+  override def initHP: Int = 110
+  pTypes(List(
+    Normal
+  ))
+  moves(List(
+    BodySlam,
+    Screech,
+    HyperBeam,
+    GigaImpact
+  ))
+}
+
+class Ursaring extends Pokemon {
+  val pName: String = "Ursaring"
+  val attack: Attack = Attack(130)
+  val defense: Defense = Defense(75)
+  val speed: Speed = Speed(55)
+  override def initHP: Int = 90
+  pTypes(List(
+    Normal
+  ))
+  moves(List(
+    BodySlam,
+    SandAttack,
+    FocusEnergy,
+    Earthquake
+  ))
+}
+
+class Typhlosion extends Pokemon {
+  val pName: String = "Typhlosion"
+  val attack: Attack = Attack(84)
+  val defense: Defense = Defense(78)
+  val speed: Speed = Speed(100)
+  override def initHP: Int = 78
+  pTypes(List(
+    Fire
+  ))
+  moves(List(
+    Eruption,
+    Scratch,
+    Ember,
+    FireSpin
+  ))
+}
+
+class Rayquaza extends Pokemon {
+  val pName: String = "Rayquaza"
+  val attack: Attack = Attack(150)
+  val defense: Defense = Defense(90)
+  val speed: Speed = Speed(95)
+  override def initHP: Int = 105
+  pTypes(List(
+    Dragon
+  ))
+  moves(List(
+    DragonBreath,
+    ScaryFace,
+    DragonClaw,
+    Outrage
+  ))
+}
+
+class Reshiram extends Pokemon {
+  val pName: String = "Reshiram"
+  val attack: Attack = Attack(120)
+  val defense: Defense = Defense(100)
+  val speed: Speed = Speed(90)
+  override def initHP: Int = 100
+  pTypes(List(
+    Dragon,
+    Fire
+  ))
+  moves(List(
+    DragonBreath,
+    ScaryFace,
+    DragonClaw,
+    BlueFlare
+  ))
+}
+
+class Gengar extends Pokemon {
+  val pName: String = "Gengar"
+  val attack: Attack = Attack(65)
+  val defense: Defense = Defense(60)
+  val speed: Speed = Speed(110)
+  override def initHP: Int = 60
+  pTypes(List(
+    Ghost,
+    Poison
+  ))
+  moves(List(
+    ShadowBall,
+    ScaryFace,
+    Lick,
+    ConfuseRay
+  ))
+}
+
+class Shedinja extends Pokemon {
+  val pName: String = "Shedinja"
+  val attack: Attack = Attack(90)
+  val defense: Defense = Defense(45)
+  val speed: Speed = Speed(40)
+  override def initHP: Int = 1
+  pTypes(List(
+    Bug,
+    Ghost
+  ))
+  moves(List(
+    MetalClaw,
+    ConfuseRay,
+    ShadowForce
+  ))
+}
+
+class Dusknoir extends Pokemon {
+  val pName: String = "Dusknoir"
+  val attack: Attack = Attack(100)
+  val defense: Defense = Defense(135)
+  val speed: Speed = Speed(45)
+  override def initHP: Int = 45
+  pTypes(List(
+    Ghost
+  ))
+  moves(List(
+    IcePunch,
+    FirePunch,
+    ThunderPunch,
+    Curse
+  ))
+}
+
+class Froslass extends Pokemon {
+  val pName: String = "Froslass"
+  val attack: Attack = Attack(80)
+  val defense: Defense = Defense(70)
+  val speed: Speed = Speed(110)
+  override def initHP: Int = 70
+  pTypes(List(
+    Ice,
+    Ghost
+  ))
+  moves(List(
+    IceBeam,
+    IcePunch,
+    ShadowBall,
+    Curse
+  ))
+}
+
+class Shuppet extends Pokemon {
+  val pName: String = "Shuppet"
+  val attack: Attack = Attack(75)
+  val defense: Defense = Defense(35)
+  val speed: Speed = Speed(45)
+  override def initHP: Int = 44
+  pTypes(List(
+    Ghost
+  ))
+  moves(List(
+    ShadowBall,
+    Leer,
+    ScaryFace
+  ))
+}
+
+class Duskull extends Pokemon {
+  val pName: String = "Duskull"
+  val attack: Attack = Attack(40)
+  val defense: Defense = Defense(90)
+  val speed: Speed = Speed(25)
+  override def initHP: Int = 20
+  pTypes(List(
+    Ghost
+  ))
+  moves(List(
+    ScaryFace,
+    Tackle,
+    FocusEnergy,
+    Curse
   ))
 }

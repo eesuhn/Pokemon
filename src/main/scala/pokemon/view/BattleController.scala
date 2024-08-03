@@ -379,7 +379,10 @@ class BattleController(
     Platform.runLater {
       _scene.onKeyPressed = (event: KeyEvent) => {
         _battleComponent.setStateDialog("Press any key to exit game...")
-        _scene.onKeyPressed = (_: KeyEvent) => Platform.exit()
+        _scene.onKeyPressed = (_: KeyEvent) => {
+          ResourceUtil.disposeAllSounds()
+          Platform.exit()
+        }
       }
     }
   }

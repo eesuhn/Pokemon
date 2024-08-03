@@ -101,6 +101,7 @@ trait PhysicalMove extends Move {
     *
     * - multiply by 2 if move is strong against target type
     * - multiply by 0.5 if move is weak against target type
+    * - multiply by 0 if move has no effect against target type
     *
     * @param target
     * @return
@@ -112,6 +113,7 @@ trait PhysicalMove extends Move {
         modifier * (
           if (moveType.strongAgainst.contains(t)) 2.0
           else if (moveType.weakAgainst.contains(t)) 0.5
+          else if (moveType.noEffectAgainst.contains(t)) 0.0
           else 1.0
         )
       }
@@ -126,8 +128,9 @@ trait PhysicalMove extends Move {
   private def calculateEffectiveness(target: Pokemon): (Double, String) = {
     val modifier = calculateModifier(target)
     val effectivenessMessage = modifier match {
-      case m if m > 1 => "It's super effective!"
-      case m if m < 1 => "It's not very effective..."
+      case m if m >= 2 => "It's super effective!"
+      case m if (m > 0 && m < 1) => "It's not very effective..."
+      case m if m == 0.0 => "It doesn't affect..."
       case _ => ""
     }
     (modifier, effectivenessMessage)
@@ -144,7 +147,9 @@ trait PhysicalMove extends Move {
     */
   def calculatePhysicalDamage(attacker: Pokemon, target: Pokemon): (Double, String) = {
     val (modifier, effectivenessMessage) = calculateEffectiveness(target)
-    val isCritical = attacker.criticalHit.isCritical
+
+    // Never critical if noEffectAgainst
+    val isCritical = if (modifier > 0) attacker.criticalHit.isCritical else false
     val targetDefense = if (isCritical) target.defense.value / 2 else target.defense.value
 
     val damage: Double = (
@@ -635,7 +640,7 @@ object DragonBreath extends SpecialMove {
 object ShadowForce extends PhysicalMove {
   val moveName: String = "Shadow Force"
   val accuracy: Int = 90
-  val moveType: Psychic.type = Psychic
+  val moveType: Ghost.type = Ghost
   override def basePower: Int = 120
 }
 
@@ -886,6 +891,152 @@ object ExtremeSpeed extends StatusMove {
   val moveType: Normal.type = Normal
   override def effects: List[StatEffect] = List(
     SpeedEffect(6)
+  )
+  override def targetSelf: Boolean = true
+}
+
+object AuroraBeam extends SpecialMove {
+  val moveName: String = "Aurora Beam"
+  val accuracy: Int = 90
+  val moveType: Ice.type = Ice
+  override def basePower: Int = 65
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object SheerCold extends SpecialMove {
+  val moveName: String = "Sheer Cold"
+  val accuracy: Int = 50
+  val moveType: Ice.type = Ice
+  override def basePower: Int = 50
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-6)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object BulletPunch extends PhysicalMove {
+  val moveName: String = "Bullet Punch"
+  val accuracy: Int = 65
+  val moveType: Steel.type = Steel
+  override def basePower: Int = 120
+}
+
+object QuickAttack extends PhysicalMove {
+  val moveName: String = "Quick Attack"
+  val accuracy: Int = 100
+  val moveType: Normal.type = Normal
+  override def basePower: Int = 55
+}
+
+object GigaImpact extends SpecialMove {
+  val moveName: String = "Giga Impact"
+  val accuracy: Int = 90
+  val moveType: Normal.type = Normal
+  override def basePower: Int = 170
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-2)
+  )
+  override def targetSelf: Boolean = true
+}
+
+object Eruption extends SpecialMove {
+  val moveName: String = "Eruption"
+  val accuracy: Int = 80
+  val moveType: Fire.type = Fire
+  override def basePower: Int = 150
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-1)
+  )
+  override def targetSelf: Boolean = true
+}
+
+object Outrage extends SpecialMove {
+  val moveName: String = "Outrage"
+  val accuracy: Int = 90
+  val moveType: Dragon.type = Dragon
+  override def basePower: Int = 130
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(3)
+  )
+  override def targetSelf: Boolean = true
+}
+
+object BlueFlare extends SpecialMove {
+  val moveName: String = "Blue Flare"
+  val accuracy: Int = 85
+  val moveType: Fire.type = Fire
+  override def basePower: Int = 130
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-3)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object ShadowBall extends SpecialMove {
+  val moveName: String = "Shadow Ball"
+  val accuracy: Int = 90
+  val moveType: Ghost.type = Ghost
+  override def basePower: Int = 80
+  override def effects: List[StatEffect] = List(
+    AttackEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object Lick extends SpecialMove {
+  val moveName: String = "Lick"
+  val accuracy: Int = 90
+  val moveType: Ghost.type = Ghost
+  override def basePower: Int = 30
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-2)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object ConfuseRay extends StatusMove {
+  val moveName: String = "Confuse Ray"
+  val accuracy: Int = 85
+  val moveType: Ghost.type = Ghost
+  override def effects: List[StatEffect] = List(
+    AccuracyEffect(-2),
+    SpeedEffect(-2)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object FirePunch extends SpecialMove {
+  val moveName: String = "Fire Punch"
+  val accuracy: Int = 90
+  val moveType: Fire.type = Fire
+  override def basePower: Int = 75
+  override def effects: List[StatEffect] = List(
+    DefenseEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object ThunderPunch extends SpecialMove {
+  val moveName: String = "Thunder Punch"
+  val accuracy: Int = 90
+  val moveType: Electric.type = Electric
+  override def basePower: Int = 75
+  override def effects: List[StatEffect] = List(
+    AttackEffect(-1)
+  )
+  override def targetSelf: Boolean = false
+}
+
+object Curse extends StatusMove {
+  val moveName: String = "Curse"
+  val accuracy: Int = 85
+  val moveType: Ghost.type = Ghost
+  override def effects: List[StatEffect] = List(
+    SpeedEffect(-1),
+    AttackEffect(2)
   )
   override def targetSelf: Boolean = true
 }
