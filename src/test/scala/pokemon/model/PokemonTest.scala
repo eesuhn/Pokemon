@@ -2,6 +2,7 @@ package pokemon.model
 
 import org.scalatest.funsuite.AnyFunSuite
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{Map => MutableMap}
 import pokemon.MainApp
 
 class PokemonTest extends AnyFunSuite {
@@ -78,6 +79,23 @@ class PokemonTest extends AnyFunSuite {
           |$failureMessages
           |""".stripMargin
       )
+    }
+  }
+
+  test("Count each Pokemon type") {
+    val pokemons = PokemonRegistry.pokemons
+    val typeCount: MutableMap[String, Int] = MutableMap.empty.withDefaultValue(0)
+
+    pokemons.foreach { pokemonClass =>
+      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+      pokemon.pTypes.foreach { pType =>
+        typeCount(pType.name) += 1
+      }
+    }
+
+    println("Pokemon type counts:")
+    typeCount.toSeq.sortBy(-_._2).foreach { case (typeName, count) =>
+      println(s"$typeName: $count")
     }
   }
 }
