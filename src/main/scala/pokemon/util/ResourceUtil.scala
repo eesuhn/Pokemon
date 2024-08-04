@@ -61,7 +61,8 @@ object ResourceUtil {
   /**
     * Load a resource sound from "sfx" folder
     *
-    * - Check if the sound is already playing, if so, stop it and play again
+    * - Dispose first if the target sound player exists
+    * - `loop = true` requires manual disposal
     *
     * @param target
     * @param loop
@@ -70,11 +71,10 @@ object ResourceUtil {
     val resource = MainApp.getClass.getResource(s"sfx/$target")
     if (resource == null) throw new Exception(s"Resource: Cannot load sound: $target")
 
+    disposeSound(target)
+
     val media: Media = new Media(resource.toURI.toString)
     if (media == null) throw new Exception(s"Media: Cannot load sound: $target")
-
-    // Stop previous player if exists
-    stopSound(target)
 
     val newPlayer = new MediaPlayer(media)
     _soundPlayers(target) = newPlayer :: _soundPlayers.getOrElse(target, List.empty)
@@ -82,21 +82,13 @@ object ResourceUtil {
     if (loop) newPlayer.setCycleCount(MediaPlayer.Indefinite)
     newPlayer.seek(newPlayer.getStartTime)
     newPlayer.play()
-
-    // DEBUG: Remove stopped players to avoid memory leaks
-    newPlayer.onEndOfMedia = () => {
-      _soundPlayers(target) = _soundPlayers(target).filter(_ != newPlayer)
-    }
   }
 
-  def stopSound(target: String): Unit = {
-    _soundPlayers.get(target).foreach(_.foreach(_.stop()))
-  }
-
-  def stopAllSounds(): Unit = {
-    _soundPlayers.values.foreach(_.foreach(_.stop()))
-  }
-
+  /**
+    * Dispose target sound player if exists
+    *
+    * @param target
+    */
   def disposeSound(target: String): Unit = {
     _soundPlayers.get(target).foreach(_.foreach(_.dispose()))
     _soundPlayers.remove(target)
@@ -105,5 +97,21 @@ object ResourceUtil {
   def disposeAllSounds(): Unit = {
     _soundPlayers.values.foreach(_.foreach(_.dispose()))
     _soundPlayers.clear()
+  }
+
+  /**
+    * @deprecated Cause memory exhaustion
+    *
+    * @param target
+    */
+  def stopSound(target: String): Unit = {
+    _soundPlayers.get(target).foreach(_.foreach(_.stop()))
+  }
+
+  /**
+    * @deprecated Cause memory exhaustion
+    */
+  def stopAllSounds(): Unit = {
+    _soundPlayers.values.foreach(_.foreach(_.stop()))
   }
 }

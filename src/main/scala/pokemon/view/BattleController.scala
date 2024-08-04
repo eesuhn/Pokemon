@@ -373,7 +373,7 @@ class BattleController(
     _scene.onKeyPressed = null
     _scene.onKeyReleased = null
 
-    ResourceUtil.stopSound("misc/battle-theme.mp3")
+    ResourceUtil.disposeSound("misc/battle-theme.mp3")
     ResourceUtil.playSound("misc/ending-theme.mp3")
 
     Platform.runLater {
