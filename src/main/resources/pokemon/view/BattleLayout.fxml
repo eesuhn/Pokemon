@@ -9,21 +9,21 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="720.0" maxWidth="960.0" minHeight="720.0" minWidth="960.0" prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.BattleController">
+<AnchorPane maxHeight="640.0" maxWidth="960.0" minHeight="640.0" minWidth="960.0" prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.BattleController">
   <children>
     <!-- background -->
-    <ImageView fx:id="battleBg" fitHeight="540.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true" />
-    <ImageView fx:id="battleDialogLeft" fitHeight="180.0" fitWidth="580.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
-    <ImageView fx:id="battleDialogRight" fitHeight="180.0" fitWidth="380.0" layoutX="580.0" layoutY="540.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleBg" fitHeight="460.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleDialogLeft" fitHeight="180.0" fitWidth="580.0" layoutY="460.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="battleDialogRight" fitHeight="180.0" fitWidth="380.0" layoutX="580.0" layoutY="460.0" pickOnBounds="true" preserveRatio="true" />
 
     <!-- pokemon -->
-    <Pane maxHeight="540.0" maxWidth="960.0" minHeight="540.0" minWidth="960.0" prefHeight="540.0" prefWidth="960.0">
+    <Pane maxHeight="460.0" maxWidth="960.0" minHeight="460.0" minWidth="960.0" prefHeight="460.0" prefWidth="960.0">
       <!-- left pokemon -->
-      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="210.0" prefHeight="250.0" prefWidth="280.0">
+      <AnchorPane fx:id="pokemonLeftPane" layoutX="200.0" layoutY="170.0" prefHeight="250.0" prefWidth="280.0">
         <ImageView fx:id="pokemonLeftImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
       </AnchorPane>
       <!-- left stats -->
-      <Pane layoutX="550.0" layoutY="320.0" maxHeight="103.2" maxWidth="348.8" minHeight="103.2" minWidth="348.8" prefHeight="103.2" prefWidth="348.8">
+      <Pane layoutX="550.0" layoutY="280.0" maxHeight="103.2" maxWidth="348.8" minHeight="103.2" minWidth="348.8" prefHeight="103.2" prefWidth="348.8">
         <ImageView fx:id="pokemonLeftStatBg" fitHeight="103.2" fitWidth="348.8" pickOnBounds="true" preserveRatio="true" />
         <Label fx:id="pokemonLeftName" layoutX="56.0" layoutY="16.0" styleClass="pokemon-name" />
         <ImageView fx:id="pokemonLeftTypeImg1" fitHeight="34.0" fitWidth="34.0" layoutX="290.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
@@ -32,11 +32,11 @@
       </Pane>
 
       <!-- right pokemon -->
-      <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="60.0" prefHeight="250.0" prefWidth="280.0">
+      <AnchorPane fx:id="pokemonRightPane" layoutX="540.0" layoutY="20.0" prefHeight="250.0" prefWidth="280.0">
         <ImageView fx:id="pokemonRightImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" />
       </AnchorPane>
       <!-- right stats -->
-      <Pane layoutX="120.0" layoutY="150.0" maxHeight="103.2" maxWidth="339.2" minHeight="103.2" minWidth="339.2" prefHeight="103.2" prefWidth="339.2">
+      <Pane layoutX="120.0" layoutY="110.0" maxHeight="103.2" maxWidth="339.2" minHeight="103.2" minWidth="339.2" prefHeight="103.2" prefWidth="339.2">
         <ImageView fx:id="pokemonRightStatBg" fitHeight="103.2" fitWidth="339.2" pickOnBounds="true" preserveRatio="true" />
         <Label fx:id="pokemonRightName" layoutX="22.0" layoutY="16.0" styleClass="pokemon-name" />
         <ImageView fx:id="pokemonRightTypeImg1" fitHeight="34.0" fitWidth="34.0" layoutX="258.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
@@ -46,7 +46,7 @@
     </Pane>
 
     <!-- input -->
-    <Pane fx:id="inputPane" layoutY="540.0" prefHeight="180.0" prefWidth="960.0">
+    <Pane fx:id="inputPane" layoutY="460.0" prefHeight="180.0" prefWidth="960.0">
       <!-- left dialog -->
       <Pane prefHeight="180.0" prefWidth="580.0">
         <!-- state -->
