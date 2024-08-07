@@ -465,9 +465,8 @@ class Exploud extends Pokemon {
     Normal
   ))
   moves(List(
-    Growth,
     Screech,
-    Scratch,
+    BodySlam,
     BulkUp
   ))
 }

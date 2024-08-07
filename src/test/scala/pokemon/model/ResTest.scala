@@ -6,17 +6,10 @@ import pokemon.MainApp
 
 class ResTest extends AnyFunSuite {
 
-  val NC = "\u001B[0m"
-  val RED = "\u001B[31m"
-  val GREEN = "\u001B[32m"
-  val YELLOW = "\u001B[33m"
-  val BLUE = "\u001B[34m"
-  val PURPLE = "\u001B[35m"
-
   test("Check if all Move SFX are present") {
     val moves = MoveRegistry.moves
     assert(moves.nonEmpty)
-    println(s"${PURPLE}moves.size: ${moves.size}${NC}")
+    println(s"${Colors.PURPLE}moves.size: ${moves.size}${Colors.NC}")
 
     val failedAcc = ListBuffer.empty[(Move, Throwable)]
     val missingSFX = ListBuffer.empty[String]
@@ -60,13 +53,15 @@ class ResTest extends AnyFunSuite {
           |${missingSFX.size} out of ${moves.size} Move SFX are missing:
           |$msg""".stripMargin
       )
+    } else {
+      println(s"${Colors.GREEN}All Move SFX are present.${Colors.NC}")
     }
   }
 
   test("Check if all Pokemon assets are present") {
     val pokemons = PokemonRegistry.pokemons
     assert(pokemons.nonEmpty)
-    println(s"${PURPLE}pokemons.size: ${pokemons.size}${NC}")
+    println(s"${Colors.PURPLE}pokemons.size: ${pokemons.size}${Colors.NC}")
 
     val failedInit = ListBuffer.empty[(Class[_], Throwable)]
     val missingAsset = ListBuffer.empty[String]
@@ -115,6 +110,8 @@ class ResTest extends AnyFunSuite {
           |${missingAsset.size} out of ${pokemons.size * 3} Pokemon assets are missing:
           |$msg""".stripMargin
       )
+    } else {
+      println(s"${Colors.GREEN}All Pokemon assets are present.${Colors.NC}")
     }
   }
 }

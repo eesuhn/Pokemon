@@ -1,17 +1,10 @@
 package pokemon.model
 
 import org.scalatest.funsuite.AnyFunSuite
-import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.{Map => MutableMap}
+import scala.collection.mutable.{Set => MutableSet}
 
 class MoveTest extends AnyFunSuite {
-
-  val NC = "\u001B[0m"
-  val RED = "\u001B[31m"
-  val GREEN = "\u001B[32m"
-  val YELLOW = "\u001B[33m"
-  val BLUE = "\u001B[34m"
-  val PURPLE = "\u001B[35m"
 
   test("Check if all Pokemon moves are of the Pokemon's type") {
     val pokemons = PokemonRegistry.pokemons
@@ -37,72 +30,62 @@ class MoveTest extends AnyFunSuite {
     if (invalidMoves.nonEmpty) {
       val msg = invalidMoves.flatMap { case (pokemonName, typeMap) =>
         typeMap.flatMap { case (pokemonTypes, moves) =>
-          s"""
-            |${YELLOW}$pokemonName (${pokemonTypes.mkString(" ")})${NC}
+          f"""
+            |${Colors.YELLOW}$pokemonName%-20s(${pokemonTypes.mkString(" ")})${Colors.NC}
             |${moves.map { case (moveName, moveType) =>
-              s"  $moveName (${moveType.toLowerCase})"
+            f"  $moveName%-20s(${moveType.toLowerCase})"
             }.mkString("\n")}""".stripMargin
         }
       }.mkString
 
       println(
         s"""
-          |${PURPLE}Found ${invalidMoves.values.flatMap(_.values).map(_.size).sum} moves that are not of the Pokemon's type:${NC}
+          |${Colors.PURPLE}Found ${invalidMoves.values.flatMap(_.values).map(_.size).sum} moves that are not of the Pokemon's type:${Colors.NC}
           |$msg""".stripMargin
       )
+    } else {
+      println(s"${Colors.GREEN}All moves are of the Pokemon's type.${Colors.NC}")
     }
   }
 
-  test("Compare moves within each Pokemon moveset") {
+  test("Find moves not assigned to any Pokemon") {
     val pokemons = PokemonRegistry.pokemons
-    val fMoves = MutableMap.empty[String, ListBuffer[(String, String, String)]]
+    val allMoves = MoveRegistry.moves.toSet
+    val assignedMoves = MutableSet.empty[Move]
 
     pokemons.foreach { pokemonClass =>
       val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
-      val moveset = pokemon.moves
+      assignedMoves ++= pokemon.moves
+    }
 
-      for (i <- moveset.indices; j <- i + 1 until moveset.length) {
-        val move1 = moveset(i)
-        val move2 = moveset(j)
+    val unassignedMoves = allMoves -- assignedMoves
 
-        if (compareMoves(move1, move2)) {
-          fMoves.
-            getOrElseUpdate(pokemon.pName, ListBuffer.empty) += ((move1.moveName, move2.moveName, "<"))
-        } else if (compareMoves(move2, move1)) {
-          fMoves.
-            getOrElseUpdate(pokemon.pName, ListBuffer.empty) += ((move2.moveName, move1.moveName, ">"))
-        }
+    if (unassignedMoves.nonEmpty) {
+      println(s"${Colors.PURPLE}Found ${unassignedMoves.size} moves not assigned to any Pokemon:${Colors.NC}")
+      unassignedMoves.foreach { move =>
+        println(s"  ${move.moveName} (${move.moveType.name.toLowerCase})")
+      }
+    } else {
+      println(s"${Colors.GREEN}All moves are assigned to at least one Pokemon.${Colors.NC}")
+    }
+  }
+
+  test("List all moves and their usage") {
+    val pokemons = PokemonRegistry.pokemons
+    val moveUsage = MutableMap[String, Int]().withDefaultValue(0)
+
+    pokemons.foreach { pokemonClass =>
+      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+      pokemon.moves.foreach { move =>
+        moveUsage(move.moveName) += 1
       }
     }
 
-    if (fMoves.nonEmpty) {
-      val msg = fMoves.map { case (pokemonName, moves) =>
-        s"""
-          |${YELLOW}$pokemonName:${NC}
-          |${moves.map { case (move1, move2, comp) =>
-            s"  $move1 $comp $move2"
-          }.mkString("\n")}""".stripMargin
-      }.mkString
+    val sortedMoves = moveUsage.toSeq.sortWith(_._2 > _._2)
 
-      println(
-        s"""
-          |${PURPLE}Found ${fMoves.values.map(_.size).sum} moves that are less efficient:${NC}
-          |$msg""".stripMargin
-      )
+    println(s"${Colors.PURPLE}Move usage across all Pokemons:${Colors.NC}")
+    sortedMoves.foreach { case (moveName, count) =>
+      println(f"$moveName%-20s: $count")
     }
-  }
-
-  private def compareMoves(move1: Move, move2: Move): Boolean = {
-    (move1, move2) match {
-      case (m1: PhysicalMove, m2: PhysicalMove) => comparePhysicalMoves(m1, m2)
-      case _ => false
-    }
-  }
-
-  private def comparePhysicalMoves(move1: PhysicalMove, move2: PhysicalMove): Boolean = {
-    val val1 = move1.basePower * (move1.accuracy / 100.0)
-    val val2 = move2.basePower * (move2.accuracy / 100.0)
-    val1 < val2
   }
 }
-
