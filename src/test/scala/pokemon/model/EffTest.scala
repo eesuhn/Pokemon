@@ -3,14 +3,31 @@ package pokemon.model
 import org.scalatest.funsuite.AnyFunSuite
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.{Map => MutableMap}
+import scala.math.BigDecimal.RoundingMode
 
 class EffTest extends AnyFunSuite {
 
-  // Weightage for different aspects of a move
+  private val rarityWeightageLimits = Map(
+    1 -> 250.0,  // Common
+    2 -> 300.0,  // Uncommon
+    3 -> 350.0,  // Rare
+    4 -> 400.0,  // Super Rare
+    5 -> 500.0   // Ultra Rare
+  )
+
+  private val baseStatWeights = Map(
+    "health" -> 0.6,
+    "attack" -> 1.0,
+    "defense" -> 0.8,
+    "speed" -> 0.6
+  )
+
+  // Maximum base power for normalization
+  private val _max_base_power = 300.0
+
   private val _power_weight = 0.5
   private val _status_weight = 0.5
 
-  // Weightage for different stat effects
   private val _stat_effect_weight = Map(
     "AttackEffect" -> 1.0,
     "DefenseEffect" -> 1.0,
@@ -19,12 +36,10 @@ class EffTest extends AnyFunSuite {
     "CriticalHitEffect" -> 0.8
   )
 
-  // Maximum base power for normalization
-  private val _max_base_power = 300.0
-
-  test("Rank moves based on efficiency") {
+  test("Rank moves and check rarity weightage") {
     val pokemons = PokemonRegistry.pokemons
     val moveRankings = MutableMap.empty[String, ListBuffer[(String, Double)]]
+    val weightageResults = MutableMap.empty[String, (Double, String)]
 
     pokemons.foreach { pokemonClass =>
       val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
@@ -34,9 +49,19 @@ class EffTest extends AnyFunSuite {
       val sortedScores = scores.sortBy(-_._2)
 
       moveRankings.getOrElseUpdate(pokemon.pName, ListBuffer.empty) ++= sortedScores
+
+      val totalWeightage = calculateTotalWeightage(pokemon, sortedScores)
+      val upperRarityLimit = rarityWeightageLimits(pokemon.rarity.value)
+      val lowerRarityLimit = if (pokemon.rarity.value > 1) rarityWeightageLimits(pokemon.rarity.value - 1) else 0.0
+
+      val status = if (totalWeightage > upperRarityLimit) s"${Colors.RED}EXCEEDED${Colors.NC}"
+      else if (totalWeightage < lowerRarityLimit) s"${Colors.YELLOW}UNDER${Colors.NC}"
+      else s"${Colors.GREEN}OK${Colors.NC}"
+
+      weightageResults(pokemon.pName) = (totalWeightage, status)
     }
 
-    printResults(moveRankings)
+    printResults(moveRankings, weightageResults)
   }
 
   private def calculateMoveEfficiency(move: Move): Double = {
@@ -72,11 +97,30 @@ class EffTest extends AnyFunSuite {
     }.sum / 6.0  // Normalize by maximum possible stage change
   }
 
-  private def printResults(moveRankings: MutableMap[String, ListBuffer[(String, Double)]]): Unit = {
+  private def calculateTotalWeightage(pokemon: Pokemon, sortedScores: List[(String, Double)]): Double = {
+    val baseStatsWeightage = calculateBaseStatsWeightage(pokemon)
+    val movesetWeightage = sortedScores.map(_._2).sum * 100
+    BigDecimal(baseStatsWeightage + movesetWeightage).setScale(2, RoundingMode.HALF_UP).toDouble
+  }
+
+  private def calculateBaseStatsWeightage(pokemon: Pokemon): Double = {
+    val healthWeight = pokemon.baseHP * baseStatWeights("health")
+    val attackWeight = pokemon.attack.value * baseStatWeights("attack")
+    val defenseWeight = pokemon.defense.value * baseStatWeights("defense")
+    val speedWeight = pokemon.speed.value * baseStatWeights("speed")
+    healthWeight + attackWeight + defenseWeight + speedWeight
+  }
+
+  private def printResults(
+    moveRankings: MutableMap[String, ListBuffer[(String, Double)]],
+    weightageResults: MutableMap[String, (Double, String)]
+  ): Unit = {
+
     if (moveRankings.nonEmpty) {
       val msg = moveRankings.map { case (pokemonName, moves) =>
+        val (totalWeightage, status) = weightageResults(pokemonName)
         s"""
-          |${Colors.YELLOW}$pokemonName:${Colors.NC}
+          |${Colors.YELLOW}$pokemonName${Colors.NC} (${totalWeightage}, $status):
           |${moves.zipWithIndex.map { case ((moveName, score), index) =>
           f"  ${index + 1}. $moveName%-20s($score%.2f)"
         }.mkString("\n")}""".stripMargin
