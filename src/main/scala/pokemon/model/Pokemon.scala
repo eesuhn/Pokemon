@@ -1092,14 +1092,13 @@ class Slaking extends Pokemon {
   val rarity: Rarity = Rarity(4)
   val attack: Attack = Attack(160)
   val defense: Defense = Defense(100)
-  val speed: Speed = Speed(100)
+  val speed: Speed = Speed(90)
   override def initHP: Int = 150
   pTypes(List(
     Normal
   ))
   moves(List(
     BodySlam,
-    Growl,
     Screech,
     BulkUp
   ))

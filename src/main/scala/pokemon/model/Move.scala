@@ -424,15 +424,11 @@ object PsychoCut extends PhysicalMove {
   override def basePower: Int = 70
 }
 
-object BodySlam extends SpecialMove {
+object BodySlam extends PhysicalMove {
   val moveName: String = "Body Slam"
-  val accuracy: Int = 100
+  val accuracy: Int = 90
   val moveType: Normal.type = Normal
   override def basePower: Int = 85
-  override def effects: List[StatEffect] = List(
-    SpeedEffect(-1)
-  )
-  override def targetSelf: Boolean = false
 }
 
 object BlazeKick extends PhysicalMove {

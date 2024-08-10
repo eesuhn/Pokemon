@@ -8,25 +8,31 @@ import scala.math.BigDecimal.RoundingMode
 class EffTest extends AnyFunSuite {
 
   private val rarityWeightageLimits = Map(
-    1 -> 250.0,  // Common
+    1 -> 200.0,  // Common
     2 -> 300.0,  // Uncommon
-    3 -> 350.0,  // Rare
-    4 -> 400.0,  // Super Rare
-    5 -> 500.0   // Ultra Rare
+    3 -> 400.0,  // Rare
+    4 -> 500.0,  // Super Rare
+    5 -> 650.0   // Ultra Rare
   )
 
+  private val _boundRange = 10.0
+  private var _okayWeightage = 0
+  private var _nearLimitWeightage = 0
+  private var _outsideRangeWeightage = 0
+
   private val baseStatWeights = Map(
-    "health" -> 0.6,
+    "health" -> 0.8,
     "attack" -> 1.0,
     "defense" -> 0.8,
     "speed" -> 0.6
   )
 
-  // Maximum base power for normalization
-  private val _max_base_power = 300.0
+  // Weightage for moveset to normalize with base stats
+  private val _move_weightage = 200.0
 
-  private val _power_weight = 0.5
-  private val _status_weight = 0.5
+  private val _max_base_power = 300.0  // For normalization
+  private val _power_weight = 0.45
+  private val _status_weight = 0.55
 
   private val _stat_effect_weight = Map(
     "AttackEffect" -> 1.0,
@@ -51,32 +57,47 @@ class EffTest extends AnyFunSuite {
       moveRankings.getOrElseUpdate(pokemon.pName, ListBuffer.empty) ++= sortedScores
 
       val totalWeightage = calculateTotalWeightage(pokemon, sortedScores)
-      val upperRarityLimit = rarityWeightageLimits(pokemon.rarity.value)
-      val lowerRarityLimit = if (pokemon.rarity.value > 1) rarityWeightageLimits(pokemon.rarity.value - 1) else 0.0
-
-      val status = if (totalWeightage > upperRarityLimit) s"${Colors.RED}EXCEEDED${Colors.NC}"
-      else if (totalWeightage < lowerRarityLimit) s"${Colors.YELLOW}UNDER${Colors.NC}"
-      else s"${Colors.GREEN}OK${Colors.NC}"
+      val status = getWeightageStatus(pokemon, totalWeightage)
 
       weightageResults(pokemon.pName) = (totalWeightage, status)
     }
 
-    printResults(moveRankings, weightageResults)
+    printResults(pokemons, moveRankings, weightageResults)
+  }
+
+  private def getWeightageStatus(pokemon: Pokemon, totalWeightage: Double): String = {
+    val upperLimit = rarityWeightageLimits(pokemon.rarity.value)
+    val lowerLimit = if (pokemon.rarity.value > 1) rarityWeightageLimits(pokemon.rarity.value - 1) else 0.0
+
+    if (totalWeightage > upperLimit || totalWeightage < lowerLimit) {
+      _outsideRangeWeightage += 1
+      s"${Colors.RED}"
+    } else if (totalWeightage > upperLimit - _boundRange || totalWeightage < lowerLimit + _boundRange) {
+      _nearLimitWeightage += 1
+      s"${Colors.YELLOW}"
+    } else {
+      _okayWeightage += 1
+      s"${Colors.GREEN}"
+    }
   }
 
   private def calculateMoveEfficiency(move: Move): Double = {
     val powerScore = calculatePowerScore(move)
     val statusScore = calculateStatusScore(move)
-    (powerScore * _power_weight) + (statusScore * _status_weight)
+    val totalScore = (powerScore * _power_weight) + (statusScore * _status_weight)
+    totalScore * (move.accuracy / 100.0)
   }
 
   private def calculatePowerScore(move: Move): Double = move match {
-    case m: SpecialMove => (m.basePower / _max_base_power) * (m.accuracy / 100.0)
-    case m: PhysicalMove => (m.basePower / _max_base_power) * (m.accuracy / 100.0)
+    case m: SpecialMove => (m.basePower / _max_base_power)
+    case m: PhysicalMove => (m.basePower / _max_base_power)
     case _ => 0.0
   }
 
   private def calculateStatusScore(move: Move): Double = {
+    // Normalize by maximum possible stage change
+    val maxStageValue = 6.0
+
     val effects = move match {
       case m: SpecialMove => m.effects
       case m: StatusMove => m.effects
@@ -94,12 +115,12 @@ class EffTest extends AnyFunSuite {
       val weight = _stat_effect_weight.getOrElse(effectType, 0.5)
       val stageValue = effect.stage
       if (targetSelf) stageValue * weight else -stageValue * weight
-    }.sum / 6.0  // Normalize by maximum possible stage change
+    }.sum / maxStageValue
   }
 
   private def calculateTotalWeightage(pokemon: Pokemon, sortedScores: List[(String, Double)]): Double = {
     val baseStatsWeightage = calculateBaseStatsWeightage(pokemon)
-    val movesetWeightage = sortedScores.map(_._2).sum * 100
+    val movesetWeightage = sortedScores.map(_._2).sum * _move_weightage
     BigDecimal(baseStatsWeightage + movesetWeightage).setScale(2, RoundingMode.HALF_UP).toDouble
   }
 
@@ -112,23 +133,43 @@ class EffTest extends AnyFunSuite {
   }
 
   private def printResults(
+    pokemons: Seq[Class[_ <: Pokemon]],
     moveRankings: MutableMap[String, ListBuffer[(String, Double)]],
     weightageResults: MutableMap[String, (Double, String)]
   ): Unit = {
-
     if (moveRankings.nonEmpty) {
-      val msg = moveRankings.map { case (pokemonName, moves) =>
-        val (totalWeightage, status) = weightageResults(pokemonName)
+      val sortedResults = weightageResults.toSeq.sortBy(-_._2._1)
+
+      val groupedResults = sortedResults
+        .groupBy { case (pokemonName, _) =>
+          pokemons.find(_.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon].pName == pokemonName)
+            .map(_.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon].rarity.value)
+            .getOrElse(0)
+        }
+        .toSeq
+        .sortBy(_._1)
+        .reverse
+
+      val msg = groupedResults.map { case (rarity, pokemonGroup) =>
         s"""
-          |${Colors.YELLOW}$pokemonName${Colors.NC} (${totalWeightage}, $status):
-          |${moves.zipWithIndex.map { case ((moveName, score), index) =>
-          f"  ${index + 1}. $moveName%-20s($score%.2f)"
-        }.mkString("\n")}""".stripMargin
+          |${Colors.PURPLE}>>>>> RARITY $rarity <<<<<${Colors.NC}
+          |${pokemonGroup.map { case (pokemonName, (totalWeightage, status)) =>
+            val moves = moveRankings(pokemonName)
+            s"""
+              |${status}$pokemonName${Colors.NC} ($totalWeightage):
+              |${moves.zipWithIndex.map { case ((moveName, score), index) =>
+              val scoreColor = if (score <= 0.0) Colors.RED else Colors.NC
+              f"  ${index + 1}. $moveName%-20s(${scoreColor}$score%.2f${Colors.NC})"
+            }.mkString("\n")}""".stripMargin
+          }.mkString("\n")}""".stripMargin
       }.mkString("\n")
 
       println(
-        s"""
+        f"""
           |${Colors.PURPLE}Move rankings for each Pokemon:${Colors.NC}
+          |${Colors.GREEN}OKAY${Colors.NC}%-20s: ${_okayWeightage}
+          |${Colors.YELLOW}NEAR${Colors.NC}%-20s: ${_nearLimitWeightage}
+          |${Colors.RED}EXCD${Colors.NC}%-20s: ${_outsideRangeWeightage}
           |$msg""".stripMargin
       )
     }
