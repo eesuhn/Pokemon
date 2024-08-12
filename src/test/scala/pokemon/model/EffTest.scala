@@ -7,14 +7,6 @@ import scala.math.BigDecimal.RoundingMode
 
 class EffTest extends AnyFunSuite {
 
-  private val rarityWeightageLimits = Map(
-    1 -> 200.0,  // Common
-    2 -> 300.0,  // Uncommon
-    3 -> 400.0,  // Rare
-    4 -> 500.0,  // Super Rare
-    5 -> 650.0   // Ultra Rare
-  )
-
   private val _boundRange = 10.0
   private var _okayWeightage = 0
   private var _nearLimitWeightage = 0
@@ -31,12 +23,11 @@ class EffTest extends AnyFunSuite {
   private val _move_weightage = 200.0
 
   test("Rank moves and check rarity weightage") {
-    val pokemons = PokemonRegistry.pokemons
+    val pokemonInstances = PokemonRegistry.pokemonInstances
     val moveRankings = MutableMap.empty[String, ListBuffer[(String, Double)]]
     val weightageResults = MutableMap.empty[String, (Double, String)]
 
-    pokemons.foreach { pokemonClass =>
-      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+    pokemonInstances.values.foreach { pokemon =>
       val moveset = pokemon.moves
 
       val scores = moveset.map(move => (move.moveName, move.moveEfficiency()))
@@ -50,12 +41,12 @@ class EffTest extends AnyFunSuite {
       weightageResults(pokemon.pName) = (totalWeightage, status)
     }
 
-    printResults(pokemons, moveRankings, weightageResults)
+    printResults(pokemonInstances, moveRankings, weightageResults)
   }
 
   private def getWeightageStatus(pokemon: Pokemon, totalWeightage: Double): String = {
-    val upperLimit = rarityWeightageLimits(pokemon.rarity.value)
-    val lowerLimit = if (pokemon.rarity.value > 1) rarityWeightageLimits(pokemon.rarity.value - 1) else 0.0
+    val upperLimit = pokemon.rarity.weightageUpperBound
+    val lowerLimit = pokemon.rarity.weightageLowerBound
 
     if (totalWeightage > upperLimit || totalWeightage < lowerLimit) {
       _outsideRangeWeightage += 1
@@ -84,7 +75,7 @@ class EffTest extends AnyFunSuite {
   }
 
   private def printResults(
-    pokemons: Seq[Class[_ <: Pokemon]],
+    pokemonInstances: Map[String, Pokemon],
     moveRankings: MutableMap[String, ListBuffer[(String, Double)]],
     weightageResults: MutableMap[String, (Double, String)]
   ): Unit = {
@@ -93,17 +84,20 @@ class EffTest extends AnyFunSuite {
 
       val groupedResults = sortedResults
         .groupBy { case (pokemonName, _) =>
-          pokemons.find(_.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon].pName == pokemonName)
-            .map(_.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon].rarity.value)
-            .getOrElse(0)
+          pokemonInstances.get(pokemonName).map(_.rarity).getOrElse(Common)
         }
         .toSeq
-        .sortBy(_._1)
+        .sortBy(_._1.weightageUpperBound)
         .reverse
 
       val msg = groupedResults.map { case (rarity, pokemonGroup) =>
+        val rarityName = rarity.getClass.getSimpleName
+          .replaceAll("([A-Z])", " $1")
+          .trim
+          .toUpperCase
+          .replaceAll("\\$$", "")
         s"""
-          |${Colors.PURPLE}>>>>> RARITY $rarity <<<<<${Colors.NC}
+          |${Colors.PURPLE}>>>>>${Colors.NC} ${rarityName} ${Colors.PURPLE}<<<<<${Colors.NC}
           |${pokemonGroup.map { case (pokemonName, (totalWeightage, status)) =>
             val moves = moveRankings(pokemonName)
             s"""
@@ -120,7 +114,7 @@ class EffTest extends AnyFunSuite {
           |${Colors.PURPLE}Move rankings for each Pokemon:${Colors.NC}
           |${Colors.GREEN}OKAY${Colors.NC}%-20s: ${_okayWeightage}
           |${Colors.YELLOW}NEAR${Colors.NC}%-20s: ${_nearLimitWeightage}
-          |${Colors.RED}EXCD${Colors.NC}%-20s: ${_outsideRangeWeightage}
+          |${Colors.RED}NOPE${Colors.NC}%-20s: ${_outsideRangeWeightage}
           |$msg""".stripMargin
       )
     }

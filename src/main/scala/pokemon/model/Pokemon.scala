@@ -6,6 +6,7 @@ import pokemon.macros.Macros
 
 object PokemonRegistry {
   private var _pokemons: List[Class[_ <: Pokemon]] = List.empty
+  private lazy val _pokemonInstances: Map[String, Pokemon] = createPokemonInstances()
 
   def registerPokemon(newPokemons: List[Class[_ <: Pokemon]]): Unit = {
     _pokemons = newPokemons ::: _pokemons
@@ -13,17 +14,16 @@ object PokemonRegistry {
 
   def pokemons: List[Class[_ <: Pokemon]] = _pokemons
 
+  def pokemonInstances: Map[String, Pokemon] = _pokemonInstances
+
+  private def createPokemonInstances(): Map[String, Pokemon] = {
+    _pokemons.map { pokemonClass =>
+      val instance = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+      instance.pName -> instance
+    }.toMap
+  }
+
   registerPokemon(Macros.registerSubclasses[Pokemon]("pokemon.model"))
-}
-
-case class Rarity(value: Int) {
-  if (value < 1 || value > 5) throw new Exception("Rarity value must be between 1 and 5")
-
-  def isCommon: Boolean = value == 1
-  def isUncommon: Boolean = value == 2
-  def isRare: Boolean = value == 3
-  def isSuperRare: Boolean = value == 4
-  def isUltraRare: Boolean = value == 5
 }
 
 abstract class Pokemon {
@@ -135,7 +135,7 @@ abstract class Pokemon {
 
 class Charmander extends Pokemon {
   val pName: String = "Charmander"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(52)
   val defense: Defense = Defense(43)
   val speed: Speed = Speed(65)
@@ -153,7 +153,7 @@ class Charmander extends Pokemon {
 
 class Squirtle extends Pokemon {
   val pName: String = "Squirtle"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(48)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(43)
@@ -171,7 +171,7 @@ class Squirtle extends Pokemon {
 
 class Bulbasaur extends Pokemon {
   val pName: String = "Bulbasaur"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(49)
   val defense: Defense = Defense(49)
   val speed: Speed = Speed(45)
@@ -190,7 +190,7 @@ class Bulbasaur extends Pokemon {
 
 class Geodude extends Pokemon {
   val pName: String = "Geodude"
-  val rarity: Rarity = Rarity(1)
+  val rarity: Rarity = Common
   val attack: Attack = Attack(80)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(20)
@@ -208,7 +208,7 @@ class Geodude extends Pokemon {
 
 class Pikachu extends Pokemon {
   val pName: String = "Pikachu"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(55)
   val defense: Defense = Defense(40)
   val speed: Speed = Speed(90)
@@ -226,7 +226,7 @@ class Pikachu extends Pokemon {
 
 class Breloom extends Pokemon {
   val pName: String = "Breloom"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(80)
   val speed: Speed = Speed(70)
@@ -246,7 +246,7 @@ class Breloom extends Pokemon {
 
 class Regice extends Pokemon {
   val pName: String = "Regice"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(50)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(50)
@@ -264,7 +264,7 @@ class Regice extends Pokemon {
 
 class Hitmonchan extends Pokemon {
   val pName: String = "Hitmonchan"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(105)
   val defense: Defense = Defense(79)
   val speed: Speed = Speed(76)
@@ -283,7 +283,7 @@ class Hitmonchan extends Pokemon {
 
 class Nidorino extends Pokemon {
   val pName: String = "Nidorino"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Uncommon
   val attack: Attack = Attack(72)
   val defense: Defense = Defense(57)
   val speed: Speed = Speed(65)
@@ -301,7 +301,7 @@ class Nidorino extends Pokemon {
 
 class Dustox extends Pokemon {
   val pName: String = "Dustox"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(50)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(65)
@@ -320,7 +320,7 @@ class Dustox extends Pokemon {
 
 class Mewtwo extends Pokemon {
   val pName: String = "Mewtwo"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(110)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(130)
@@ -338,7 +338,7 @@ class Mewtwo extends Pokemon {
 
 class Scyther extends Pokemon {
   val pName: String = "Scyther"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(110)
   val defense: Defense = Defense(80)
   val speed: Speed = Speed(105)
@@ -357,7 +357,7 @@ class Scyther extends Pokemon {
 
 class Heracross extends Pokemon {
   val pName: String = "Heracross"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(125)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(85)
@@ -376,7 +376,7 @@ class Heracross extends Pokemon {
 
 class Onix extends Pokemon {
   val pName: String = "Onix"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(45)
   val defense: Defense = Defense(160)
   val speed: Speed = Speed(70)
@@ -394,7 +394,7 @@ class Onix extends Pokemon {
 
 class Snorlax extends Pokemon {
   val pName: String = "Snorlax"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(110)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(30)
@@ -412,7 +412,7 @@ class Snorlax extends Pokemon {
 
 class Blaziken extends Pokemon {
   val pName: String = "Blaziken"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(80)
@@ -431,7 +431,7 @@ class Blaziken extends Pokemon {
 
 class Toxicroak extends Pokemon {
   val pName: String = "Toxicroak"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(106)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(85)
@@ -450,7 +450,7 @@ class Toxicroak extends Pokemon {
 
 class Marshtomp extends Pokemon {
   val pName: String = "Marshtomp"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(50)
@@ -468,7 +468,7 @@ class Marshtomp extends Pokemon {
 
 class Slowpoke extends Pokemon {
   val pName: String = "Slowpoke"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Uncommon
   val attack: Attack = Attack(65)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(15)
@@ -487,7 +487,7 @@ class Slowpoke extends Pokemon {
 
 class Exploud extends Pokemon {
   val pName: String = "Exploud"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(91)
   val defense: Defense = Defense(63)
   val speed: Speed = Speed(68)
@@ -504,7 +504,7 @@ class Exploud extends Pokemon {
 
 class Solrock extends Pokemon {
   val pName: String = "Solrock"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(95)
   val defense: Defense = Defense(85)
   val speed: Speed = Speed(70)
@@ -522,7 +522,7 @@ class Solrock extends Pokemon {
 
 class Rhyhorn extends Pokemon {
   val pName: String = "Rhyhorn"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Uncommon
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(95)
   val speed: Speed = Speed(25)
@@ -540,7 +540,7 @@ class Rhyhorn extends Pokemon {
 
 class Shuckle extends Pokemon {
   val pName: String = "Shuckle"
-  val rarity: Rarity = Rarity(1)
+  val rarity: Rarity = Common
   val attack: Attack = Attack(10)
   val defense: Defense = Defense(230)
   val speed: Speed = Speed(5)
@@ -557,7 +557,7 @@ class Shuckle extends Pokemon {
 
 class Regirock extends Pokemon {
   val pName: String = "Regirock"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(100)
   val defense: Defense = Defense(200)
   val speed: Speed = Speed(50)
@@ -575,7 +575,7 @@ class Regirock extends Pokemon {
 
 class Charizard extends Pokemon {
   val pName: String = "Charizard"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(84)
   val defense: Defense = Defense(78)
   val speed: Speed = Speed(100)
@@ -593,7 +593,7 @@ class Charizard extends Pokemon {
 
 class Arbok extends Pokemon {
   val pName: String = "Arbok"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(69)
   val speed: Speed = Speed(80)
@@ -610,7 +610,7 @@ class Arbok extends Pokemon {
 
 class Hariyama extends Pokemon {
   val pName: String = "Hariyama"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(60)
   val speed: Speed = Speed(50)
@@ -629,7 +629,7 @@ class Hariyama extends Pokemon {
 
 class Giratina extends Pokemon {
   val pName: String = "Giratina"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(100)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(90)
@@ -648,7 +648,7 @@ class Giratina extends Pokemon {
 
 class Kyogre extends Pokemon {
   val pName: String = "Kyogre"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(100)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(90)
@@ -665,7 +665,7 @@ class Kyogre extends Pokemon {
 
 class Metagross extends Pokemon {
   val pName: String = "Metagross"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(135)
   val defense: Defense = Defense(130)
   val speed: Speed = Speed(70)
@@ -684,7 +684,7 @@ class Metagross extends Pokemon {
 
 class Lucario extends Pokemon {
   val pName: String = "Lucario"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(110)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(90)
@@ -703,7 +703,7 @@ class Lucario extends Pokemon {
 
 class Dialga extends Pokemon {
   val pName: String = "Dialga"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(90)
@@ -722,7 +722,7 @@ class Dialga extends Pokemon {
 
 class Steelix extends Pokemon {
   val pName: String = "Steelix"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(200)
   val speed: Speed = Speed(30)
@@ -740,7 +740,7 @@ class Steelix extends Pokemon {
 
 class Palkia extends Pokemon {
   val pName: String = "Palkia"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(100)
@@ -759,7 +759,7 @@ class Palkia extends Pokemon {
 
 class Kyurem extends Pokemon {
   val pName: String = "Kyurem"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(95)
@@ -778,7 +778,7 @@ class Kyurem extends Pokemon {
 
 class Zekrom extends Pokemon {
   val pName: String = "Zekrom"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(150)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(90)
@@ -797,7 +797,7 @@ class Zekrom extends Pokemon {
 
 class Cyndaquil extends Pokemon {
   val pName: String = "Cyndaquil"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(52)
   val defense: Defense = Defense(43)
   val speed: Speed = Speed(65)
@@ -815,7 +815,7 @@ class Cyndaquil extends Pokemon {
 
 class Infernape extends Pokemon {
   val pName: String = "Infernape"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(104)
   val defense: Defense = Defense(71)
   val speed: Speed = Speed(108)
@@ -834,7 +834,7 @@ class Infernape extends Pokemon {
 
 class Emboar extends Pokemon {
   val pName: String = "Emboar"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(123)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(65)
@@ -853,7 +853,7 @@ class Emboar extends Pokemon {
 
 class Meganium extends Pokemon {
   val pName: String = "Meganium"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(82)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(80)
@@ -871,7 +871,7 @@ class Meganium extends Pokemon {
 
 class Sceptile extends Pokemon {
   val pName: String = "Sceptile"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(120)
@@ -889,7 +889,7 @@ class Sceptile extends Pokemon {
 
 class Torterra extends Pokemon {
   val pName: String = "Torterra"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(109)
   val defense: Defense = Defense(105)
   val speed: Speed = Speed(56)
@@ -907,7 +907,7 @@ class Torterra extends Pokemon {
 
 class Abomasnow extends Pokemon {
   val pName: String = "Abomasnow"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(92)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(60)
@@ -926,7 +926,7 @@ class Abomasnow extends Pokemon {
 
 class Luxio extends Pokemon {
   val pName: String = "Luxio"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Uncommon
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(49)
   val speed: Speed = Speed(60)
@@ -944,7 +944,7 @@ class Luxio extends Pokemon {
 
 class Magneton extends Pokemon {
   val pName: String = "Magneton"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Uncommon
   val attack: Attack = Attack(60)
   val defense: Defense = Defense(95)
   val speed: Speed = Speed(70)
@@ -963,7 +963,7 @@ class Magneton extends Pokemon {
 
 class Voltorb extends Pokemon {
   val pName: String = "Voltorb"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Common
   val attack: Attack = Attack(30)
   val defense: Defense = Defense(50)
   val speed: Speed = Speed(100)
@@ -981,7 +981,7 @@ class Voltorb extends Pokemon {
 
 class Muk extends Pokemon {
   val pName: String = "Muk"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(105)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(50)
@@ -999,7 +999,7 @@ class Muk extends Pokemon {
 
 class Weezing extends Pokemon {
   val pName: String = "Weezing"
-  val rarity: Rarity = Rarity(1)
+  val rarity: Rarity = Common
   val attack: Attack = Attack(90)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(60)
@@ -1017,7 +1017,7 @@ class Weezing extends Pokemon {
 
 class Alakazam extends Pokemon {
   val pName: String = "Alakazam"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(50)
   val defense: Defense = Defense(45)
   val speed: Speed = Speed(120)
@@ -1034,7 +1034,7 @@ class Alakazam extends Pokemon {
 
 class Gallade extends Pokemon {
   val pName: String = "Gallade"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(125)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(80)
@@ -1053,7 +1053,7 @@ class Gallade extends Pokemon {
 
 class Meditite extends Pokemon {
   val pName: String = "Meditite"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(40)
   val defense: Defense = Defense(55)
   val speed: Speed = Speed(60)
@@ -1072,7 +1072,7 @@ class Meditite extends Pokemon {
 
 class Porygon extends Pokemon {
   val pName: String = "Porygon"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Uncommon
   val attack: Attack = Attack(60)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(40)
@@ -1089,7 +1089,7 @@ class Porygon extends Pokemon {
 
 class Slaking extends Pokemon {
   val pName: String = "Slaking"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(160)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(90)
@@ -1106,7 +1106,7 @@ class Slaking extends Pokemon {
 
 class Arceus extends Pokemon {
   val pName: String = "Arceus"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(120)
@@ -1124,7 +1124,7 @@ class Arceus extends Pokemon {
 
 class Dewgong extends Pokemon {
   val pName: String = "Dewgong"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(70)
   val defense: Defense = Defense(80)
   val speed: Speed = Speed(70)
@@ -1143,7 +1143,7 @@ class Dewgong extends Pokemon {
 
 class Walrein extends Pokemon {
   val pName: String = "Walrein"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(80)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(65)
@@ -1162,7 +1162,7 @@ class Walrein extends Pokemon {
 
 class Spheal extends Pokemon {
   val pName: String = "Spheal"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Uncommon
   val attack: Attack = Attack(40)
   val defense: Defense = Defense(50)
   val speed: Speed = Speed(25)
@@ -1180,7 +1180,7 @@ class Spheal extends Pokemon {
 
 class Scizor extends Pokemon {
   val pName: String = "Scizor"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(65)
@@ -1199,7 +1199,7 @@ class Scizor extends Pokemon {
 
 class Armaldo extends Pokemon {
   val pName: String = "Armaldo"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(125)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(45)
@@ -1218,7 +1218,7 @@ class Armaldo extends Pokemon {
 
 class Pinsir extends Pokemon {
   val pName: String = "Pinsir"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(125)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(85)
@@ -1236,7 +1236,7 @@ class Pinsir extends Pokemon {
 
 class Kakuna extends Pokemon {
   val pName: String = "Kakuna"
-  val rarity: Rarity = Rarity(1)
+  val rarity: Rarity = Common
   val attack: Attack = Attack(25)
   val defense: Defense = Defense(50)
   val speed: Speed = Speed(35)
@@ -1253,7 +1253,7 @@ class Kakuna extends Pokemon {
 
 class Jolteon extends Pokemon {
   val pName: String = "Jolteon"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(65)
   val defense: Defense = Defense(60)
   val speed: Speed = Speed(130)
@@ -1271,7 +1271,7 @@ class Jolteon extends Pokemon {
 
 class Electabuzz extends Pokemon {
   val pName: String = "Electabuzz"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(83)
   val defense: Defense = Defense(57)
   val speed: Speed = Speed(105)
@@ -1289,7 +1289,7 @@ class Electabuzz extends Pokemon {
 
 class Regigigas extends Pokemon {
   val pName: String = "Regigigas"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(160)
   val defense: Defense = Defense(110)
   val speed: Speed = Speed(100)
@@ -1307,7 +1307,7 @@ class Regigigas extends Pokemon {
 
 class Ursaring extends Pokemon {
   val pName: String = "Ursaring"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(55)
@@ -1325,7 +1325,7 @@ class Ursaring extends Pokemon {
 
 class Typhlosion extends Pokemon {
   val pName: String = "Typhlosion"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(84)
   val defense: Defense = Defense(78)
   val speed: Speed = Speed(100)
@@ -1343,7 +1343,7 @@ class Typhlosion extends Pokemon {
 
 class Rayquaza extends Pokemon {
   val pName: String = "Rayquaza"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(150)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(95)
@@ -1361,7 +1361,7 @@ class Rayquaza extends Pokemon {
 
 class Reshiram extends Pokemon {
   val pName: String = "Reshiram"
-  val rarity: Rarity = Rarity(5)
+  val rarity: Rarity = UltraRare
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(90)
@@ -1380,7 +1380,7 @@ class Reshiram extends Pokemon {
 
 class Gengar extends Pokemon {
   val pName: String = "Gengar"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(65)
   val defense: Defense = Defense(60)
   val speed: Speed = Speed(110)
@@ -1399,7 +1399,7 @@ class Gengar extends Pokemon {
 
 class Shedinja extends Pokemon {
   val pName: String = "Shedinja"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(90)
   val defense: Defense = Defense(45)
   val speed: Speed = Speed(40)
@@ -1417,7 +1417,7 @@ class Shedinja extends Pokemon {
 
 class Dusknoir extends Pokemon {
   val pName: String = "Dusknoir"
-  val rarity: Rarity = Rarity(4)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(100)
   val defense: Defense = Defense(135)
   val speed: Speed = Speed(45)
@@ -1435,7 +1435,7 @@ class Dusknoir extends Pokemon {
 
 class Froslass extends Pokemon {
   val pName: String = "Froslass"
-  val rarity: Rarity = Rarity(3)
+  val rarity: Rarity = Rare
   val attack: Attack = Attack(80)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(110)
@@ -1454,7 +1454,7 @@ class Froslass extends Pokemon {
 
 class Shuppet extends Pokemon {
   val pName: String = "Shuppet"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = Uncommon
   val attack: Attack = Attack(75)
   val defense: Defense = Defense(35)
   val speed: Speed = Speed(45)
@@ -1471,7 +1471,7 @@ class Shuppet extends Pokemon {
 
 class Duskull extends Pokemon {
   val pName: String = "Duskull"
-  val rarity: Rarity = Rarity(2)
+  val rarity: Rarity = SuperRare
   val attack: Attack = Attack(40)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(25)
