@@ -20,13 +20,7 @@ class BattleComponent(
 
   // right dialog
   // move stats
-  val moveTypeImg: ImageView,
-  val moveTypeTxt: Label,
-  val moveCat: ImageView,
-  val powerTxtLabel: Label,
-  val powerTxt: Label,
-  val accuracyTxtLabel: Label,
-  val accuracyTxt: Label,
+  val moveStats: MoveStatsView,
 
   // pokemon current stats
   val pokemonCurrentStats: PokemonStatsView
@@ -48,91 +42,11 @@ class BattleComponent(
 
   def setStateDialog(text: String): Unit = stateDialogTxt.text = text
 
-  def updateMoveStats(power: String, accuracy: String, category: String, typeOfMove: String): Unit = {
-    powerTxt(power)
-    accuracyTxt(accuracy)
-    setMoveCatImg(category)
-    setMoveType(typeOfMove)
-  }
-
   def clearLeftDialogPane(): Unit = stateDialogTxt.text = ""
 
   def clearRightDialogPane(): Unit = {
-    updateMoveStats("", "", "", "")
-    updatePokemonCurrentStats("", "", "", "", "", "")
-  }
-
-  def updatePokemonCurrentStats(
-    pokemonName: String,
-    type1: String,
-    type2: String,
-    hp: String,
-    attack: String,
-    defense: String
-  ): Unit = {
-
-    pokemonCurrentStats.updatePokemonCurrentStats(
-      pokemonName,
-      type1,
-      type2,
-      hp,
-      attack,
-      defense
-    )
-  }
-
-  private def powerTxt(text: String): Unit = {
-    powerTxt.text = text
-    powerTxtLabel.text = if (text.nonEmpty) "Power" else ""
-  }
-
-  private def accuracyTxt(text: String): Unit = {
-    accuracyTxt.text = text
-    accuracyTxtLabel.text = if (text.nonEmpty) "Accuracy" else ""
-  }
-
-  /**
-    * Set move category image
-    *
-    * @param category
-    */
-  private def setMoveCatImg(category: String): Unit = {
-    moveCat.image = if (category.nonEmpty) ResourceUtil.resouceImage(s"misc/${category}-move.png") else null
-  }
-
-  /**
-    * Set move type image and text
-    *
-    * @param typeOfMove
-    */
-  private def setMoveType(typeOfMove: String): Unit = {
-    if (!typeOfMove.isEmpty()) {
-      moveTypeImg.image = ResourceUtil.resouceImage(s"types/${typeOfMove}-type.png")
-      moveTypeTxt.text = typeOfMove.toUpperCase()
-      moveTypeTextColor(typeOfMove)
-    } else {
-      moveTypeImg.image = null
-      moveTypeTxt.text = ""
-      moveTypeTextColor("")
-    }
-  }
-
-  private def moveTypeTextColor(typeOfMove: String): Unit = {
-    val color = typeOfMove match {
-      case "normal" => "#7a6f63"
-      case "fire" => "#a0292c"
-      case "water" => "#02416a"
-      case "electric" => "#b19007"
-      case "grass" => "#095c28"
-      case "ice" => "#2c7286"
-      case "fighting" => "#9b3d30"
-      case "poison" => "#753a61"
-      case "psychic" => "#9c4267"
-      case "bug" => "#6f7b13"
-      case "rock" => "#72613a"
-      case _ => "black"
-    }
-    moveTypeTxt.style = s"-fx-text-fill: ${color};"
+    moveStats.updateMoveStats("", "", "", "")
+    pokemonCurrentStats.updatePokemonCurrentStats("", "", "", "", "", "")
   }
 }
 
@@ -264,5 +178,77 @@ case class PokemonStatsView(
   private def defenseTxt(text: String): Unit = {
     currentDefense.text = text
     currentDefenseTxt.text = if (text.nonEmpty) "Def." else ""
+  }
+}
+
+case class MoveStatsView(
+  val moveTypeImg: ImageView,
+  val moveTypeTxt: Label,
+  val moveCat: ImageView,
+  val powerTxtLabel: Label,
+  val powerTxt: Label,
+  val accuracyTxtLabel: Label,
+  val accuracyTxt: Label
+) {
+
+  def updateMoveStats(power: String, accuracy: String, category: String, typeOfMove: String): Unit = {
+    powerTxt(power)
+    accuracyTxt(accuracy)
+    setMoveCatImg(category)
+    setMoveType(typeOfMove)
+  }
+
+  private def powerTxt(text: String): Unit = {
+    powerTxt.text = text
+    powerTxtLabel.text = if (text.nonEmpty) "Power" else ""
+  }
+
+  private def accuracyTxt(text: String): Unit = {
+    accuracyTxt.text = text
+    accuracyTxtLabel.text = if (text.nonEmpty) "Accuracy" else ""
+  }
+
+  /**
+    * Set move category image
+    *
+    * @param category
+    */
+  private def setMoveCatImg(category: String): Unit = {
+    moveCat.image = if (category.nonEmpty) ResourceUtil.resouceImage(s"misc/${category}-move.png") else null
+  }
+
+  /**
+    * Set move type image and text
+    *
+    * @param typeOfMove
+    */
+  private def setMoveType(typeOfMove: String): Unit = {
+    if (!typeOfMove.isEmpty()) {
+      moveTypeImg.image = ResourceUtil.resouceImage(s"types/${typeOfMove}-type.png")
+      moveTypeTxt.text = typeOfMove.toUpperCase()
+      moveTypeTextColor(typeOfMove)
+    } else {
+      moveTypeImg.image = null
+      moveTypeTxt.text = ""
+      moveTypeTextColor("")
+    }
+  }
+
+  private def moveTypeTextColor(typeOfMove: String): Unit = {
+    val color = typeOfMove match {
+      case "normal" => "#7a6f63"
+      case "fire" => "#a0292c"
+      case "water" => "#02416a"
+      case "electric" => "#b19007"
+      case "grass" => "#095c28"
+      case "ice" => "#2c7286"
+      case "fighting" => "#9b3d30"
+      case "poison" => "#753a61"
+      case "psychic" => "#9c4267"
+      case "bug" => "#6f7b13"
+      case "rock" => "#72613a"
+      case _ => "black"
+    }
+    moveTypeTxt.style = s"-fx-text-fill: ${color};"
   }
 }
