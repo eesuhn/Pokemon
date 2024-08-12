@@ -21,6 +21,19 @@ abstract class Move {
   val accuracy: Int
   val moveType: Type
 
+  protected val _physicalWeight: Double = 0.45
+  protected val _statusWeight: Double = 0.55
+
+  private val _maxBasePower: Double = 300.0
+  private val _maxStageValue: Int = 6
+
+  def moveEfficiency(): Double = {
+    val efficiency = targetMoveEfficiency()
+    efficiency * (accuracy / 100.0)
+  }
+
+  protected def targetMoveEfficiency(): Double
+
   /**
     * Return power of the move if it is a PhysicalMove
     *
@@ -49,6 +62,26 @@ abstract class Move {
   def calculateMoveAccuracy(): Boolean = {
     val random = Random
     random.nextInt(100) <= accuracy
+  }
+
+  protected def physicalMoveScore(basePower: Int): Double = basePower / _maxBasePower
+
+  protected def statusMoveScore(effects: List[StatEffect], targetSelf: Boolean): Double = {
+    val scoreSum = effects.map { effect =>
+      val weight = statEffectWeight(effect)
+      val stageValue = effect.stage
+      if (targetSelf) stageValue * weight else -stageValue * weight
+    }.sum
+    scoreSum / _maxStageValue
+  }
+
+  private def statEffectWeight(effect: StatEffect): Double = effect match {
+    case _: AttackEffect => 1.0
+    case _: DefenseEffect => 1.0
+    case _: AccuracyEffect => 0.8
+    case _: SpeedEffect => 0.6
+    case _: CriticalHitEffect => 0.8
+    case _ => 0.0
   }
 }
 
@@ -84,6 +117,11 @@ trait StatusMove extends Move {
       }
       s"${pokemon.pName}'s $statName $intensity$changeType!"
     }
+  }
+
+  override protected def targetMoveEfficiency(): Double = {
+    val statusScore = statusMoveScore(effects, targetSelf)
+    statusScore * _statusWeight
   }
 }
 
@@ -159,12 +197,24 @@ trait PhysicalMove extends Move {
     val criticalMessage = if (isCritical) "A critical hit!" else ""
     (finalDamage * modifier, List(criticalMessage, effectivenessMessage).filter(_.nonEmpty).mkString(" "))
   }
+
+  override protected def targetMoveEfficiency(): Double = {
+    val powerScore = physicalMoveScore(basePower)
+    powerScore * _physicalWeight
+  }
 }
 
 /**
   * SpecialMove is the combination of PhysicalMove and StatusMove
   */
-trait SpecialMove extends PhysicalMove with StatusMove
+trait SpecialMove extends PhysicalMove with StatusMove {
+
+  override protected def targetMoveEfficiency(): Double = {
+    val powerScore = physicalMoveScore(basePower)
+    val statusScore = statusMoveScore(effects, targetSelf)
+    (powerScore * _physicalWeight) + (statusScore * _statusWeight)
+  }
+}
 
 object Growl extends StatusMove {
   val moveName: String = "Growl"

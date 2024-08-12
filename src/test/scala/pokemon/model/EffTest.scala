@@ -30,18 +30,6 @@ class EffTest extends AnyFunSuite {
   // Weightage for moveset to normalize with base stats
   private val _move_weightage = 200.0
 
-  private val _max_base_power = 300.0  // For normalization
-  private val _power_weight = 0.45
-  private val _status_weight = 0.55
-
-  private val _stat_effect_weight = Map(
-    "AttackEffect" -> 1.0,
-    "DefenseEffect" -> 1.0,
-    "AccuracyEffect" -> 0.8,
-    "SpeedEffect" -> 0.6,
-    "CriticalHitEffect" -> 0.8
-  )
-
   test("Rank moves and check rarity weightage") {
     val pokemons = PokemonRegistry.pokemons
     val moveRankings = MutableMap.empty[String, ListBuffer[(String, Double)]]
@@ -51,7 +39,7 @@ class EffTest extends AnyFunSuite {
       val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
       val moveset = pokemon.moves
 
-      val scores = moveset.map(move => (move.moveName, calculateMoveEfficiency(move)))
+      val scores = moveset.map(move => (move.moveName, move.moveEfficiency()))
       val sortedScores = scores.sortBy(-_._2)
 
       moveRankings.getOrElseUpdate(pokemon.pName, ListBuffer.empty) ++= sortedScores
@@ -79,43 +67,6 @@ class EffTest extends AnyFunSuite {
       _okayWeightage += 1
       s"${Colors.GREEN}"
     }
-  }
-
-  private def calculateMoveEfficiency(move: Move): Double = {
-    val powerScore = calculatePowerScore(move)
-    val statusScore = calculateStatusScore(move)
-    val totalScore = (powerScore * _power_weight) + (statusScore * _status_weight)
-    totalScore * (move.accuracy / 100.0)
-  }
-
-  private def calculatePowerScore(move: Move): Double = move match {
-    case m: SpecialMove => (m.basePower / _max_base_power)
-    case m: PhysicalMove => (m.basePower / _max_base_power)
-    case _ => 0.0
-  }
-
-  private def calculateStatusScore(move: Move): Double = {
-    // Normalize by maximum possible stage change
-    val maxStageValue = 6.0
-
-    val effects = move match {
-      case m: SpecialMove => m.effects
-      case m: StatusMove => m.effects
-      case _ => List.empty
-    }
-
-    val targetSelf = move match {
-      case m: SpecialMove => m.targetSelf
-      case m: StatusMove => m.targetSelf
-      case _ => false
-    }
-
-    effects.map { effect =>
-      val effectType = effect.getClass.getSimpleName
-      val weight = _stat_effect_weight.getOrElse(effectType, 0.5)
-      val stageValue = effect.stage
-      if (targetSelf) stageValue * weight else -stageValue * weight
-    }.sum / maxStageValue
   }
 
   private def calculateTotalWeightage(pokemon: Pokemon, sortedScores: List[(String, Double)]): Double = {
