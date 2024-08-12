@@ -16,9 +16,7 @@ class MoveTest extends AnyFunSuite {
 
       pokemon.moves.foreach { move =>
         if (!pokemonTypes.contains(move.moveType) &&
-            move.moveType != Normal &&
-            move.moveName != "Ancient Power" &&
-            move.moveName != "Bulk Up"
+            move.moveType != Normal
         ) {
           val pokemonEntry = invalidMoves.getOrElseUpdate(pokemon.pName, MutableMap.empty)
           val typeEntry = pokemonEntry.getOrElseUpdate(pokemon.pTypeNames, List.empty)
