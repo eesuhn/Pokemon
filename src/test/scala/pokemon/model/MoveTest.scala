@@ -69,7 +69,6 @@ class MoveTest extends AnyFunSuite {
   test("List all moves and their usage") {
     val pokemonInstances = PokemonRegistry.pokemonInstances
     val moveUsage = MutableMap[String, Int]().withDefaultValue(0)
-    val sortedMoves = moveUsage.toSeq.sortWith(_._2 > _._2)
 
     pokemonInstances.values.foreach { pokemon =>
       pokemon.moves.foreach { move =>
@@ -77,9 +76,15 @@ class MoveTest extends AnyFunSuite {
       }
     }
 
+    val groupedMoves = moveUsage.groupBy(_._2).toSeq.sortBy(_._1).reverse
+
     println(s"${Colors.PURPLE}Move usage across all Pokemons:${Colors.NC}")
-    sortedMoves.foreach { case (moveName, count) =>
-      println(f"$moveName%-20s: $count")
+    groupedMoves.foreach { case (count, moves) =>
+      val msg = f"""
+        |${Colors.YELLOW}$count:${Colors.NC}
+        |${moves.keys.toSeq.sorted.mkString(s"${Colors.YELLOW}, ${Colors.NC}")}
+        |""".stripMargin
+      println(msg)
     }
   }
 }
