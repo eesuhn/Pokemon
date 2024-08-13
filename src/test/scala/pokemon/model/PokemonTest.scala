@@ -6,11 +6,10 @@ import scala.collection.mutable.{Map => MutableMap}
 class PokemonTest extends AnyFunSuite {
 
   test("Count each Pokemon type") {
-    val pokemons = PokemonRegistry.pokemons
+    val pokemonInstances = PokemonRegistry.pokemonInstances
     val count = MutableMap.empty[String, Int]
 
-    pokemons.foreach { pokemonClass =>
-      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+    pokemonInstances.values.foreach { pokemon =>
       pokemon.pTypes.foreach { pType =>
         count(pType.name) = count.getOrElse(pType.name, 0) + 1
       }

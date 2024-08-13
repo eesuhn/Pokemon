@@ -6,14 +6,12 @@ import scala.collection.mutable.{Set => MutableSet}
 
 class MoveTest extends AnyFunSuite {
 
-  test("Check if all Pokemon moves are of the Pokemon's type") {
-    val pokemons = PokemonRegistry.pokemons
+  test("Check if all Pokemon moves are of the Pokemon type") {
+    val pokemonInstances = PokemonRegistry.pokemonInstances
     val invalidMoves = MutableMap.empty[String, MutableMap[List[String], List[(String, String)]]]
 
-    pokemons.foreach { pokemonClass =>
-      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+    pokemonInstances.values.foreach { pokemon =>
       val pokemonTypes = pokemon.pTypes
-
       pokemon.moves.foreach { move =>
         if (!pokemonTypes.contains(move.moveType) &&
             move.moveType != Normal
@@ -29,10 +27,11 @@ class MoveTest extends AnyFunSuite {
       val msg = invalidMoves.flatMap { case (pokemonName, typeMap) =>
         typeMap.flatMap { case (pokemonTypes, moves) =>
           f"""
-            |${Colors.YELLOW}$pokemonName%-20s(${pokemonTypes.mkString(" ")})${Colors.NC}
-            |${moves.map { case (moveName, moveType) =>
-            f"  $moveName%-20s(${moveType.toLowerCase})"
-            }.mkString("\n")}""".stripMargin
+            |${Colors.YELLOW}$pokemonName${Colors.NC} (${pokemonTypes.mkString(" ")}):
+            |${moves.zipWithIndex.map { case ((moveName, moveType), index) =>
+              f"  ${index + 1}. $moveName%-20s(${moveType.toLowerCase})"
+            }.mkString("\n")}
+            |""".stripMargin
         }
       }.mkString
 
@@ -47,12 +46,11 @@ class MoveTest extends AnyFunSuite {
   }
 
   test("Find moves not assigned to any Pokemon") {
-    val pokemons = PokemonRegistry.pokemons
+    val pokemonInstances = PokemonRegistry.pokemonInstances
     val allMoves = MoveRegistry.moves.toSet
     val assignedMoves = MutableSet.empty[Move]
 
-    pokemons.foreach { pokemonClass =>
-      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+    pokemonInstances.values.foreach { pokemon =>
       assignedMoves ++= pokemon.moves
     }
 
@@ -69,17 +67,15 @@ class MoveTest extends AnyFunSuite {
   }
 
   test("List all moves and their usage") {
-    val pokemons = PokemonRegistry.pokemons
+    val pokemonInstances = PokemonRegistry.pokemonInstances
     val moveUsage = MutableMap[String, Int]().withDefaultValue(0)
+    val sortedMoves = moveUsage.toSeq.sortWith(_._2 > _._2)
 
-    pokemons.foreach { pokemonClass =>
-      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+    pokemonInstances.values.foreach { pokemon =>
       pokemon.moves.foreach { move =>
         moveUsage(move.moveName) += 1
       }
     }
-
-    val sortedMoves = moveUsage.toSeq.sortWith(_._2 > _._2)
 
     println(s"${Colors.PURPLE}Move usage across all Pokemons:${Colors.NC}")
     sortedMoves.foreach { case (moveName, count) =>
