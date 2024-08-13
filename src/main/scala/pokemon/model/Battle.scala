@@ -76,7 +76,7 @@ class Battle() {
     results.toList
   }
 
-  def availablePlayerPokemon(): ArrayBuffer[Pokemon] = _player.deck.filter(p => p.currentHP > 0 && p != _player.activePokemon)
+  def availablePlayerPokemon(): ArrayBuffer[Pokemon] = _player.deck.filter(p => p.health.value > 0 && p != _player.activePokemon)
 
   private def decideFirstBySpeed(
     attacker1: Trainer,
@@ -120,7 +120,7 @@ class Battle() {
     if (attackResult) {
       messages ++= effectMessages
 
-      if (defenderPokemon.currentHP == 0) {
+      if (defenderPokemon.health.value == 0) {
         messages += s"${defenderPokemon.pName} fainted!"
       }
     }

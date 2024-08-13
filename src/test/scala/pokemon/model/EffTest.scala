@@ -12,7 +12,7 @@ class EffTest extends AnyFunSuite {
   private var _nearLimitWeightage = 0
   private var _outsideRangeWeightage = 0
 
-  private val baseStatWeights = Map(
+  private val _baseStatWeights = Map(
     "health" -> 0.8,
     "attack" -> 1.0,
     "defense" -> 0.8,
@@ -67,10 +67,10 @@ class EffTest extends AnyFunSuite {
   }
 
   private def calculateBaseStatsWeightage(pokemon: Pokemon): Double = {
-    val healthWeight = pokemon.baseHP * baseStatWeights("health")
-    val attackWeight = pokemon.attack.value * baseStatWeights("attack")
-    val defenseWeight = pokemon.defense.value * baseStatWeights("defense")
-    val speedWeight = pokemon.speed.value * baseStatWeights("speed")
+    val healthWeight = pokemon.health.baseValue * _baseStatWeights("health")
+    val attackWeight = pokemon.attack.value * _baseStatWeights("attack")
+    val defenseWeight = pokemon.defense.value * _baseStatWeights("defense")
+    val speedWeight = pokemon.speed.value * _baseStatWeights("speed")
     healthWeight + attackWeight + defenseWeight + speedWeight
   }
 

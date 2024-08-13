@@ -426,7 +426,7 @@ class BattleController(
         pokemonName.toLowerCase,
         pTypes.head,
         if (pTypes.length > 1) pTypes(1) else "",
-        pokemon.currentHP.toString,
+        pokemon.health.value.toString,
         pokemon.attack.value.toString,
         pokemon.defense.value.toString
       )
