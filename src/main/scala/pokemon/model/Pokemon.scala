@@ -117,6 +117,11 @@ abstract class Pokemon {
   }
 
   def pokemonHpPercentage: Double = health.value.toDouble / health.baseValue.toDouble
+
+  def baseStatScore(): Double = {
+    val statList = List(health, attack, defense, speed)
+    statList.map(_.statScore()).sum
+  }
 }
 
 class Charmander extends Pokemon {

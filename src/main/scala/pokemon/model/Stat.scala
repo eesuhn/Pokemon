@@ -48,6 +48,16 @@ abstract class Stat {
     else if (stage > 0) (2.0 + stage) / 2.0
     else 1.0
   }
+
+  def statScore(): Double = _baseValue * baseStatWeight()
+
+  private def baseStatWeight(): Double = this match {
+    case _: Health => 0.8
+    case _: Attack => 1.0
+    case _: Defense => 0.8
+    case _: Speed => 0.6
+    case _ => 0.0
+  }
 }
 
 case class Attack(

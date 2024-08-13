@@ -56,7 +56,7 @@ abstract class Move {
     case _: SpecialMove => "special"
     case _: PhysicalMove => "physical"
     case _: StatusMove => "status"
-    case _ => "unknown"
+    case _ => throw new Exception(s"Invalid move category: $moveName")
   }
 
   def calculateMoveAccuracy(): Boolean = {
