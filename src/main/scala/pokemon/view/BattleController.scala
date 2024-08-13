@@ -157,6 +157,15 @@ class BattleController(
       pokemonCurrentDefenseTxt,
       pokemonCurrentDefense
     )
+    val moveStats: MoveStatsView = new MoveStatsView(
+      moveTypeImg,
+      moveTypeTxt,
+      moveCat,
+      powerTxtLabel,
+      powerTxt,
+      accuracyTxtLabel,
+      accuracyTxt
+    )
     new BattleComponent(
       // background
       background,
@@ -171,13 +180,7 @@ class BattleController(
 
       // right dialog
       // move stats
-      moveTypeImg,
-      moveTypeTxt,
-      moveCat,
-      powerTxtLabel,
-      powerTxt,
-      accuracyTxtLabel,
-      accuracyTxt,
+      moveStats,
 
       // pokemon current stats
       pokemonCurrentStats
@@ -236,7 +239,7 @@ class BattleController(
     val moveName = _battle.player.activePokemon.moves(currentSelection).moveName
 
     _battle.player.activePokemon.moves.find(_.moveName == moveName).foreach { move =>
-      _battleComponent.updateMoveStats(
+      _battleComponent.moveStats.updateMoveStats(
         move.movePower,
         move.accuracy.toString,
         move.moveCategoryName,
@@ -419,11 +422,11 @@ class BattleController(
     _battle.player.deck.find(_.pName == pokemonName).foreach { pokemon =>
       val pTypes = pokemon.pTypeNames
 
-      _battleComponent.updatePokemonCurrentStats(
+      _battleComponent.pokemonCurrentStats.updatePokemonCurrentStats(
         pokemonName.toLowerCase,
         pTypes.head,
         if (pTypes.length > 1) pTypes(1) else "",
-        pokemon.currentHP.toString,
+        pokemon.health.value.toString,
         pokemon.attack.value.toString,
         pokemon.defense.value.toString
       )

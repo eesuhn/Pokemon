@@ -11,6 +11,12 @@ import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 object ResourceUtil {
 
   private val _soundPlayers = Map[String, List[MediaPlayer]]()
+  private var _masterVolume: Double = 1.0
+
+  def masterVolume(volume: Double): Unit = {
+    _masterVolume = volume
+    _soundPlayers.values.foreach(_.foreach(_.setVolume(volume)))
+  }
 
   /**
     * Load a resource layout from "view" folder
@@ -67,7 +73,7 @@ object ResourceUtil {
     * @param target
     * @param loop
     */
-  def playSound(target: String, loop: Boolean = false): Unit = {
+  def playSound(target: String, loop: Boolean = false, volume: Double = _masterVolume): Unit = {
     val resource = MainApp.getClass.getResource(s"sfx/$target")
     if (resource == null) throw new Exception(s"Resource: Cannot load sound: $target")
 
@@ -80,6 +86,7 @@ object ResourceUtil {
     _soundPlayers(target) = newPlayer :: _soundPlayers.getOrElse(target, List.empty)
 
     if (loop) newPlayer.setCycleCount(MediaPlayer.Indefinite)
+    newPlayer.setVolume(volume)
     newPlayer.seek(newPlayer.getStartTime)
     newPlayer.play()
   }

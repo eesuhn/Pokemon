@@ -3,34 +3,34 @@ package pokemon.model
 import scala.util.Random
 
 abstract class Stat {
-  private val _baseValue: Int = initValue
   protected var _value: Int = initValue
+  protected val _baseValue: Int = initValue
   private var _currentStage: Int = 0
 
   protected def initValue: Int
   protected def minValue: Int = 0
 
-  def value: Int = _value
+  protected def minStage: Int = -6
+  protected def maxStage: Int = 6
 
-  /**
-    * Update the stage count, which update the value of the stat
-    *
-    * @param stage
-    */
-  def value(stage: Int): Unit = {
+  def value: Int = _value
+  def baseValue: Int = _baseValue
+
+  def updateValue(value: Int): Unit
+
+  protected def updateValueByStage(stage: Int): Unit = {
     changeStage(stage)
-    updateValue()
+    val calculated = (_baseValue * calculateStage(_currentStage)).toInt
+    _value = Math.max(calculated, minValue)
   }
 
   /**
-    * Change the stage of the stat
-    *
-    * Limit the stage between -6 and 6
+    * Limit the stage between -6 and 6 (Default)
     *
     * @param stage
     */
   private def changeStage(stage: Int): Unit = {
-    _currentStage = Math.min(Math.max(_currentStage + stage, -6), 6)
+    _currentStage = Math.min(Math.max(_currentStage + stage, minStage), maxStage)
   }
 
   /**
@@ -47,55 +47,79 @@ abstract class Stat {
     else 1.0
   }
 
-  /**
-    * Update the value of the stat
-    *
-    * Hard limit the value to minValue
-    */
-  private def updateValue(): Unit = {
-    val calculated = (_baseValue * calculateStage(_currentStage)).toInt
-    _value = Math.max(calculated, minValue)
+  def statScore(): Double = _baseValue * baseStatWeight()
+
+  private def baseStatWeight(): Double = this match {
+    case _: Health => 0.8
+    case _: Attack => 1.0
+    case _: Defense => 0.8
+    case _: Speed => 0.6
+    case _ => 0.0
   }
 }
 
 case class Attack(
   initValue: Int
 ) extends Stat {
+
   override protected def minValue: Int = 20
+  override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }
 
 case class Defense(
   initValue: Int
 ) extends Stat {
+
   override protected def minValue: Int = 20
+  override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }
 
 case class Accuracy(
   initValue: Int
 ) extends Stat {
+
   override protected def minValue: Int = 60
+  override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }
 
 case class Speed(
   initValue: Int
 ) extends Stat {
+
   override protected def minValue: Int = 10
+  override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }
 
 case class CriticalHit(
   initValue: Int = 1
 ) extends Stat {
 
-  override protected def minValue: Int = 1
-
-  private def probability: Double = _value.toDouble / 10.0
-
   def isCritical: Boolean = {
     val random = new Random()
+    val probability = _value.toDouble / 10.0
     random.nextDouble() <= probability
   }
 
-  override def value(stage: Int): Unit = {
-    _value = Math.min(Math.max(_value + stage, 0), 6)
+  /**
+    * Hard limit critical hit ratio to not exceed 6
+    *
+    * @param value
+    */
+  override def updateValue(value: Int): Unit = {
+    _value = Math.min(Math.max(_value + value, minValue), 6)
+  }
+}
+
+case class Health(
+  initValue: Int
+) extends Stat {
+
+  /**
+    * Hard limit health to not exceed the base value
+    *
+    * @param value
+    */
+  override def updateValue(value: Int): Unit = {
+    _value = Math.min(Math.max(_value + value, minValue), _baseValue)
   }
 }

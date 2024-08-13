@@ -6,6 +6,7 @@ import pokemon.macros.Macros
 
 object PokemonRegistry {
   private var _pokemons: List[Class[_ <: Pokemon]] = List.empty
+  private lazy val _pokemonInstances: Map[String, Pokemon] = createPokemonInstances()
 
   def registerPokemon(newPokemons: List[Class[_ <: Pokemon]]): Unit = {
     _pokemons = newPokemons ::: _pokemons
@@ -13,29 +14,39 @@ object PokemonRegistry {
 
   def pokemons: List[Class[_ <: Pokemon]] = _pokemons
 
+  def pokemonInstances: Map[String, Pokemon] = _pokemonInstances
+
+  private def createPokemonInstances(): Map[String, Pokemon] = {
+    _pokemons.map { pokemonClass =>
+      val instance = pokemonClass.getDeclaredConstructor().newInstance()
+      instance.pName -> instance
+    }.toMap
+  }
+
   registerPokemon(Macros.registerSubclasses[Pokemon]("pokemon.model"))
 }
 
 abstract class Pokemon {
   val pName: String
+  val rarity: Rarity
+  val health: Health
   val attack: Attack
   val defense: Defense
   val accuracy: Accuracy = Accuracy(100)
   val speed: Speed
   val criticalHit: CriticalHit = CriticalHit()
+
   private val _level: Int = 5
-  private val _baseHP: Int = initHP
-  private var _currentHP: Int = initHP
   private var _pTypes: List[Type] = List()
   private var _moves: List[Move] = List()
-
-  protected def initHP: Int
+  private lazy val _score: Double = calculateScore()
+  private val _baseStatNorm: Double = 1.0
+  private val _moveScoreNorm: Double = 200.0
 
   def level: Int = _level
-  def baseHP: Int = _baseHP
-  def currentHP: Int = _currentHP
   def pTypes: List[Type] = _pTypes
   def moves: List[Move] = _moves
+  def score: Double = _score
 
   def pTypeNames: List[String] = pTypes.map(_.name.toLowerCase)
 
@@ -63,15 +74,6 @@ abstract class Pokemon {
     _moves = moves
   }
 
-  /**
-    * Take damage from an attack, HP cannot go below 0
-    *
-    * @param damage
-    */
-  private def takeDamage(damage: Int): Unit = {
-    _currentHP = Math.max(currentHP - damage, 0)
-  }
-
   private def statusAttack(statusMove: StatusMove, target: Pokemon): List[String] = {
     if (statusMove.targetSelf) statusMove.applyEffects(this)
     else statusMove.applyEffects(target)
@@ -79,7 +81,7 @@ abstract class Pokemon {
 
   private def physicalAttack(physicalMove: PhysicalMove, target: Pokemon): List[String] = {
     val (damage, effectivenessMessage) = physicalMove.calculatePhysicalDamage(this, target)
-    target.takeDamage(damage.toInt)
+    target.health.updateValue(-damage.toInt)
     List(effectivenessMessage).filter(_.nonEmpty)
   }
 
@@ -119,15 +121,53 @@ abstract class Pokemon {
     random.nextInt(100) <= accuracy.value
   }
 
-  def pokemonHpPercentage: Double = currentHP.toDouble / baseHP.toDouble
+  def pokemonHpPercentage: Double = health.value.toDouble / health.baseValue.toDouble
+
+  def baseStatScore(): Double = {
+    val statList = List(health, attack, defense, speed)
+    statList.map(_.statScore()).sum
+  }
+
+  /**
+    * Normalize by `_baseStatNorm` and `_moveScoreNorm`
+    *
+    * @return
+    */
+  def calculateScore(): Double = {
+    val statScore = baseStatScore() * _baseStatNorm
+    val moveScore = moves.map(_.moveEfficiency()).sum * _moveScoreNorm
+    statScore + moveScore
+  }
+
+  /**
+    * Check if Pokemon is out of bounds of the rarity's score range
+    *
+    * @return
+    */
+  def outOfBounds: Boolean = {
+    _score > rarity.weightageUpperBound ||
+      _score < rarity.weightageLowerBound
+  }
+
+  /**
+    * Check if Pokemon is within `boundRange` of the rarity's score range
+    *
+    * @return
+    */
+  def nearBounds: Boolean = {
+    val boundRange = 10.0
+    _score > rarity.weightageUpperBound - boundRange ||
+      _score < rarity.weightageLowerBound + boundRange
+  }
 }
 
 class Charmander extends Pokemon {
   val pName: String = "Charmander"
+  val rarity: Rarity = Rare
+  val health: Health = Health(39)
   val attack: Attack = Attack(52)
   val defense: Defense = Defense(43)
   val speed: Speed = Speed(65)
-  override def initHP: Int = 39
   pTypes(List(
     Fire
   ))
@@ -141,10 +181,11 @@ class Charmander extends Pokemon {
 
 class Squirtle extends Pokemon {
   val pName: String = "Squirtle"
+  val rarity: Rarity = Rare
+  val health: Health = Health(44)
   val attack: Attack = Attack(48)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(43)
-  override def initHP: Int = 44
   pTypes(List(
     Water
   ))
@@ -158,10 +199,11 @@ class Squirtle extends Pokemon {
 
 class Bulbasaur extends Pokemon {
   val pName: String = "Bulbasaur"
+  val rarity: Rarity = Rare
+  val health: Health = Health(45)
   val attack: Attack = Attack(49)
   val defense: Defense = Defense(49)
   val speed: Speed = Speed(45)
-  override def initHP: Int = 45
   pTypes(List(
     Grass,
     Poison
@@ -176,10 +218,11 @@ class Bulbasaur extends Pokemon {
 
 class Geodude extends Pokemon {
   val pName: String = "Geodude"
+  val rarity: Rarity = Common
+  val health: Health = Health(40)
   val attack: Attack = Attack(80)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(20)
-  override def initHP: Int = 40
   pTypes(List(
     Rock
   ))
@@ -193,10 +236,11 @@ class Geodude extends Pokemon {
 
 class Pikachu extends Pokemon {
   val pName: String = "Pikachu"
+  val rarity: Rarity = Rare
+  val health: Health = Health(35)
   val attack: Attack = Attack(55)
   val defense: Defense = Defense(40)
   val speed: Speed = Speed(90)
-  override def initHP: Int = 35
   pTypes(List(
     Electric
   ))
@@ -210,11 +254,12 @@ class Pikachu extends Pokemon {
 
 class Breloom extends Pokemon {
   val pName: String = "Breloom"
+  val rarity: Rarity = Rare
+  val health: Health = Health(60)
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(80)
   val speed: Speed = Speed(70)
   override val criticalHit: CriticalHit = CriticalHit(2)
-  override def initHP: Int = 60
   pTypes(List(
     Grass,
     Fighting
@@ -229,10 +274,11 @@ class Breloom extends Pokemon {
 
 class Regice extends Pokemon {
   val pName: String = "Regice"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(80)
   val attack: Attack = Attack(50)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(50)
-  override def initHP: Int = 80
   pTypes(List(
     Ice
   ))
@@ -246,11 +292,12 @@ class Regice extends Pokemon {
 
 class Hitmonchan extends Pokemon {
   val pName: String = "Hitmonchan"
+  val rarity: Rarity = Rare
+  val health: Health = Health(50)
   val attack: Attack = Attack(105)
   val defense: Defense = Defense(79)
   val speed: Speed = Speed(76)
   override val criticalHit: CriticalHit = CriticalHit(2)
-  override def initHP: Int = 50
   pTypes(List(
     Fighting
   ))
@@ -264,10 +311,11 @@ class Hitmonchan extends Pokemon {
 
 class Nidorino extends Pokemon {
   val pName: String = "Nidorino"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(61)
   val attack: Attack = Attack(72)
   val defense: Defense = Defense(57)
   val speed: Speed = Speed(65)
-  override def initHP: Int = 61
   pTypes(List(
     Poison
   ))
@@ -281,10 +329,11 @@ class Nidorino extends Pokemon {
 
 class Dustox extends Pokemon {
   val pName: String = "Dustox"
+  val rarity: Rarity = Rare
+  val health: Health = Health(60)
   val attack: Attack = Attack(50)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(65)
-  override def initHP: Int = 60
   pTypes(List(
     Bug,
     Poison
@@ -299,10 +348,11 @@ class Dustox extends Pokemon {
 
 class Mewtwo extends Pokemon {
   val pName: String = "Mewtwo"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(106)
   val attack: Attack = Attack(110)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(130)
-  override def initHP: Int = 106
   pTypes(List(
     Psychic
   ))
@@ -316,10 +366,11 @@ class Mewtwo extends Pokemon {
 
 class Scyther extends Pokemon {
   val pName: String = "Scyther"
+  val rarity: Rarity = Rare
+  val health: Health = Health(70)
   val attack: Attack = Attack(110)
   val defense: Defense = Defense(80)
   val speed: Speed = Speed(105)
-  override def initHP: Int = 70
   pTypes(List(
     Bug,
     Grass
@@ -334,10 +385,11 @@ class Scyther extends Pokemon {
 
 class Heracross extends Pokemon {
   val pName: String = "Heracross"
+  val rarity: Rarity = Rare
+  val health: Health = Health(80)
   val attack: Attack = Attack(125)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(85)
-  override def initHP: Int = 80
   pTypes(List(
     Bug,
     Fighting
@@ -352,10 +404,11 @@ class Heracross extends Pokemon {
 
 class Onix extends Pokemon {
   val pName: String = "Onix"
+  val rarity: Rarity = Rare
+  val health: Health = Health(35)
   val attack: Attack = Attack(45)
   val defense: Defense = Defense(160)
   val speed: Speed = Speed(70)
-  override def initHP: Int = 35
   pTypes(List(
     Rock
   ))
@@ -369,10 +422,11 @@ class Onix extends Pokemon {
 
 class Snorlax extends Pokemon {
   val pName: String = "Snorlax"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(160)
   val attack: Attack = Attack(110)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(30)
-  override def initHP: Int = 160
   pTypes(List(
     Normal
   ))
@@ -386,10 +440,11 @@ class Snorlax extends Pokemon {
 
 class Blaziken extends Pokemon {
   val pName: String = "Blaziken"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(80)
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(80)
-  override def initHP: Int = 80
   pTypes(List(
     Fire,
     Fighting
@@ -404,10 +459,11 @@ class Blaziken extends Pokemon {
 
 class Toxicroak extends Pokemon {
   val pName: String = "Toxicroak"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(83)
   val attack: Attack = Attack(106)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(85)
-  override def initHP: Int = 83
   pTypes(List(
     Poison,
     Fighting
@@ -422,10 +478,11 @@ class Toxicroak extends Pokemon {
 
 class Marshtomp extends Pokemon {
   val pName: String = "Marshtomp"
+  val rarity: Rarity = Rare
+  val health: Health = Health(70)
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(50)
-  override def initHP: Int = 70
   pTypes(List(
     Water
   ))
@@ -439,10 +496,11 @@ class Marshtomp extends Pokemon {
 
 class Slowpoke extends Pokemon {
   val pName: String = "Slowpoke"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(90)
   val attack: Attack = Attack(65)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(15)
-  override def initHP: Int = 90
   pTypes(List(
     Water,
     Psychic
@@ -457,27 +515,28 @@ class Slowpoke extends Pokemon {
 
 class Exploud extends Pokemon {
   val pName: String = "Exploud"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(104)
   val attack: Attack = Attack(91)
   val defense: Defense = Defense(63)
   val speed: Speed = Speed(68)
-  override def initHP: Int = 104
   pTypes(List(
     Normal
   ))
   moves(List(
-    Growth,
     Screech,
-    Scratch,
+    BodySlam,
     BulkUp
   ))
 }
 
 class Solrock extends Pokemon {
   val pName: String = "Solrock"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(70)
   val attack: Attack = Attack(95)
   val defense: Defense = Defense(85)
   val speed: Speed = Speed(70)
-  override def initHP: Int = 70
   pTypes(List(
     Rock,
     Psychic
@@ -491,10 +550,11 @@ class Solrock extends Pokemon {
 
 class Rhyhorn extends Pokemon {
   val pName: String = "Rhyhorn"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(80)
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(95)
   val speed: Speed = Speed(25)
-  override def initHP: Int = 80
   pTypes(List(
     Rock
   ))
@@ -508,10 +568,11 @@ class Rhyhorn extends Pokemon {
 
 class Shuckle extends Pokemon {
   val pName: String = "Shuckle"
+  val rarity: Rarity = Common
+  val health: Health = Health(20)
   val attack: Attack = Attack(10)
   val defense: Defense = Defense(230)
   val speed: Speed = Speed(5)
-  override def initHP: Int = 20
   pTypes(List(
     Bug,
     Rock
@@ -524,10 +585,11 @@ class Shuckle extends Pokemon {
 
 class Regirock extends Pokemon {
   val pName: String = "Regirock"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(80)
   val attack: Attack = Attack(100)
   val defense: Defense = Defense(200)
   val speed: Speed = Speed(50)
-  override def initHP: Int = 80
   pTypes(List(
     Rock
   ))
@@ -541,10 +603,11 @@ class Regirock extends Pokemon {
 
 class Charizard extends Pokemon {
   val pName: String = "Charizard"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(78)
   val attack: Attack = Attack(84)
   val defense: Defense = Defense(78)
   val speed: Speed = Speed(100)
-  override def initHP: Int = 78
   pTypes(List(
     Fire
   ))
@@ -558,10 +621,11 @@ class Charizard extends Pokemon {
 
 class Arbok extends Pokemon {
   val pName: String = "Arbok"
+  val rarity: Rarity = Rare
+  val health: Health = Health(60)
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(69)
   val speed: Speed = Speed(80)
-  override def initHP: Int = 60
   pTypes(List(
     Poison
   ))
@@ -574,11 +638,12 @@ class Arbok extends Pokemon {
 
 class Hariyama extends Pokemon {
   val pName: String = "Hariyama"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(144)
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(60)
   val speed: Speed = Speed(50)
   override val criticalHit: CriticalHit = CriticalHit(2)
-  override def initHP: Int = 144
   pTypes(List(
     Fighting
   ))
@@ -592,10 +657,11 @@ class Hariyama extends Pokemon {
 
 class Giratina extends Pokemon {
   val pName: String = "Giratina"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(150)
   val attack: Attack = Attack(100)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(90)
-  override def initHP: Int = 150
   pTypes(List(
     Dragon,
     Ghost
@@ -610,10 +676,11 @@ class Giratina extends Pokemon {
 
 class Kyogre extends Pokemon {
   val pName: String = "Kyogre"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(100)
   val attack: Attack = Attack(100)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(90)
-  override def initHP: Int = 100
   pTypes(List(
     Water
   ))
@@ -626,10 +693,11 @@ class Kyogre extends Pokemon {
 
 class Metagross extends Pokemon {
   val pName: String = "Metagross"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(80)
   val attack: Attack = Attack(135)
   val defense: Defense = Defense(130)
   val speed: Speed = Speed(70)
-  override def initHP: Int = 80
   pTypes(List(
     Steel,
     Psychic
@@ -644,10 +712,11 @@ class Metagross extends Pokemon {
 
 class Lucario extends Pokemon {
   val pName: String = "Lucario"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(70)
   val attack: Attack = Attack(110)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(90)
-  override def initHP: Int = 70
   pTypes(List(
     Fighting,
     Steel
@@ -662,10 +731,11 @@ class Lucario extends Pokemon {
 
 class Dialga extends Pokemon {
   val pName: String = "Dialga"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(100)
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(90)
-  override def initHP: Int = 100
   pTypes(List(
     Steel,
     Dragon
@@ -680,10 +750,11 @@ class Dialga extends Pokemon {
 
 class Steelix extends Pokemon {
   val pName: String = "Steelix"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(75)
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(200)
   val speed: Speed = Speed(30)
-  override def initHP: Int = 75
   pTypes(List(
     Steel
   ))
@@ -697,10 +768,11 @@ class Steelix extends Pokemon {
 
 class Palkia extends Pokemon {
   val pName: String = "Palkia"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(90)
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(100)
-  override def initHP: Int = 90
   pTypes(List(
     Water,
     Dragon
@@ -715,10 +787,11 @@ class Palkia extends Pokemon {
 
 class Kyurem extends Pokemon {
   val pName: String = "Kyurem"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(125)
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(95)
-  override def initHP: Int = 125
   pTypes(List(
     Dragon,
     Ice
@@ -733,10 +806,11 @@ class Kyurem extends Pokemon {
 
 class Zekrom extends Pokemon {
   val pName: String = "Zekrom"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(100)
   val attack: Attack = Attack(150)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(90)
-  override def initHP: Int = 100
   pTypes(List(
     Dragon,
     Electric
@@ -751,10 +825,11 @@ class Zekrom extends Pokemon {
 
 class Cyndaquil extends Pokemon {
   val pName: String = "Cyndaquil"
+  val rarity: Rarity = Rare
+  val health: Health = Health(39)
   val attack: Attack = Attack(52)
   val defense: Defense = Defense(43)
   val speed: Speed = Speed(65)
-  override def initHP: Int = 39
   pTypes(List(
     Fire
   ))
@@ -768,10 +843,11 @@ class Cyndaquil extends Pokemon {
 
 class Infernape extends Pokemon {
   val pName: String = "Infernape"
+  val rarity: Rarity = Rare
+  val health: Health = Health(76)
   val attack: Attack = Attack(104)
   val defense: Defense = Defense(71)
   val speed: Speed = Speed(108)
-  override def initHP: Int = 76
   pTypes(List(
     Fire,
     Fighting
@@ -786,10 +862,11 @@ class Infernape extends Pokemon {
 
 class Emboar extends Pokemon {
   val pName: String = "Emboar"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(110)
   val attack: Attack = Attack(123)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(65)
-  override def initHP: Int = 110
   pTypes(List(
     Fire,
     Fighting
@@ -804,10 +881,11 @@ class Emboar extends Pokemon {
 
 class Meganium extends Pokemon {
   val pName: String = "Meganium"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(80)
   val attack: Attack = Attack(82)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(80)
-  override def initHP: Int = 80
   pTypes(List(
     Grass
   ))
@@ -821,10 +899,11 @@ class Meganium extends Pokemon {
 
 class Sceptile extends Pokemon {
   val pName: String = "Sceptile"
+  val rarity: Rarity = Rare
+  val health: Health = Health(70)
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(120)
-  override def initHP: Int = 70
   pTypes(List(
     Grass
   ))
@@ -838,10 +917,11 @@ class Sceptile extends Pokemon {
 
 class Torterra extends Pokemon {
   val pName: String = "Torterra"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(95)
   val attack: Attack = Attack(109)
   val defense: Defense = Defense(105)
   val speed: Speed = Speed(56)
-  override def initHP: Int = 95
   pTypes(List(
     Grass
   ))
@@ -855,10 +935,11 @@ class Torterra extends Pokemon {
 
 class Abomasnow extends Pokemon {
   val pName: String = "Abomasnow"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(90)
   val attack: Attack = Attack(92)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(60)
-  override def initHP: Int = 90
   pTypes(List(
     Grass,
     Ice
@@ -873,10 +954,11 @@ class Abomasnow extends Pokemon {
 
 class Luxio extends Pokemon {
   val pName: String = "Luxio"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(60)
   val attack: Attack = Attack(85)
   val defense: Defense = Defense(49)
   val speed: Speed = Speed(60)
-  override def initHP: Int = 60
   pTypes(List(
     Electric
   ))
@@ -890,10 +972,11 @@ class Luxio extends Pokemon {
 
 class Magneton extends Pokemon {
   val pName: String = "Magneton"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(50)
   val attack: Attack = Attack(60)
   val defense: Defense = Defense(95)
   val speed: Speed = Speed(70)
-  override def initHP: Int = 50
   pTypes(List(
     Electric,
     Steel
@@ -908,10 +991,11 @@ class Magneton extends Pokemon {
 
 class Voltorb extends Pokemon {
   val pName: String = "Voltorb"
+  val rarity: Rarity = Common
+  val health: Health = Health(40)
   val attack: Attack = Attack(30)
   val defense: Defense = Defense(50)
   val speed: Speed = Speed(100)
-  override def initHP: Int = 40
   pTypes(List(
     Electric
   ))
@@ -925,10 +1009,11 @@ class Voltorb extends Pokemon {
 
 class Muk extends Pokemon {
   val pName: String = "Muk"
+  val rarity: Rarity = Rare
+  val health: Health = Health(105)
   val attack: Attack = Attack(105)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(50)
-  override def initHP: Int = 105
   pTypes(List(
     Poison
   ))
@@ -942,10 +1027,11 @@ class Muk extends Pokemon {
 
 class Weezing extends Pokemon {
   val pName: String = "Weezing"
+  val rarity: Rarity = Common
+  val health: Health = Health(65)
   val attack: Attack = Attack(90)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(60)
-  override def initHP: Int = 65
   pTypes(List(
     Poison
   ))
@@ -959,10 +1045,11 @@ class Weezing extends Pokemon {
 
 class Alakazam extends Pokemon {
   val pName: String = "Alakazam"
+  val rarity: Rarity = Rare
+  val health: Health = Health(55)
   val attack: Attack = Attack(50)
   val defense: Defense = Defense(45)
   val speed: Speed = Speed(120)
-  override def initHP: Int = 55
   pTypes(List(
     Psychic
   ))
@@ -975,10 +1062,11 @@ class Alakazam extends Pokemon {
 
 class Gallade extends Pokemon {
   val pName: String = "Gallade"
+  val rarity: Rarity = Rare
+  val health: Health = Health(68)
   val attack: Attack = Attack(125)
   val defense: Defense = Defense(65)
   val speed: Speed = Speed(80)
-  override def initHP: Int = 68
   pTypes(List(
     Psychic,
     Fighting
@@ -993,10 +1081,11 @@ class Gallade extends Pokemon {
 
 class Meditite extends Pokemon {
   val pName: String = "Meditite"
+  val rarity: Rarity = Rare
+  val health: Health = Health(30)
   val attack: Attack = Attack(40)
   val defense: Defense = Defense(55)
   val speed: Speed = Speed(60)
-  override def initHP: Int = 30
   pTypes(List(
     Psychic,
     Fighting
@@ -1011,10 +1100,11 @@ class Meditite extends Pokemon {
 
 class Porygon extends Pokemon {
   val pName: String = "Porygon"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(65)
   val attack: Attack = Attack(60)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(40)
-  override def initHP: Int = 65
   pTypes(List(
     Normal
   ))
@@ -1027,16 +1117,16 @@ class Porygon extends Pokemon {
 
 class Slaking extends Pokemon {
   val pName: String = "Slaking"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(150)
   val attack: Attack = Attack(160)
   val defense: Defense = Defense(100)
-  val speed: Speed = Speed(100)
-  override def initHP: Int = 150
+  val speed: Speed = Speed(90)
   pTypes(List(
     Normal
   ))
   moves(List(
     BodySlam,
-    Growl,
     Screech,
     BulkUp
   ))
@@ -1044,10 +1134,11 @@ class Slaking extends Pokemon {
 
 class Arceus extends Pokemon {
   val pName: String = "Arceus"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(120)
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(120)
   val speed: Speed = Speed(120)
-  override def initHP: Int = 120
   pTypes(List(
     Normal
   ))
@@ -1061,10 +1152,11 @@ class Arceus extends Pokemon {
 
 class Dewgong extends Pokemon {
   val pName: String = "Dewgong"
+  val rarity: Rarity = Rare
+  val health: Health = Health(90)
   val attack: Attack = Attack(70)
   val defense: Defense = Defense(80)
   val speed: Speed = Speed(70)
-  override def initHP: Int = 90
   pTypes(List(
     Water,
     Ice
@@ -1079,10 +1171,11 @@ class Dewgong extends Pokemon {
 
 class Walrein extends Pokemon {
   val pName: String = "Walrein"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(110)
   val attack: Attack = Attack(80)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(65)
-  override def initHP: Int = 110
   pTypes(List(
     Water,
     Ice
@@ -1097,10 +1190,11 @@ class Walrein extends Pokemon {
 
 class Spheal extends Pokemon {
   val pName: String = "Spheal"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(70)
   val attack: Attack = Attack(40)
   val defense: Defense = Defense(50)
   val speed: Speed = Speed(25)
-  override def initHP: Int = 70
   pTypes(List(
     Water,
     Ice
@@ -1114,10 +1208,11 @@ class Spheal extends Pokemon {
 
 class Scizor extends Pokemon {
   val pName: String = "Scizor"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(70)
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(65)
-  override def initHP: Int = 70
   pTypes(List(
     Bug,
     Steel
@@ -1132,10 +1227,11 @@ class Scizor extends Pokemon {
 
 class Armaldo extends Pokemon {
   val pName: String = "Armaldo"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(75)
   val attack: Attack = Attack(125)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(45)
-  override def initHP: Int = 75
   pTypes(List(
     Bug,
     Rock
@@ -1150,10 +1246,11 @@ class Armaldo extends Pokemon {
 
 class Pinsir extends Pokemon {
   val pName: String = "Pinsir"
+  val rarity: Rarity = Rare
+  val health: Health = Health(65)
   val attack: Attack = Attack(125)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(85)
-  override def initHP: Int = 65
   pTypes(List(
     Bug
   ))
@@ -1167,10 +1264,11 @@ class Pinsir extends Pokemon {
 
 class Kakuna extends Pokemon {
   val pName: String = "Kakuna"
+  val rarity: Rarity = Common
+  val health: Health = Health(45)
   val attack: Attack = Attack(25)
   val defense: Defense = Defense(50)
   val speed: Speed = Speed(35)
-  override def initHP: Int = 45
   pTypes(List(
     Bug,
     Poison
@@ -1183,10 +1281,11 @@ class Kakuna extends Pokemon {
 
 class Jolteon extends Pokemon {
   val pName: String = "Jolteon"
+  val rarity: Rarity = Rare
+  val health: Health = Health(65)
   val attack: Attack = Attack(65)
   val defense: Defense = Defense(60)
   val speed: Speed = Speed(130)
-  override def initHP: Int = 65
   pTypes(List(
     Electric
   ))
@@ -1200,10 +1299,11 @@ class Jolteon extends Pokemon {
 
 class Electabuzz extends Pokemon {
   val pName: String = "Electabuzz"
+  val rarity: Rarity = Rare
+  val health: Health = Health(65)
   val attack: Attack = Attack(83)
   val defense: Defense = Defense(57)
   val speed: Speed = Speed(105)
-  override def initHP: Int = 65
   pTypes(List(
     Electric
   ))
@@ -1217,10 +1317,11 @@ class Electabuzz extends Pokemon {
 
 class Regigigas extends Pokemon {
   val pName: String = "Regigigas"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(110)
   val attack: Attack = Attack(160)
   val defense: Defense = Defense(110)
   val speed: Speed = Speed(100)
-  override def initHP: Int = 110
   pTypes(List(
     Normal
   ))
@@ -1234,10 +1335,11 @@ class Regigigas extends Pokemon {
 
 class Ursaring extends Pokemon {
   val pName: String = "Ursaring"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(90)
   val attack: Attack = Attack(130)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(55)
-  override def initHP: Int = 90
   pTypes(List(
     Normal
   ))
@@ -1251,10 +1353,11 @@ class Ursaring extends Pokemon {
 
 class Typhlosion extends Pokemon {
   val pName: String = "Typhlosion"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(78)
   val attack: Attack = Attack(84)
   val defense: Defense = Defense(78)
   val speed: Speed = Speed(100)
-  override def initHP: Int = 78
   pTypes(List(
     Fire
   ))
@@ -1268,10 +1371,11 @@ class Typhlosion extends Pokemon {
 
 class Rayquaza extends Pokemon {
   val pName: String = "Rayquaza"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(105)
   val attack: Attack = Attack(150)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(95)
-  override def initHP: Int = 105
   pTypes(List(
     Dragon
   ))
@@ -1285,10 +1389,11 @@ class Rayquaza extends Pokemon {
 
 class Reshiram extends Pokemon {
   val pName: String = "Reshiram"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(100)
   val attack: Attack = Attack(120)
   val defense: Defense = Defense(100)
   val speed: Speed = Speed(90)
-  override def initHP: Int = 100
   pTypes(List(
     Dragon,
     Fire
@@ -1303,10 +1408,11 @@ class Reshiram extends Pokemon {
 
 class Gengar extends Pokemon {
   val pName: String = "Gengar"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(60)
   val attack: Attack = Attack(65)
   val defense: Defense = Defense(60)
   val speed: Speed = Speed(110)
-  override def initHP: Int = 60
   pTypes(List(
     Ghost,
     Poison
@@ -1321,10 +1427,11 @@ class Gengar extends Pokemon {
 
 class Shedinja extends Pokemon {
   val pName: String = "Shedinja"
+  val rarity: Rarity = Rare
+  val health: Health = Health(1)
   val attack: Attack = Attack(90)
   val defense: Defense = Defense(45)
   val speed: Speed = Speed(40)
-  override def initHP: Int = 1
   pTypes(List(
     Bug,
     Ghost
@@ -1338,10 +1445,11 @@ class Shedinja extends Pokemon {
 
 class Dusknoir extends Pokemon {
   val pName: String = "Dusknoir"
+  val rarity: Rarity = Rare
+  val health: Health = Health(45)
   val attack: Attack = Attack(100)
   val defense: Defense = Defense(135)
   val speed: Speed = Speed(45)
-  override def initHP: Int = 45
   pTypes(List(
     Ghost
   ))
@@ -1355,10 +1463,11 @@ class Dusknoir extends Pokemon {
 
 class Froslass extends Pokemon {
   val pName: String = "Froslass"
+  val rarity: Rarity = Rare
+  val health: Health = Health(70)
   val attack: Attack = Attack(80)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(110)
-  override def initHP: Int = 70
   pTypes(List(
     Ice,
     Ghost
@@ -1373,10 +1482,11 @@ class Froslass extends Pokemon {
 
 class Shuppet extends Pokemon {
   val pName: String = "Shuppet"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(44)
   val attack: Attack = Attack(75)
   val defense: Defense = Defense(35)
   val speed: Speed = Speed(45)
-  override def initHP: Int = 44
   pTypes(List(
     Ghost
   ))
@@ -1389,10 +1499,11 @@ class Shuppet extends Pokemon {
 
 class Duskull extends Pokemon {
   val pName: String = "Duskull"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(20)
   val attack: Attack = Attack(40)
   val defense: Defense = Defense(90)
   val speed: Speed = Speed(25)
-  override def initHP: Int = 20
   pTypes(List(
     Ghost
   ))

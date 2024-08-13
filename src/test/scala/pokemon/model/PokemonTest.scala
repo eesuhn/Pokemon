@@ -5,31 +5,47 @@ import scala.collection.mutable.{Map => MutableMap}
 
 class PokemonTest extends AnyFunSuite {
 
-  val NC = "\u001B[0m"
-  val RED = "\u001B[31m"
-  val GREEN = "\u001B[32m"
-  val YELLOW = "\u001B[33m"
-  val BLUE = "\u001B[34m"
-  val PURPLE = "\u001B[35m"
-
   test("Count each Pokemon type") {
-    val pokemons = PokemonRegistry.pokemons
+    val pokemonInstances = PokemonRegistry.pokemonInstances
     val count = MutableMap.empty[String, Int]
 
-    pokemons.foreach { pokemonClass =>
-      val pokemon = pokemonClass.getDeclaredConstructor().newInstance().asInstanceOf[Pokemon]
+    pokemonInstances.values.foreach { pokemon =>
       pokemon.pTypes.foreach { pType =>
         count(pType.name) = count.getOrElse(pType.name, 0) + 1
       }
     }
 
     val msg = count.toSeq.sortBy(-_._2).map { case (pType, num) =>
-      s"${YELLOW}$pType:${NC} $num"
+      f"${Colors.YELLOW}$pType%-20s:${Colors.NC} $num"
     }.mkString("\n")
 
     println(
       s"""
-        |${PURPLE}Pokemon type count:${NC}
+        |${Colors.PURPLE}Pokemon type count:${Colors.NC}
+        |$msg""".stripMargin
+    )
+  }
+
+  test("Count each Pokemon rarity") {
+    val pokemonInstances = PokemonRegistry.pokemonInstances
+    val count = MutableMap.empty[Rarity, Int]
+
+    pokemonInstances.values.foreach { pokemon =>
+      count(pokemon.rarity) = count.getOrElse(pokemon.rarity, 0) + 1
+    }
+
+    val msg = count.toSeq.sortBy(-_._2).map { case (rarity, num) =>
+      val rarityName = rarity.getClass.getSimpleName
+        .replaceAll("([A-Z])", " $1")
+        .trim
+        .capitalize
+        .replaceAll("\\$$", "")
+      f"${Colors.YELLOW}$rarityName%-20s:${Colors.NC} $num"
+    }.mkString("\n")
+
+    println(
+      s"""
+        |${Colors.PURPLE}Pokemon rarity count:${Colors.NC}
         |$msg""".stripMargin
     )
   }

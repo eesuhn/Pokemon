@@ -8,7 +8,7 @@ abstract class StatEffect {
 
   def stage: Int = _stage
 
-  def applyEffect(pokemon: Pokemon): Unit = stat(pokemon).value(_stage)
+  def applyEffect(pokemon: Pokemon): Unit = stat(pokemon).updateValue(_stage)
 }
 
 case class AttackEffect(
