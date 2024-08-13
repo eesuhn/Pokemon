@@ -52,6 +52,10 @@ abstract class Move {
       .replace("$", "")
   }
 
+  /**
+    * @throws Exception if move category is invalid
+    * @return
+    */
   def moveCategoryName: String = this match {
     case _: SpecialMove => "special"
     case _: PhysicalMove => "physical"
@@ -64,6 +68,12 @@ abstract class Move {
     random.nextInt(100) <= accuracy
   }
 
+  /**
+    * `_maxBasePower` used to normalize base power
+    *
+    * @param basePower
+    * @return
+    */
   protected def physicalMoveScore(basePower: Int): Double = basePower / _maxBasePower
 
   protected def statusMoveScore(effects: List[StatEffect], targetSelf: Boolean): Double = {
@@ -75,6 +85,12 @@ abstract class Move {
     scoreSum / _maxStageValue
   }
 
+  /**
+    * Return defined weight of the stat effect
+    *
+    * @param effect
+    * @return
+    */
   private def statEffectWeight(effect: StatEffect): Double = effect match {
     case _: AttackEffect => 1.0
     case _: DefenseEffect => 1.0

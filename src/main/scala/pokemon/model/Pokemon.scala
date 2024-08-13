@@ -35,10 +35,13 @@ abstract class Pokemon {
   val accuracy: Accuracy = Accuracy(100)
   val speed: Speed
   val criticalHit: CriticalHit = CriticalHit()
+
   private val _level: Int = 5
   private var _pTypes: List[Type] = List()
   private var _moves: List[Move] = List()
   private lazy val _score: Double = calculateScore()
+  private val _baseStatNorm: Double = 1.0
+  private val _moveScoreNorm: Double = 200.0
 
   def level: Int = _level
   def pTypes: List[Type] = _pTypes
@@ -125,17 +128,32 @@ abstract class Pokemon {
     statList.map(_.statScore()).sum
   }
 
+  /**
+    * Normalize by `_baseStatNorm` and `_moveScoreNorm`
+    *
+    * @return
+    */
   def calculateScore(): Double = {
-    val statScore = baseStatScore()
-    val moveScore = moves.map(_.moveEfficiency()).sum * 200.0
+    val statScore = baseStatScore() * _baseStatNorm
+    val moveScore = moves.map(_.moveEfficiency()).sum * _moveScoreNorm
     statScore + moveScore
   }
 
+  /**
+    * Check if Pokemon is out of bounds of the rarity's score range
+    *
+    * @return
+    */
   def outOfBounds: Boolean = {
     _score > rarity.weightageUpperBound ||
       _score < rarity.weightageLowerBound
   }
 
+  /**
+    * Check if Pokemon is within `boundRange` of the rarity's score range
+    *
+    * @return
+    */
   def nearBounds: Boolean = {
     val boundRange = 10.0
     _score > rarity.weightageUpperBound - boundRange ||

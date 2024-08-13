@@ -25,8 +25,6 @@ abstract class Stat {
   }
 
   /**
-    * Change the stage of the stat
-    *
     * Limit the stage between -6 and 6 (Default)
     *
     * @param stage
@@ -102,6 +100,11 @@ case class CriticalHit(
     random.nextDouble() <= probability
   }
 
+  /**
+    * Hard limit critical hit ratio to not exceed 6
+    *
+    * @param value
+    */
   override def updateValue(value: Int): Unit = {
     _value = Math.min(Math.max(_value + value, minValue), 6)
   }
@@ -111,6 +114,11 @@ case class Health(
   initValue: Int
 ) extends Stat {
 
+  /**
+    * Hard limit health to not exceed the base value
+    *
+    * @param value
+    */
   override def updateValue(value: Int): Unit = {
     _value = Math.min(Math.max(_value + value, minValue), _baseValue)
   }
