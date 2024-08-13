@@ -38,10 +38,12 @@ abstract class Pokemon {
   private val _level: Int = 5
   private var _pTypes: List[Type] = List()
   private var _moves: List[Move] = List()
+  private lazy val _score: Double = calculateScore()
 
   def level: Int = _level
   def pTypes: List[Type] = _pTypes
   def moves: List[Move] = _moves
+  def score: Double = _score
 
   def pTypeNames: List[String] = pTypes.map(_.name.toLowerCase)
 
@@ -121,6 +123,23 @@ abstract class Pokemon {
   def baseStatScore(): Double = {
     val statList = List(health, attack, defense, speed)
     statList.map(_.statScore()).sum
+  }
+
+  def calculateScore(): Double = {
+    val statScore = baseStatScore()
+    val moveScore = moves.map(_.moveEfficiency()).sum * 200.0
+    statScore + moveScore
+  }
+
+  def outOfBounds: Boolean = {
+    _score > rarity.weightageUpperBound ||
+      _score < rarity.weightageLowerBound
+  }
+
+  def nearBounds: Boolean = {
+    val boundRange = 10.0
+    _score > rarity.weightageUpperBound - boundRange ||
+      _score < rarity.weightageLowerBound + boundRange
   }
 }
 
