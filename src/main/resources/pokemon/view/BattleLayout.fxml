@@ -72,10 +72,10 @@
       <!-- right dialog -->
       <Pane layoutX="580.0" prefHeight="180.0" prefWidth="380.0">
         <!-- move stats -->
-        <ImageView fx:id="moveTypeImg" fitWidth="38.0" layoutX="38.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" />
-        <Label fx:id="moveTypeTxt" layoutX="76.0" layoutY="40.0" styleClass="move-type-text" />
-        <ImageView fx:id="moveCat" fitWidth="74.0" layoutX="206.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
-        <GridPane hgap="10" layoutX="40.0" layoutY="82.0" prefHeight="180.0" prefWidth="380.0" vgap="2">
+        <ImageView fx:id="moveTypeImg" fitWidth="38.0" layoutX="44.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" />
+        <Label fx:id="moveTypeTxt" layoutX="82.0" layoutY="40.0" styleClass="move-type-text" />
+        <ImageView fx:id="moveCat" fitWidth="74.0" layoutX="212.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
+        <GridPane hgap="10" layoutX="46.0" layoutY="82.0" prefHeight="180.0" prefWidth="380.0" vgap="2">
           <Label fx:id="powerTxtLabel" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="powerTxt" styleClass="right-battle-text" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
           <Label fx:id="accuracyTxtLabel" styleClass="right-battle-text" GridPane.columnIndex="0" GridPane.rowIndex="1" />
@@ -91,10 +91,10 @@
         </GridPane>
 
         <!-- pokemon current stats -->
-        <ImageView fx:id="pokemonCurrentImg" fitWidth="106.0" layoutX="48.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="pokemonCurrentTypeImg1" fitWidth="38.0" layoutX="176.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="pokemonCurrentTypeImg2" fitWidth="38.0" layoutX="220.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
-        <GridPane hgap="6" layoutX="184.0" layoutY="80.0" vgap="4">
+        <ImageView fx:id="pokemonCurrentImg" fitWidth="106.0" layoutX="52.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="pokemonCurrentTypeImg1" fitWidth="38.0" layoutX="184.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="pokemonCurrentTypeImg2" fitWidth="38.0" layoutX="228.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+        <GridPane hgap="6" layoutX="192.0" layoutY="80.0" vgap="4">
           <Label fx:id="pokemonCurrentHpTxt" styleClass="poke-cur-stats" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <Label fx:id="pokemonCurrentHp" styleClass="poke-cur-stats" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
           <Label fx:id="pokemonCurrentAttackTxt" styleClass="poke-cur-stats" GridPane.columnIndex="0" GridPane.rowIndex="1" />
