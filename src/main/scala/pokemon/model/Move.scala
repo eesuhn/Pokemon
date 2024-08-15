@@ -18,18 +18,31 @@ object MoveRegistry {
 
 abstract class Move {
   val moveName: String
-  val accuracy: Int
   val moveType: Type
+
+  private var _accuracy: Int = 100
 
   protected val _physicalWeight: Double = 0.45
   protected val _statusWeight: Double = 0.55
 
-  private val _maxBasePower: Double = 300.0
+  protected  val _maxBasePower: Double = 300.0
   private val _maxStageValue: Int = 6
+
+  def accuracy: Int = _accuracy
+
+  /**
+    * @param value
+    *
+    * @throws Exception if value is not between 0 and 100
+    */
+  protected def accuracy_=(value: Int): Unit = {
+    if (value < 0 || value > 100) throw new Exception("Invalid accuracy value")
+    _accuracy = value
+  }
 
   def moveEfficiency(): Double = {
     val efficiency = targetMoveEfficiency()
-    efficiency * (accuracy / 100.0)
+    efficiency * (_accuracy / 100.0)
   }
 
   protected def targetMoveEfficiency(): Double
@@ -65,7 +78,7 @@ abstract class Move {
 
   def calculateMoveAccuracy(): Boolean = {
     val random = Random
-    random.nextInt(100) <= accuracy
+    random.nextInt(100) <= _accuracy
   }
 
   /**
@@ -146,9 +159,15 @@ trait StatusMove extends Move {
   * based on the user's attack and the target's defense
   */
 trait PhysicalMove extends Move {
-  def basePower: Int
-
+  private var _basePower: Int = 0
   private val _controlDamage: Int = 12
+
+  def basePower: Int = _basePower
+
+  protected def basePower_=(value: Int): Unit = {
+    if (value < 0 || value > _maxBasePower) throw new Exception(f"Invalid base power value: $value")
+    _basePower = value
+  }
 
   /**
     * Calculate modifier for the move based on target's type
@@ -230,4 +249,33 @@ trait SpecialMove extends PhysicalMove with StatusMove {
     val statusScore = statusMoveScore(effects, targetSelf)
     (powerScore * _physicalWeight) + (statusScore * _statusWeight)
   }
+}
+
+object Growl extends StatusMove {
+  val moveName: String = "Growl"
+  val moveType: Type = Normal
+  val effects: List[StatEffect] = List(
+    AttackEffect(-1)
+  )
+  val targetSelf: Boolean = false
+}
+
+object ThunderShock extends SpecialMove {
+  val moveName: String = "Thunder Shock"
+  val moveType: Type = Electric
+  basePower_=(40)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-1)
+  )
+  val targetSelf: Boolean = false
+}
+
+object ThunderWave extends StatusMove {
+  val moveName: String = "Thunder Wave"
+  accuracy_=(90)
+  val moveType: Type = Electric
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-2)
+  )
+  val targetSelf: Boolean = false
 }

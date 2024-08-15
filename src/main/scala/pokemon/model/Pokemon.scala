@@ -57,7 +57,7 @@ abstract class Pokemon {
     *
     * @throws Exception if `types.length > 2`
     */
-  protected def pTypes(types: List[Type]): Unit = {
+  protected def pTypes_=(types: List[Type]): Unit = {
     if (types.length > 2) throw new Exception(s"Pokemon $pName can have at most 2 types")
     _pTypes = types
   }
@@ -69,7 +69,7 @@ abstract class Pokemon {
     *
     * @throws Exception if `moves.length > 4`
     */
-  protected def moves(moves: List[Move]): Unit = {
+  protected def moves_=(moves: List[Move]): Unit = {
     if (moves.length > 4) throw new Exception(s"Pokemon $pName can learn at most 4 moves")
     _moves = moves
   }
@@ -159,4 +159,22 @@ abstract class Pokemon {
     _score > rarity.weightageUpperBound - boundRange ||
       _score < rarity.weightageLowerBound + boundRange
   }
+}
+
+class Pikachu extends Pokemon {
+  val pName: String = "Pikachu"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(35)
+  val attack: Attack = Attack(55)
+  val defense: Defense = Defense(40)
+  val speed: Speed = Speed(90)
+
+  pTypes_=(List(
+    Electric
+  ))
+  moves_=(List(
+    Growl,
+    ThunderShock,
+    ThunderWave
+  ))
 }
