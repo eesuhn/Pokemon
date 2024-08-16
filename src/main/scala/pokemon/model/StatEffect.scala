@@ -18,6 +18,11 @@ abstract class StatEffect {
     } else false
   }
 
+  /**
+    * Check effect accuracy if defined
+    *
+    * @return
+    */
   private def effectAccuracy: Boolean = {
     val random = new Random()
     accuracy match {

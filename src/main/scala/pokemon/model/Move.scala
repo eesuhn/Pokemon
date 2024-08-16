@@ -89,11 +89,26 @@ abstract class Move {
     */
   protected def physicalMoveScore(basePower: Int): Double = basePower / _maxBasePower
 
+  /**
+    * Calculate score of the status move based on the effects
+    *
+    * - Weight of the effect is defined by the stat effect
+    * - Stage value is multiplied by the weight
+    * - Individual effect accuracy is considered
+    *
+    * @param effects
+    * @param targetSelf
+    * @return
+    */
   protected def statusMoveScore(effects: List[StatEffect], targetSelf: Boolean): Double = {
     val scoreSum = effects.map { effect =>
+      val effectAccuracy = effect.accuracy match {
+        case Some(acc) => acc
+        case None => 100
+      }
       val weight = statEffectWeight(effect)
       val stageValue = effect.stage
-      if (targetSelf) stageValue * weight else -stageValue * weight
+      (if (targetSelf) stageValue * weight else -stageValue * weight) * (effectAccuracy / 100.0)
     }.sum
     scoreSum / _maxStageValue
   }
@@ -171,6 +186,11 @@ trait PhysicalMove extends Move {
 
   def basePower: Int = _basePower
 
+  /**
+    * @param value
+    *
+    * @throws Exception if value is not between 0 and `_maxBasePower`
+    */
   protected def basePower_=(value: Int): Unit = {
     if (value < 0 || value > _maxBasePower) throw new Exception(f"Invalid base power value: $value")
     _basePower = value
