@@ -193,7 +193,6 @@ class Rattata extends Pokemon {
   ))
   moves_=(List(
     Tackle,
-    TailWhip,
     FocusEnergy
   ))
 }
@@ -330,5 +329,183 @@ class Squirtle extends Pokemon {
     TailWhip,
     WaterGun,
     Bite
+  ))
+}
+
+class Venusaur extends Pokemon {
+  val pName: String = "Venusaur"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(80)
+  val attack: Attack = Attack(96)
+  val defense: Defense = Defense(83)
+  val speed: Speed = Speed(80)
+
+  pTypes_=(List(
+    Grass,
+    Poison
+  ))
+  moves_=(List(
+    SolarBeam,
+    PetalDance,
+    RazorLeaf,
+    SeedBomb
+  ))
+}
+
+class Charizard extends Pokemon {
+  val pName: String = "Charizard"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(78)
+  val attack: Attack = Attack(94)
+  val defense: Defense = Defense(78)
+  val speed: Speed = Speed(100)
+
+  pTypes_=(List(
+    Fire,
+    Flying
+  ))
+  moves_=(List(
+    Flamethrower,
+    DragonClaw,
+    AirSlash,
+    DragonBreath
+  ))
+}
+
+class Blastoise extends Pokemon {
+  val pName: String = "Blastoise"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(79)
+  val attack: Attack = Attack(83)
+  val defense: Defense = Defense(110)
+  val speed: Speed = Speed(78)
+
+  pTypes_=(List(
+    Water
+  ))
+  moves_=(List(
+    HydroPump,
+    AquaTail,
+    Bite,
+    ShellSmash
+  ))
+}
+
+class Gengar extends Pokemon {
+  val pName: String = "Gengar"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(60)
+  val attack: Attack = Attack(65)
+  val defense: Defense = Defense(60)
+  val speed: Speed = Speed(110)
+
+  pTypes_=(List(
+    Ghost,
+    Poison
+  ))
+  moves_=(List(
+    ShadowBall,
+    SludgeBomb,
+    DarkPulse,
+    DreamEater
+  ))
+}
+
+class Armaldo extends Pokemon {
+  val pName: String = "Armaldo"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(75)
+  val attack: Attack = Attack(125)
+  val defense: Defense = Defense(100)
+  val speed: Speed = Speed(45)
+
+  pTypes_=(List(
+    Rock,
+    Bug
+  ))
+  moves_=(List(
+    XScissor,
+    RockSlide,
+    Earthquake,
+    IronDefense
+  ))
+}
+
+class Togekiss extends Pokemon {
+  val pName: String = "Togekiss"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(85)
+  val attack: Attack = Attack(50)
+  val defense: Defense = Defense(95)
+  val speed: Speed = Speed(80)
+
+  pTypes_=(List(
+    Fairy,
+    Flying
+  ))
+  moves_=(List(
+    AirSlash,
+    Charm,
+    AncientPower,
+    SkyAttack
+  ))
+}
+
+class Mawile extends Pokemon {
+  val pName: String = "Mawile"
+  val rarity: Rarity = Rare
+  val health: Health = Health(70)
+  val attack: Attack = Attack(85)
+  val defense: Defense = Defense(85)
+  val speed: Speed = Speed(50)
+
+  pTypes_=(List(
+    Steel,
+    Fairy
+  ))
+  moves_=(List(
+    Bite,
+    IronDefense,
+    IronHead,
+    Crunch
+  ))
+}
+
+class Gardevoir extends Pokemon {
+  val pName: String = "Gardevoir"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(68)
+  val attack: Attack = Attack(75)
+  val defense: Defense = Defense(65)
+  val speed: Speed = Speed(80)
+
+  pTypes_=(List(
+    Psychic,
+    Fairy
+  ))
+  moves_=(List(
+    Confusion,
+    CalmMind,
+    DreamEater,
+    Charm
+  ))
+}
+
+class Jigglypuff extends Pokemon {
+  val pName: String = "Jigglypuff"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(115)
+  val attack: Attack = Attack(45)
+  val defense: Defense = Defense(20)
+  val speed: Speed = Speed(20)
+
+  pTypes_=(List(
+    Normal,
+    Fairy
+  ))
+  moves_=(List(
+    Charm,
+    Pound,
+    DefenseCurl
   ))
 }
