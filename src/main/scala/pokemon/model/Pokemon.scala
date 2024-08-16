@@ -179,3 +179,156 @@ class Pikachu extends Pokemon {
     TailWhip
   ))
 }
+
+class Rattata extends Pokemon {
+  val pName: String = "Rattata"
+  val rarity: Rarity = Common
+  val health: Health = Health(30)
+  val attack: Attack = Attack(56)
+  val defense: Defense = Defense(35)
+  val speed: Speed = Speed(72)
+
+  pTypes_=(List(
+    Normal
+  ))
+  moves_=(List(
+    Tackle,
+    TailWhip,
+    FocusEnergy
+  ))
+}
+
+class Hitmonchan extends Pokemon {
+  val pName: String = "Hitmonchan"
+  val rarity: Rarity = Rare
+  val health: Health = Health(50)
+  val attack: Attack = Attack(105)
+  val defense: Defense = Defense(79)
+  val speed: Speed = Speed(76)
+
+  pTypes_=(List(
+    Fighting
+  ))
+  moves_=(List(
+    Agility,
+    FirePunch,
+    IcePunch
+  ))
+}
+
+class Snorlax extends Pokemon {
+  val pName: String = "Snorlax"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(160)
+  val attack: Attack = Attack(110)
+  val defense: Defense = Defense(65)
+  val speed: Speed = Speed(30)
+
+  pTypes_=(List(
+    Normal
+  ))
+  moves_=(List(
+    BodySlam,
+    BellyDrum,
+    Bite,
+    Screech
+  ))
+}
+
+class Metagross extends Pokemon {
+  val pName: String = "Metagross"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(80)
+  val attack: Attack = Attack(135)
+  val defense: Defense = Defense(130)
+  val speed: Speed = Speed(70)
+
+  pTypes_=(List(
+    Steel,
+    Psychic
+  ))
+  moves_=(List(
+    MeteorMash,
+    ZenHeadbutt,
+    BulletPunch,
+    Agility
+  ))
+}
+
+class Giratina extends Pokemon {
+  val pName: String = "Giratina"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(150)
+  val attack: Attack = Attack(100)
+  val defense: Defense = Defense(120)
+  val speed: Speed = Speed(90)
+
+  pTypes_=(List(
+    Ghost,
+    Dragon
+  ))
+  moves_=(List(
+    ShadowForce,
+    DragonClaw,
+    DragonBreath,
+    AncientPower
+  ))
+}
+
+class Bulbasaur extends Pokemon {
+  val pName: String = "Bulbasaur"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(45)
+  val attack: Attack = Attack(49)
+  val defense: Defense = Defense(49)
+  val speed: Speed = Speed(45)
+
+  pTypes_=(List(
+    Grass,
+    Poison
+  ))
+  moves_=(List(
+    Tackle,
+    Growl,
+    VineWhip,
+    RazorLeaf
+  ))
+}
+
+class Charmander extends Pokemon {
+  val pName: String = "Charmander"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(39)
+  val attack: Attack = Attack(52)
+  val defense: Defense = Defense(43)
+  val speed: Speed = Speed(65)
+
+  pTypes_=(List(
+    Fire
+  ))
+  moves_=(List(
+    Scratch,
+    Growl,
+    Ember,
+    Smokescreen
+  ))
+}
+
+class Squirtle extends Pokemon {
+  val pName: String = "Squirtle"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(44)
+  val attack: Attack = Attack(48)
+  val defense: Defense = Defense(65)
+  val speed: Speed = Speed(43)
+
+  pTypes_=(List(
+    Water
+  ))
+  moves_=(List(
+    Tackle,
+    TailWhip,
+    WaterGun,
+    Bite
+  ))
+}
