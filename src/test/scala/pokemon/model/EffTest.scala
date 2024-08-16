@@ -80,11 +80,12 @@ class EffTest extends AnyFunSuite {
 
       println(
         f"""
+          |$msg
+          |
           |${Colors.PURPLE}Move rankings for each Pokemon:${Colors.NC}
           |${Colors.GREEN}OKAY${Colors.NC}%-20s: ${_okayWeightage}
           |${Colors.YELLOW}NEAR${Colors.NC}%-20s: ${_nearLimitWeightage}
-          |${Colors.RED}NOPE${Colors.NC}%-20s: ${_outsideRangeWeightage}
-          |$msg""".stripMargin
+          |${Colors.RED}NOPE${Colors.NC}%-20s: ${_outsideRangeWeightage}""".stripMargin
       )
     }
   }

@@ -509,3 +509,325 @@ class Jigglypuff extends Pokemon {
     DefenseCurl
   ))
 }
+
+class Salamence extends Pokemon {
+  val pName: String = "Salamence"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(95)
+  val attack: Attack = Attack(135)
+  val defense: Defense = Defense(80)
+  val speed: Speed = Speed(100)
+
+  pTypes_=(List(
+    Dragon,
+    Flying
+  ))
+  moves_=(List(
+    DragonClaw,
+    DragonBreath,
+    ZenHeadbutt,
+    Crunch
+  ))
+}
+
+class Garchomp extends Pokemon {
+  val pName: String = "Garchomp"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(102)
+  val attack: Attack = Attack(126)
+  val defense: Defense = Defense(96)
+  val speed: Speed = Speed(100)
+
+  pTypes_=(List(
+    Dragon,
+    Ground
+  ))
+  moves_=(List(
+    DragonClaw,
+    Earthquake,
+    IronDefense,
+    SwordsDance
+  ))
+}
+
+class Gible extends Pokemon {
+  val pName: String = "Gible"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(58)
+  val attack: Attack = Attack(70)
+  val defense: Defense = Defense(45)
+  val speed: Speed = Speed(42)
+
+  pTypes_=(List(
+    Dragon,
+    Ground
+  ))
+  moves_=(List(
+    DragonBreath,
+    SandAttack,
+    Bite
+  ))
+}
+
+class Altaria extends Pokemon {
+  val pName: String = "Altaria"
+  val rarity: Rarity = Rare
+  val health: Health = Health(75)
+  val attack: Attack = Attack(70)
+  val defense: Defense = Defense(90)
+  val speed: Speed = Speed(80)
+
+  pTypes_=(List(
+    Dragon,
+    Flying
+  ))
+  moves_=(List(
+    DragonBreath,
+    DragonDance,
+    AirSlash
+  ))
+}
+
+class Dialga extends Pokemon {
+  val pName: String = "Dialga"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(100)
+  val attack: Attack = Attack(120)
+  val defense: Defense = Defense(120)
+  val speed: Speed = Speed(90)
+
+  pTypes_=(List(
+    Steel,
+    Dragon
+  ))
+  moves_=(List(
+    DragonClaw,
+    IronDefense,
+    RoarOfTime,
+    FlashCannon
+  ))
+}
+
+class Zekrom extends Pokemon {
+  val pName: String = "Zekrom"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(100)
+  val attack: Attack = Attack(150)
+  val defense: Defense = Defense(120)
+  val speed: Speed = Speed(90)
+
+  pTypes_=(List(
+    Dragon,
+    Electric
+  ))
+  moves_=(List(
+    DragonClaw,
+    FusionBolt,
+    ZenHeadbutt,
+    BoltStrike
+  ))
+}
+
+class Rayquaza extends Pokemon {
+  val pName: String = "Rayquaza"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(105)
+  val attack: Attack = Attack(150)
+  val defense: Defense = Defense(90)
+  val speed: Speed = Speed(95)
+
+  pTypes_=(List(
+    Dragon,
+    Flying
+  ))
+  moves_=(List(
+    DragonClaw,
+    DragonDance,
+    AirSlash,
+    Hurricane
+  ))
+}
+
+class Geodude extends Pokemon {
+  val pName: String = "Geodude"
+  val rarity: Rarity = Common
+  val health: Health = Health(40)
+  val attack: Attack = Attack(65)
+  val defense: Defense = Defense(70)
+  val speed: Speed = Speed(22)
+
+  pTypes_=(List(
+    Rock,
+    Ground
+  ))
+  moves_=(List(
+    Tackle,
+    DefenseCurl
+  ))
+}
+
+class Shuckle extends Pokemon {
+  val pName: String = "Shuckle"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(20)
+  val attack: Attack = Attack(10)
+  val defense: Defense = Defense(230)
+  val speed: Speed = Speed(5)
+
+  pTypes_=(List(
+    Bug,
+    Rock
+  ))
+  moves_=(List(
+    ShellSmash,
+    Pound,
+    BugBite
+  ))
+}
+
+class Cyndaquil extends Pokemon {
+  val pName: String = "Cyndaquil"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(39)
+  val attack: Attack = Attack(52)
+  val defense: Defense = Defense(43)
+  val speed: Speed = Speed(65)
+
+  pTypes_=(List(
+    Fire
+  ))
+  moves_=(List(
+    Tackle,
+    Leer,
+    Ember,
+    Smokescreen
+  ))
+}
+
+class Torchic extends Pokemon {
+  val pName: String = "Torchic"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(45)
+  val attack: Attack = Attack(60)
+  val defense: Defense = Defense(40)
+  val speed: Speed = Speed(45)
+
+  pTypes_=(List(
+    Fire
+  ))
+  moves_=(List(
+    Scratch,
+    Growl,
+    Ember,
+    Peck
+  ))
+}
+
+class Infernape extends Pokemon {
+  val pName: String = "Infernape"
+  val rarity: Rarity = Rare
+  val health: Health = Health(76)
+  val attack: Attack = Attack(104)
+  val defense: Defense = Defense(71)
+  val speed: Speed = Speed(108)
+
+  pTypes_=(List(
+    Fire,
+    Fighting
+  ))
+  moves_=(List(
+    FirePunch,
+    MachPunch,
+    FlameWheel
+  ))
+}
+
+class Victini extends Pokemon {
+  val pName: String = "Victini"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(100)
+  val attack: Attack = Attack(100)
+  val defense: Defense = Defense(100)
+  val speed: Speed = Speed(100)
+
+  pTypes_=(List(
+    Psychic,
+    Fire
+  ))
+  moves_=(List(
+    ZenHeadbutt,
+    VCreate,
+    FocusEnergy,
+    FlameCharge
+  ))
+}
+
+class Kyogre extends Pokemon {
+  val pName: String = "Kyogre"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(100)
+  val attack: Attack = Attack(100)
+  val defense: Defense = Defense(90)
+  val speed: Speed = Speed(90)
+
+  pTypes_=(List(
+    Water
+  ))
+  moves_=(List(
+    HydroPump,
+    AquaTail,
+    AquaRing,
+    IceBeam
+  ))
+}
+
+class Groudon extends Pokemon {
+  val pName: String = "Groudon"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(100)
+  val attack: Attack = Attack(150)
+  val defense: Defense = Defense(140)
+  val speed: Speed = Speed(90)
+
+  pTypes_=(List(
+    Ground
+  ))
+  moves_=(List(
+    SolarBeam,
+    SwordsDance,
+    Earthquake,
+    Eruption
+  ))
+}
+
+class Psyduck extends Pokemon {
+  val pName: String = "Psyduck"
+  val rarity: Rarity = Common
+  val health: Health = Health(50)
+  val attack: Attack = Attack(46)
+  val defense: Defense = Defense(44)
+  val speed: Speed = Speed(56)
+
+  pTypes_=(List(
+    Water
+  ))
+  moves_=(List(
+    Confusion
+  ))
+}
+
+class Voltorb extends Pokemon {
+  val pName: String = "Voltorb"
+  val rarity: Rarity = Common
+  val health: Health = Health(40)
+  val attack: Attack = Attack(50)
+  val defense: Defense = Defense(50)
+  val speed: Speed = Speed(100)
+
+  pTypes_=(List(
+    Electric
+  ))
+  moves_=(List(
+    Explosion
+  ))
+}
