@@ -129,8 +129,7 @@ trait StatusMove extends Move {
     * @return
     */
   def applyEffects(pokemon: Pokemon): List[String] = {
-    effects.map { effect =>
-      effect.applyEffect(pokemon)
+    effects.flatMap { effect =>
       val statName = effect match {
         case _: AttackEffect => "attack"
         case _: DefenseEffect => "defense"
@@ -138,13 +137,21 @@ trait StatusMove extends Move {
         case _: SpeedEffect => "speed"
         case _: CriticalHitEffect => "critical"
       }
-      val changeType = if (effect.stage > 0) "rose" else "fell"
-      val intensity = Math.abs(effect.stage) match {
-        case 1 => ""
-        case 2 => "sharply "
-        case n if n > 2 => "drastically "
+
+      val (applied, message) = effect.applyEffect(pokemon) match {
+        case true =>
+          val changeType = if (effect.stage > 0) "rose" else "fell"
+          val intensity = Math.abs(effect.stage) match {
+            case 1 => ""
+            case 2 => "sharply "
+            case n if n > 2 => "drastically "
+          }
+          (true, s"${pokemon.pName}'s $statName $intensity$changeType!")
+        case false =>
+          (false, "")
       }
-      s"${pokemon.pName}'s $statName $intensity$changeType!"
+
+      if (applied) Some(message) else None
     }
   }
 
@@ -261,11 +268,11 @@ object Struggle extends SpecialMove {
   val targetSelf: Boolean = true
 }
 
-object Growl extends StatusMove {
-  val moveName: String = "Growl"
-  val moveType: Type = Normal
+object Charm extends StatusMove {
+  val moveName: String = "Charm"
+  val moveType: Type = Fairy
   val effects: List[StatEffect] = List(
-    AttackEffect(-1)
+    AttackEffect(-2)
   )
   val targetSelf: Boolean = false
 }
@@ -275,7 +282,7 @@ object ThunderShock extends SpecialMove {
   val moveType: Type = Electric
   basePower_=(40)
   val effects: List[StatEffect] = List(
-    SpeedEffect(-1)
+    SpeedEffect(-3, Some(10))
   )
   val targetSelf: Boolean = false
 }

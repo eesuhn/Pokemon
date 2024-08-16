@@ -173,7 +173,7 @@ class Pikachu extends Pokemon {
     Electric
   ))
   moves_=(List(
-    Growl,
+    Charm,
     ThunderShock,
     ThunderWave
   ))
