@@ -34,14 +34,14 @@ abstract class Pokemon {
   val defense: Defense
   val accuracy: Accuracy = Accuracy(100)
   val speed: Speed
-  val criticalHit: CriticalHit = CriticalHit()
+  val critical: Critical = Critical()
 
   private val _level: Int = 5
   private var _pTypes: List[Type] = List(NoType)
   private var _moves: List[Move] = List(Struggle)
   private lazy val _score: Double = calculateScore()
   private val _baseStatNorm: Double = 1.0
-  private val _moveScoreNorm: Double = 200.0
+  private val _moveScoreNorm: Double = 100.0
 
   def level: Int = _level
   def pTypes: List[Type] = _pTypes
@@ -175,6 +175,7 @@ class Pikachu extends Pokemon {
   moves_=(List(
     Charm,
     ThunderShock,
-    ThunderWave
+    ThunderWave,
+    TailWhip
   ))
 }

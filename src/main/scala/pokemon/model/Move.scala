@@ -27,6 +27,7 @@ abstract class Move {
 
   protected  val _maxBasePower: Double = 300.0
   private val _maxStageValue: Int = 6
+  private val _efficiencyNorm: Double = 2.0
 
   def accuracy: Int = _accuracy
 
@@ -40,8 +41,13 @@ abstract class Move {
     _accuracy = value
   }
 
+  /**
+    * Consider `_efficiencyNorm` to normalize score
+    *
+    * @return
+    */
   def moveEfficiency(): Double = {
-    val efficiency = targetMoveEfficiency()
+    val efficiency = targetMoveEfficiency() * _efficiencyNorm
     efficiency * (_accuracy / 100.0)
   }
 
@@ -124,7 +130,7 @@ abstract class Move {
     case _: DefenseEffect => 1.0
     case _: AccuracyEffect => 0.8
     case _: SpeedEffect => 0.6
-    case _: CriticalHitEffect => 0.8
+    case _: CriticalEffect => 0.8
     case _ => 0.0
   }
 }
@@ -145,14 +151,6 @@ trait StatusMove extends Move {
     */
   def applyEffects(pokemon: Pokemon): List[String] = {
     effects.flatMap { effect =>
-      val statName = effect match {
-        case _: AttackEffect => "attack"
-        case _: DefenseEffect => "defense"
-        case _: AccuracyEffect => "accuracy"
-        case _: SpeedEffect => "speed"
-        case _: CriticalHitEffect => "critical"
-      }
-
       val (applied, message) = effect.applyEffect(pokemon) match {
         case true =>
           val changeType = if (effect.stage > 0) "rose" else "fell"
@@ -161,7 +159,7 @@ trait StatusMove extends Move {
             case 2 => "sharply "
             case n if n > 2 => "drastically "
           }
-          (true, s"${pokemon.pName}'s $statName $intensity$changeType!")
+          (true, s"${pokemon.pName}'s ${effect.statEffectName} $intensity$changeType!")
         case false =>
           (false, "")
       }
@@ -249,7 +247,7 @@ trait PhysicalMove extends Move {
     val (modifier, effectivenessMessage) = calculateEffectiveness(target)
 
     // Never critical if noEffectAgainst
-    val isCritical = if (modifier > 0) attacker.criticalHit.isCritical else false
+    val isCritical = if (modifier > 0) attacker.critical.isCritical else false
     val targetDefense = if (isCritical) target.defense.value / 2 else target.defense.value
 
     val damage: Double = (
@@ -290,6 +288,7 @@ object Struggle extends SpecialMove {
 
 object Charm extends StatusMove {
   val moveName: String = "Charm"
+  accuracy_=(90)
   val moveType: Type = Fairy
   val effects: List[StatEffect] = List(
     AttackEffect(-2)
@@ -299,6 +298,7 @@ object Charm extends StatusMove {
 
 object ThunderShock extends SpecialMove {
   val moveName: String = "Thunder Shock"
+  accuracy_=(95)
   val moveType: Type = Electric
   basePower_=(40)
   val effects: List[StatEffect] = List(
@@ -313,6 +313,15 @@ object ThunderWave extends StatusMove {
   val moveType: Type = Electric
   val effects: List[StatEffect] = List(
     SpeedEffect(-2)
+  )
+  val targetSelf: Boolean = false
+}
+
+object TailWhip extends StatusMove {
+  val moveName: String = "Tail Whip"
+  val moveType: Type = Normal
+  val effects: List[StatEffect] = List(
+    DefenseEffect(-1)
   )
   val targetSelf: Boolean = false
 }

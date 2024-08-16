@@ -30,6 +30,12 @@ abstract class StatEffect {
       case None => true
     }
   }
+
+  def statEffectName: String = this
+    .getClass
+    .getSimpleName
+    .replace("Effect", "")
+    .toLowerCase
 }
 
 case class AttackEffect(
@@ -60,9 +66,9 @@ case class SpeedEffect(
   override protected def stat(pokemon: Pokemon): Stat = pokemon.speed
 }
 
-case class CriticalHitEffect(
+case class CriticalEffect(
   initStage: Int,
   override val accuracy: Option[Int] = None
 ) extends StatEffect {
-  override protected def stat(pokemon: Pokemon): Stat = pokemon.criticalHit
+  override protected def stat(pokemon: Pokemon): Stat = pokemon.critical
 }

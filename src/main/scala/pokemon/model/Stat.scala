@@ -90,7 +90,7 @@ case class Speed(
   override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }
 
-case class CriticalHit(
+case class Critical(
   initValue: Int = 1
 ) extends Stat {
 
