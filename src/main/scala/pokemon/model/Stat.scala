@@ -121,16 +121,16 @@ case class Accuracy(
 ) extends Stat {
 
   override protected def minValue: Int = 60
-  override protected def minStage: Int = -4
+  override protected def minStage: Int = -8
   override protected def maxStage: Int = 0
 
   /**
-    * Accuracy adjustment adhere to 10% change per stage
+    * 5% per stage
     *
     * @param stage
     * @return
     */
-  override protected def calculateStage(stage: Int): Double = (10.0 + stage) / 10.0
+  override protected def calculateStage(stage: Int): Double = (20.0 + stage) / 20.0
 
   override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }

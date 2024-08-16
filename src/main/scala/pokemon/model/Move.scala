@@ -26,7 +26,7 @@ abstract class Move {
   protected val _statusWeight: Double = 0.55
 
   protected val _maxBasePower: Double = 300.0
-  private val _maxStageValue: Int = 6
+  private val _stageDiffNorm: Double = 6.0
   private val _efficiencyNorm: Double = 2.0
 
   def accuracy: Int = _accuracy
@@ -116,7 +116,7 @@ abstract class Move {
       val stageValue = effect.stage
       (if (targetSelf) stageValue * weight else -stageValue * weight) * (effectAccuracy / 100.0)
     }.sum
-    scoreSum / _maxStageValue
+    scoreSum / _stageDiffNorm
   }
 
   /**
@@ -288,8 +288,8 @@ object Struggle extends SpecialMove {
 
 object Charm extends StatusMove {
   val moveName: String = "Charm"
-  accuracy_=(90)
   val moveType: Type = Fairy
+  accuracy_=(90)
   val effects: List[StatEffect] = List(
     AttackEffect(-2)
   )
@@ -298,8 +298,8 @@ object Charm extends StatusMove {
 
 object ThunderShock extends SpecialMove {
   val moveName: String = "Thunder Shock"
-  accuracy_=(95)
   val moveType: Type = Electric
+  accuracy_=(95)
   basePower_=(40)
   val effects: List[StatEffect] = List(
     SpeedEffect(-3, Some(10))
@@ -309,8 +309,8 @@ object ThunderShock extends SpecialMove {
 
 object ThunderWave extends StatusMove {
   val moveName: String = "Thunder Wave"
-  accuracy_=(90)
   val moveType: Type = Electric
+  accuracy_=(90)
   val effects: List[StatEffect] = List(
     SpeedEffect(-2)
   )
