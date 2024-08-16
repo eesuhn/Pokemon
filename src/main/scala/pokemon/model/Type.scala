@@ -18,6 +18,12 @@ abstract class Type {
   val noEffectAgainst: List[Type] = List()
 }
 
+object NoType extends Type {
+  val name: String = "NoType"
+  val strongAgainst: List[Type] = List()
+  val weakAgainst: List[Type] = List()
+}
+
 object Normal extends Type {
   val name: String = "Normal"
   val strongAgainst: List[Type] = List()

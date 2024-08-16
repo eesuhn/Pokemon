@@ -251,6 +251,16 @@ trait SpecialMove extends PhysicalMove with StatusMove {
   }
 }
 
+object Struggle extends SpecialMove {
+  val moveName: String = "Struggle"
+  val moveType: Type = NoType
+  basePower_=(50)
+  val effects: List[StatEffect] = List(
+    DefenseEffect(-2)
+  )
+  val targetSelf: Boolean = true
+}
+
 object Growl extends StatusMove {
   val moveName: String = "Growl"
   val moveType: Type = Normal

@@ -37,8 +37,8 @@ abstract class Pokemon {
   val criticalHit: CriticalHit = CriticalHit()
 
   private val _level: Int = 5
-  private var _pTypes: List[Type] = List()
-  private var _moves: List[Move] = List()
+  private var _pTypes: List[Type] = List(NoType)
+  private var _moves: List[Move] = List(Struggle)
   private lazy val _score: Double = calculateScore()
   private val _baseStatNorm: Double = 1.0
   private val _moveScoreNorm: Double = 200.0
