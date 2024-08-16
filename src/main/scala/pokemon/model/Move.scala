@@ -127,10 +127,10 @@ abstract class Move {
     */
   private def statEffectWeight(effect: StatEffect): Double = effect match {
     case _: AttackEffect => 1.0
-    case _: DefenseEffect => 1.0
+    case _: DefenseEffect => 0.8
     case _: AccuracyEffect => 0.8
     case _: SpeedEffect => 0.6
-    case _: CriticalEffect => 0.8
+    case _: CriticalEffect => 1.0
     case _ => 0.0
   }
 }
