@@ -25,7 +25,7 @@ abstract class Move {
   protected val _physicalWeight: Double = 0.45
   protected val _statusWeight: Double = 0.55
 
-  protected  val _maxBasePower: Double = 300.0
+  protected val _maxBasePower: Double = 300.0
   private val _maxStageValue: Int = 6
   private val _efficiencyNorm: Double = 2.0
 
