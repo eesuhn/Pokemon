@@ -41,7 +41,7 @@ abstract class Stat {
     *
     * @return
     */
-  private def calculateStage(stage: Int): Double = {
+  protected def calculateStage(stage: Int): Double = {
     if (stage < 0) 2.0 / (2.0 - stage)
     else if (stage > 0) (2.0 + stage) / 2.0
     else 1.0
@@ -53,7 +53,7 @@ abstract class Stat {
     case _: Health => 0.8
     case _: Attack => 1.0
     case _: Defense => 0.8
-    case _: Speed => 0.6
+    case _: Speed => 0.8
     case _ => 0.0
   }
 }
@@ -74,14 +74,6 @@ case class Defense(
   override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }
 
-case class Accuracy(
-  initValue: Int
-) extends Stat {
-
-  override protected def minValue: Int = 60
-  override def updateValue(stage: Int): Unit = updateValueByStage(stage)
-}
-
 case class Speed(
   initValue: Int
 ) extends Stat {
@@ -90,7 +82,7 @@ case class Speed(
   override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }
 
-case class CriticalHit(
+case class Critical(
   initValue: Int = 1
 ) extends Stat {
 
@@ -122,4 +114,23 @@ case class Health(
   override def updateValue(value: Int): Unit = {
     _value = Math.min(Math.max(_value + value, minValue), _baseValue)
   }
+}
+
+case class Accuracy(
+  initValue: Int
+) extends Stat {
+
+  override protected def minValue: Int = 60
+  override protected def minStage: Int = -8
+  override protected def maxStage: Int = 0
+
+  /**
+    * 5% per stage
+    *
+    * @param stage
+    * @return
+    */
+  override protected def calculateStage(stage: Int): Double = (20.0 + stage) / 20.0
+
+  override def updateValue(stage: Int): Unit = updateValueByStage(stage)
 }

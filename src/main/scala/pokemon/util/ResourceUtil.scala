@@ -72,6 +72,8 @@ object ResourceUtil {
     *
     * @param target
     * @param loop
+    *
+    * @throws Exception if resource is not found or media is not loaded
     */
   def playSound(target: String, loop: Boolean = false, volume: Double = _masterVolume): Unit = {
     val resource = MainApp.getClass.getResource(s"sfx/$target")
