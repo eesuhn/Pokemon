@@ -92,6 +92,8 @@ class BattleController(
 
     _battle.start()
     updatePokemonViews()
+    _battleComponent.playerPokemonHpBar(_battle.player.activePokemon.pokemonHpPercentage)
+    _battleComponent.botPokemonHpBar(_battle.bot.activePokemon.pokemonHpPercentage)
 
     Platform.runLater {
       _scene = inputPane.scene.value
@@ -187,23 +189,13 @@ class BattleController(
     )
   }
 
-  private def updatePokemonViews(): Unit = {
-    _battleComponent.pokemonViews(
-      _battle.player.activePokemon.pName,
-      _battle.bot.activePokemon.pName
-    )
-    _battleComponent.pokemonHpBars(
-      _battle.player.activePokemon.pokemonHpPercentage,
-      _battle.bot.activePokemon.pokemonHpPercentage
-    )
-    _battleComponent.leftPokemonTypes(
-      _battle.player.activePokemon.pTypeNames.head,
-      if (_battle.player.activePokemon.pTypeNames.length > 1) _battle.player.activePokemon.pTypeNames(1) else ""
-    )
-    _battleComponent.rightPokemonTypes(
-      _battle.bot.activePokemon.pTypeNames.head,
-      if (_battle.bot.activePokemon.pTypeNames.length > 1) _battle.bot.activePokemon.pTypeNames(1) else ""
-    )
+  private def updatePokemonViews(
+    playerPokemonView: Boolean = true,
+    botPokemonView: Boolean = true
+  ): Unit = {
+
+    if (playerPokemonView) _battleComponent.playerPokemonViews(_battle.player.activePokemon)
+    if (botPokemonView) _battleComponent.botPokemonViews(_battle.bot.activePokemon)
   }
 
   /**
@@ -228,7 +220,6 @@ class BattleController(
   }
 
   private def handleMainMenu(): Unit = {
-    updatePokemonViews()
     _dialogManager.toMainMenu()
     _battleComponent.setStateDialog(s"What will ${_battle.player.activePokemon.pName} do?")
     focusInputPane()
@@ -271,18 +262,17 @@ class BattleController(
     */
   private def showResultsInDialog(results: Seq[String]): Unit = {
     _dialogManager.clearAll()
-    updatePokemonViews()
+
+    if (_battle.playerJustSwitched) updatePokemonViews()
+    else updatePokemonViews(botPokemonView = false)
 
     def showNextResult(currentIndex: Int): Unit = {
       if (currentIndex < results.length) {
         val result = results(currentIndex)
         _battleComponent.setStateDialog(result)
 
-        // Move SFX if it didn't miss
-        if (!result.contains("missed") && result.contains("used")) {
-          val moveName = result.split(" used ")(1).split("!")(0)
-          playMoveSound(moveName)
-        }
+        hookSuccessMove(result)
+        hookSwitchFaint(result)
 
         setupKeyHandlers(currentIndex)
       } else {
@@ -305,7 +295,44 @@ class BattleController(
     showNextResult(0)
   }
 
-  private def playMoveSound(moveName: String): Unit = {
+  private def hookSwitchFaint(result: String): Unit = {
+    if (result.contains("fainted")) {
+      // Update bot Pokemon view and HP after fainted
+      updatePokemonViews(playerPokemonView = false)
+      _battleComponent.botPokemonHpBar(_battle.bot.activePokemon.pokemonHpPercentage)
+    }
+
+    // Display previous Pokemon HP if player withdrew
+    if (result.contains("withdrew")) _battleComponent.playerPokemonHpBar(_battle.playerPrevPokemonHp)
+  }
+
+  private def hookSuccessMove(result: String): Unit = {
+    if (result.contains("used")
+      && !result.contains("missed")
+    ) {
+      playMoveSound(result)
+      deductHpIfSuccessMove()
+    }
+  }
+
+  /**
+    * Deduct HP based on head of trainer queue
+    */
+  private def deductHpIfSuccessMove(): Unit = {
+    val current = _battle.headTrainerQueue()
+
+    if (_battle.isPlayer(current)) {
+      // Display 0 HP because bot ONLY switch when fainted
+      if (_battle.botJustSwitched) _battleComponent.botPokemonHpBar(0.0)
+      else _battleComponent.botPokemonHpBar(_battle.bot.activePokemon.pokemonHpPercentage)
+
+    } else {
+      _battleComponent.playerPokemonHpBar(_battle.player.activePokemon.pokemonHpPercentage)
+    }
+  }
+
+  private def playMoveSound(result: String): Unit = {
+    val moveName = result.split(" used ")(1).split("!")(0)
     val formattedMoveName = moveName.toLowerCase.replace(" ", "-")
     ResourceUtil.playSound(s"moves/$formattedMoveName.mp3")
   }
@@ -318,15 +345,17 @@ class BattleController(
     else if (!_battle.player.isActivePokemonAlive) playerFaintSwitch()
 
     // Check if Player just switched Pokemon after fainted
-    else if (_battle.playerJustSwitchedAfterFaint) {
-      _battle.opponentJustSwitched(false)
+    else if (_battle.playerJustFaintSwitched) {
+      _battle.botJustSwitched(false)
       handleMainMenu()
     }
 
     // Prompt Player to switch Pokemon after bot switched
-    else if (_battle.opponentJustSwitched && _battle.player.moreThanOnePokemonAlive) {
+    else if (_battle.botJustSwitched
+      && _battle.player.moreThanOnePokemonAlive
+    ) {
       promptPlayerSwitch()
-      _battle.opponentJustSwitched(false)
+      _battle.botJustSwitched(false)
     }
 
     // Just go back to main menu
