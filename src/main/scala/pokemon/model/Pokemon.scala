@@ -1727,3 +1727,225 @@ class Reshiram extends Pokemon {
     BlueFlare
   ))
 }
+
+class Magneton extends Pokemon {
+  val pName: String = "Magneton"
+  val rarity: Rarity = Rare
+  val health: Health = Health(50)
+  val attack: Attack = Attack(60)
+  val defense: Defense = Defense(95)
+  val speed: Speed = Speed(70)
+
+  pTypes_=(List(
+    Electric,
+    Steel
+  ))
+  moves_=(List(
+    ThunderShock,
+    ThunderWave,
+    FlashCannon
+  ))
+}
+
+class Electabuzz extends Pokemon {
+  val pName: String = "Electabuzz"
+  val rarity: Rarity = Rare
+  val health: Health = Health(65)
+  val attack: Attack = Attack(83)
+  val defense: Defense = Defense(57)
+  val speed: Speed = Speed(105)
+
+  pTypes_=(List(
+    Electric
+  ))
+  moves_=(List(
+    ThunderShock,
+    ThunderPunch,
+    ThunderWave
+  ))
+}
+
+class Raikou extends Pokemon {
+  val pName: String = "Raikou"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(90)
+  val attack: Attack = Attack(115)
+  val defense: Defense = Defense(75)
+  val speed: Speed = Speed(115)
+
+  pTypes_=(List(
+    Electric
+  ))
+  moves_=(List(
+    ThunderFang,
+    Thunder,
+    ExtremeSpeed,
+    SwordsDance
+  ))
+}
+
+class Pinsir extends Pokemon {
+  val pName: String = "Pinsir"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(65)
+  val attack: Attack = Attack(125)
+  val defense: Defense = Defense(100)
+  val speed: Speed = Speed(85)
+
+  pTypes_=(List(
+    Bug
+  ))
+  moves_=(List(
+    FuryCutter,
+    SwordsDance,
+    XScissor,
+    FocusEnergy
+  ))
+}
+
+class Scizor extends Pokemon {
+  val pName: String = "Scizor"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(70)
+  val attack: Attack = Attack(130)
+  val defense: Defense = Defense(100)
+  val speed: Speed = Speed(65)
+
+  pTypes_=(List(
+    Bug,
+    Steel
+  ))
+  moves_=(List(
+    FuryCutter,
+    IronDefense,
+    XScissor,
+    IronHead
+  ))
+}
+
+class Caterpie extends Pokemon {
+  val pName: String = "Caterpie"
+  val rarity: Rarity = Common
+  val health: Health = Health(45)
+  val attack: Attack = Attack(30)
+  val defense: Defense = Defense(35)
+  val speed: Speed = Speed(45)
+
+  pTypes_=(List(
+    Bug
+  ))
+  moves_=(List(
+    Tackle,
+    StringShot
+  ))
+}
+
+class Meowth extends Pokemon {
+  val pName: String = "Meowth"
+  val rarity: Rarity = Common
+  val health: Health = Health(40)
+  val attack: Attack = Attack(45)
+  val defense: Defense = Defense(35)
+  val speed: Speed = Speed(90)
+
+  pTypes_=(List(
+    Normal
+  ))
+  moves_=(List(
+    Scratch,
+    Growl
+  ))
+}
+
+class Farfetchd extends Pokemon {
+  val pName: String = "Farfetchd"
+  val rarity: Rarity = SuperRare
+  val health: Health = Health(62)
+  val attack: Attack = Attack(135)
+  val defense: Defense = Defense(95)
+  val speed: Speed = Speed(65)
+
+  pTypes_=(List(
+    Normal,
+    Flying
+  ))
+  moves_=(List(
+    LeafBlade,
+    SwordsDance,
+    FocusEnergy,
+    AirSlash
+  ))
+}
+
+class Togepi extends Pokemon {
+  val pName: String = "Togepi"
+  val rarity: Rarity = Common
+  val health: Health = Health(35)
+  val attack: Attack = Attack(20)
+  val defense: Defense = Defense(65)
+  val speed: Speed = Speed(20)
+
+  pTypes_=(List(
+    Fairy
+  ))
+  moves_=(List(
+    Charm,
+    Pound
+  ))
+}
+
+class Snubbull extends Pokemon {
+  val pName: String = "Snubbull"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(60)
+  val attack: Attack = Attack(80)
+  val defense: Defense = Defense(50)
+  val speed: Speed = Speed(30)
+
+  pTypes_=(List(
+    Fairy
+  ))
+  moves_=(List(
+    Bite,
+    Charm,
+    Tackle
+  ))
+}
+
+class Slowpoke extends Pokemon {
+  val pName: String = "Slowpoke"
+  val rarity: Rarity = Uncommon
+  val health: Health = Health(90)
+  val attack: Attack = Attack(65)
+  val defense: Defense = Defense(65)
+  val speed: Speed = Speed(15)
+
+  pTypes_=(List(
+    Water,
+    Psychic
+  ))
+  moves_=(List(
+    WaterGun,
+    Confusion,
+    Tackle
+  ))
+}
+
+class Mewtwo extends Pokemon {
+  val pName: String = "Mewtwo"
+  val rarity: Rarity = UltraRare
+  val health: Health = Health(106)
+  val attack: Attack = Attack(110)
+  val defense: Defense = Defense(90)
+  val speed: Speed = Speed(130)
+
+  pTypes_=(List(
+    Psychic
+  ))
+  moves_=(List(
+    Confusion,
+    PowerSwap,
+    AncientPower,
+    FutureSight
+  ))
+}

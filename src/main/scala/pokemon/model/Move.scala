@@ -1361,3 +1361,78 @@ object FusionFlare extends SpecialMove {
   )
   val targetSelf: Boolean = true
 }
+
+object ThunderPunch extends SpecialMove {
+  val moveName: String = "Thunder Punch"
+  val moveType: Type = Electric
+  basePower_=(75)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(1)
+  )
+  val targetSelf: Boolean = true
+}
+
+object ThunderFang extends SpecialMove {
+  val moveName: String = "Thunder Fang"
+  val moveType: Type = Electric
+  accuracy_=(95)
+  basePower_=(70)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-2)
+  )
+  val targetSelf: Boolean = false
+}
+
+object Thunder extends SpecialMove {
+  val moveName: String = "Thunder"
+  val moveType: Type = Electric
+  accuracy_=(70)
+  basePower_=(110)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-2)
+  )
+  val targetSelf: Boolean = false
+}
+
+object StringShot extends StatusMove {
+  val moveName: String = "String Shot"
+  val moveType: Type = Bug
+  accuracy_=(95)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-1)
+  )
+  val targetSelf: Boolean = false
+}
+
+object PowerSwap extends StatusMove {
+  val moveName: String = "Power Swap"
+  val moveType: Type = Psychic
+  val effects: List[StatEffect] = List(
+    AttackEffect(4),
+    DefenseEffect(-4)
+  )
+  val targetSelf: Boolean = true
+}
+
+object FutureSight extends SpecialMove {
+  val moveName: String = "Future Sight"
+  val moveType: Type = Psychic
+  accuracy_=(90)
+  basePower_=(120)
+  val effects: List[StatEffect] = List(
+    CriticalEffect(-1),
+    AttackEffect(-1)
+  )
+  val targetSelf: Boolean = false
+}
+
+object LeafBlade extends SpecialMove {
+  val moveName: String = "Leaf Blade"
+  val moveType: Type = Grass
+  accuracy_=(90)
+  basePower_=(90)
+  val effects: List[StatEffect] = List(
+    CriticalEffect(2)
+  )
+  val targetSelf: Boolean = true
+}
