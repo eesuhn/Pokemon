@@ -980,3 +980,169 @@ object Explosion extends SpecialMove {
   )
   val targetSelf: Boolean = true
 }
+
+object MetalClaw extends SpecialMove {
+  val moveName: String = "Metal Claw"
+  val moveType: Type = Steel
+  accuracy_=(90)
+  basePower_=(60)
+  val effects: List[StatEffect] = List(
+    AttackEffect(1, Some(20))
+  )
+  val targetSelf: Boolean = true
+}
+
+object SuckerPunch extends SpecialMove {
+  val moveName: String = "Sucker Punch"
+  val moveType: Type = Dark
+  accuracy_=(95)
+  basePower_=(70)
+  val effects: List[StatEffect] = List(
+    CriticalEffect(-1, Some(30)),
+    AccuracyEffect(-1, Some(30))
+  )
+  val targetSelf: Boolean = false
+}
+
+object ConfuseRay extends StatusMove {
+  val moveName: String = "Confuse Ray"
+  val moveType: Type = Ghost
+  accuracy_=(80)
+  val effects: List[StatEffect] = List(
+    AccuracyEffect(-3)
+  )
+  val targetSelf: Boolean = false
+}
+
+object Astonish extends SpecialMove {
+  val moveName: String = "Astonish"
+  val moveType: Type = Ghost
+  basePower_=(30)
+  val effects: List[StatEffect] = List(
+    AccuracyEffect(-1, Some(30))
+  )
+  val targetSelf: Boolean = false
+}
+
+object ShadowPunch extends SpecialMove {
+  val moveName: String = "Shadow Punch"
+  val moveType: Type = Ghost
+  basePower_=(60)
+  val effects: List[StatEffect] = List(
+    DefenseEffect(-1, Some(20))
+  )
+  val targetSelf: Boolean = false
+}
+
+object Harden extends StatusMove {
+  val moveName: String = "Harden"
+  val moveType: Type = Normal
+  accuracy_=(95)
+  val effects: List[StatEffect] = List(
+    DefenseEffect(1)
+  )
+  val targetSelf: Boolean = true
+}
+
+object HammerArm extends SpecialMove {
+  val moveName: String = "Hammer Arm"
+  val moveType: Type = Fighting
+  accuracy_=(90)
+  basePower_=(80)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-1, Some(80))
+  )
+  val targetSelf: Boolean = false
+}
+
+object DynamicPunch extends SpecialMove {
+  val moveName: String = "Dynamic Punch"
+  val moveType: Type = Fighting
+  accuracy_=(80)
+  basePower_=(100)
+  val effects: List[StatEffect] = List(
+    CriticalEffect(2),
+    AccuracyEffect(-2)
+  )
+  val targetSelf: Boolean = true
+}
+
+object ShadowClaw extends SpecialMove {
+  val moveName: String = "Shadow Claw"
+  val moveType: Type = Ghost
+  accuracy_=(95)
+  basePower_=(70)
+  val effects: List[StatEffect] = List(
+    CriticalEffect(1, Some(50))
+  )
+  val targetSelf: Boolean = true
+}
+
+object PowderSnow extends SpecialMove {
+  val moveName: String = "Powder Snow"
+  val moveType: Type = Ice
+  accuracy_=(95)
+  basePower_=(40)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-1, Some(15))
+  )
+  val targetSelf: Boolean = false
+}
+
+object Surf extends PhysicalMove {
+  val moveName: String = "Surf"
+  val moveType: Type = Water
+  accuracy_=(95)
+  basePower_=(90)
+}
+
+object Blizzard extends SpecialMove {
+  val moveName: String = "Blizzard"
+  val moveType: Type = Ice
+  accuracy_=(70)
+  basePower_=(110)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-2)
+  )
+  val targetSelf: Boolean = false
+}
+
+object IceShard extends PhysicalMove {
+  val moveName: String = "Ice Shard"
+  val moveType: Type = Ice
+  accuracy_=(95)
+  basePower_=(60)
+}
+
+object WoodHammer extends SpecialMove {
+  val moveName: String = "Wood Hammer"
+  val moveType: Type = Grass
+  accuracy_=(90)
+  basePower_=(120)
+  val effects: List[StatEffect] = List(
+    DefenseEffect(-2, Some(30))
+  )
+  val targetSelf: Boolean = true
+}
+
+object LeafStorm extends SpecialMove {
+  val moveName: String = "Leaf Storm"
+  val moveType: Type = Grass
+  accuracy_=(90)
+  basePower_=(130)
+  val effects: List[StatEffect] = List(
+    AttackEffect(-2, Some(50))
+  )
+  val targetSelf: Boolean = false
+}
+
+object ForcePalm extends SpecialMove {
+  val moveName: String = "Force Palm"
+  val moveType: Type = Fighting
+  accuracy_=(90)
+  basePower_=(60)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-2, Some(30))
+  )
+  val targetSelf: Boolean = false
+}
