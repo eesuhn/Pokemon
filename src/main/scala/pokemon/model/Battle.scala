@@ -75,7 +75,7 @@ class Battle() {
         }
     }
 
-    results ++= handleFaintSwitch(_bot)
+    results ++= handleBotFaintSwitch(_bot)
 
     _playerJustSwitched = _player.activePokemon != playerPokemonBeforeTurn
     _botJustSwitched = _bot.activePokemon != botPokemonBeforeTurn
@@ -151,15 +151,17 @@ class Battle() {
   }
 
   /**
-    * Switch to the next alive Pokemon if the current Pokemon fainted
+    * Handle bot switch when the active Pokemon fainted
     *
-    * @param trainer
+    * - Consider type advantage
+    *
+    * @param bot
     * @return
     */
-  private def handleFaintSwitch(trainer: Trainer): List[String] = {
-    if (!trainer.isActivePokemonAlive) {
-      trainer.switchToNextAlivePokemon() match {
-        case Some(pokemon) => List(s"${trainer.name}'s ${pokemon.pName} was sent out!")
+  private def handleBotFaintSwitch(bot: Bot): List[String] = {
+    if (!bot.isActivePokemonAlive) {
+      bot.switchToNextPokemon(_player.activePokemon) match {
+        case Some(pokemon) => List(s"${bot.name}'s ${pokemon.pName} was sent out!")
         case None => List()
       }
     } else {

@@ -43,13 +43,6 @@ abstract class Trainer {
     activePokemon = pokemon
   }
 
-  def switchToNextAlivePokemon(): Option[Pokemon] = {
-    deck.find(_.health.value > 0).map { pokemon =>
-      switchActivePokemon(pokemon)
-      pokemon
-    }
-  }
-
   def isActivePokemonAlive: Boolean = activePokemon != null && activePokemon.health.value > 0
 
   def moreThanOnePokemonAlive: Boolean = deck.count(_.health.value > 0) > 1
@@ -83,6 +76,25 @@ class Bot extends Trainer {
   // }
 
   def chooseMove(target: Pokemon): Move = weightedRandomMove(target)
+
+  /**
+    * Switches the active Pokemon to the next best Pokemon
+    *
+    * - Based on move efficiency
+    *
+    * @param playerActivePokemon
+    * @return
+    */
+  def switchToNextPokemon(playerActivePokemon: Pokemon): Option[Pokemon] = {
+    val alivePokemons = deck.filter(_.health.value > 0)
+
+    if (!alivePokemons.isEmpty) {
+      val bestPokemon = alivePokemons.maxBy(_.moveEffMap(playerActivePokemon).values.sum)
+      switchActivePokemon(bestPokemon)
+      return Some(bestPokemon)
+    }
+    None
+  }
 
   /**
     * Randomly selects a move from the active Pokemon's move list
