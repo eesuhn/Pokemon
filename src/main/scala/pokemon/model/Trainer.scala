@@ -8,13 +8,67 @@ abstract class Trainer {
   var deck: ArrayBuffer[Pokemon] = ArrayBuffer.empty[Pokemon]
   var activePokemon: Pokemon = _
 
+  private val _deckSize: Int = 5
+
   def generateDeck(): Unit = {
     val pokemons = PokemonRegistry.pokemons
       .map(pokemon => pokemon.getDeclaredConstructor().newInstance())
       .toList
-    val randomPokemons = Random.shuffle(pokemons).take(5)
+    val weightedPokemons = weightPokemonsByRarity(pokemons)
+    val deckSize = Math.min(_deckSize, weightedPokemons.length)
+    val selectedPokemons = selectPokemonsWeighted(weightedPokemons, deckSize)
+    addPokemons(selectedPokemons)
+  }
 
-    addPokemons(randomPokemons)
+
+  /**
+    * Map Pokemon to their rarity Gacha chance
+    *
+    * @param pokemons
+    * @return
+    */
+  private def weightPokemonsByRarity(pokemons: List[Pokemon]): List[(Pokemon, Double)] = {
+    val rarities = RarityRegistry.rarities
+    val totalGachaChance = rarities.map(_.gachaChance).sum
+    pokemons.map(pokemon => (pokemon, pokemon.rarity.gachaChance / totalGachaChance))
+  }
+
+  /**
+    * Selects a list of Pokemon based on Gacha chance
+    *
+    * @param weightedPokemons
+    * @param count
+    * @return
+    */
+  private def selectPokemonsWeighted(
+    weightedPokemons: List[(Pokemon, Double)],
+    count: Int
+  ): List[Pokemon] = {
+
+    val selected = ArrayBuffer.empty[Pokemon]
+    var remainingPokemons = weightedPokemons
+    val random = new Random()
+
+    while (selected.size < count && remainingPokemons.nonEmpty) {
+      val totalWeight = remainingPokemons.map(_._2).sum
+      val randomValue = random.nextDouble() * totalWeight
+      var accumulatedWeight = 0.0
+
+      val (selectedPokemon, selectedIndex) = remainingPokemons
+        .zipWithIndex
+        .find { case ((_, weight), _) =>
+          accumulatedWeight += weight
+          randomValue < accumulatedWeight
+        }
+        .map { case ((pokemon, _), index) => (pokemon, index) }
+        .getOrElse((null, -1))
+
+      if (selectedPokemon != null) {
+        selected += selectedPokemon
+        remainingPokemons = remainingPokemons.patch(selectedIndex, Nil, 1)
+      }
+    }
+    selected.toList
   }
 
   /**

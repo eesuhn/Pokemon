@@ -28,6 +28,18 @@ class Battle() {
 
     _player.generateDeck()
     _bot.generateDeck()
+
+    // DEBUG: Print both deck
+    // val deckMsg = f"""
+    //   |Player's deck:
+    //   |${_player.deck.zipWithIndex.map { case (p, i) =>
+    //     f"  ${i + 1}. ${p.pName}" }.mkString("\n")}
+    //   |
+    //   |Bot's deck:
+    //   |${_bot.deck.zipWithIndex.map { case (p, i) =>
+    //     f"  ${i + 1}. ${p.pName}" }.mkString("\n")}
+    //   |""".stripMargin
+    // println(deckMsg)
   }
 
   def isBattleOver: Boolean = _player.isDefeated || _bot.isDefeated
