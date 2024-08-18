@@ -14,12 +14,15 @@ abstract class Trainer {
     val pokemons = PokemonRegistry.pokemons
       .map(pokemon => pokemon.getDeclaredConstructor().newInstance())
       .toList
+
     val weightedPokemons = weightPokemonsByRarity(pokemons)
     val deckSize = Math.min(_deckSize, weightedPokemons.length)
     val selectedPokemons = selectPokemonsWeighted(weightedPokemons, deckSize)
-    addPokemons(selectedPokemons)
-  }
 
+    // Sort selected Pokemons by score in ascending order
+    val sortedPokemons = selectedPokemons.sortBy(_.score)
+    addPokemons(sortedPokemons)
+  }
 
   /**
     * Map Pokemon to their rarity Gacha chance
@@ -34,7 +37,7 @@ abstract class Trainer {
   }
 
   /**
-    * Selects a list of Pokemon based on Gacha chance
+    * Selects a list of `5` Pokemon based on Gacha chance
     *
     * @param weightedPokemons
     * @param count
