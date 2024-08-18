@@ -482,7 +482,7 @@ class Mawile extends Pokemon {
     Bite,
     IronDefense,
     IronHead,
-    Crunch
+    PlayRough
   ))
 }
 
@@ -501,7 +501,7 @@ class Gardevoir extends Pokemon {
   moves_=(List(
     Confusion,
     CalmMind,
-    DreamEater,
+    PlayRough,
     Charm
   ))
 }
@@ -520,7 +520,7 @@ class Jigglypuff extends Pokemon {
   ))
   moves_=(List(
     Charm,
-    Pound,
+    FairyWind,
     DefenseCurl
   ))
 }
@@ -939,7 +939,8 @@ class Golett extends Pokemon {
   moves_=(List(
     ShadowPunch,
     Harden,
-    Earthquake
+    Earthquake,
+    Bulldoze
   ))
 }
 
@@ -1921,7 +1922,7 @@ class Snubbull extends Pokemon {
     Fairy
   ))
   moves_=(List(
-    Bite,
+    FairyWind,
     Charm,
     Tackle
   ))
@@ -1962,5 +1963,23 @@ class Mewtwo extends Pokemon {
     PowerSwap,
     AncientPower,
     FutureSight
+  ))
+}
+
+class Dugtrio extends Pokemon {
+  val pName: String = "Dugtrio"
+  val rarity: Rarity = Rare
+  val health: Health = Health(35)
+  val attack: Attack = Attack(80)
+  val defense: Defense = Defense(50)
+  val speed: Speed = Speed(120)
+
+  pTypes_=(List(
+    Ground
+  ))
+  moves_=(List(
+    Earthquake,
+    SandAttack,
+    MudSlap
   ))
 }

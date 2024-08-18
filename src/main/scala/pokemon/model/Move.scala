@@ -208,7 +208,7 @@ trait StatusMove extends Move {
   */
 trait PhysicalMove extends Move {
   private var _basePower: Int = 0
-  private val _controlDamage: Int = 12
+  private val _controlDamage: Int = 10
 
   def basePower: Int = _basePower
 
@@ -1440,4 +1440,49 @@ object LeafBlade extends SpecialMove {
     CriticalEffect(2)
   )
   val targetSelf: Boolean = true
+}
+
+object FairyWind extends SpecialMove {
+  val moveName: String = "Fairy Wind"
+  val moveType: Type = Fairy
+  accuracy_=(95)
+  basePower_=(40)
+  val effects: List[StatEffect] = List(
+    AttackEffect(-1, Some(10)),
+    CriticalEffect(-1, Some(10))
+  )
+  val targetSelf: Boolean = false
+}
+
+object PlayRough extends SpecialMove {
+  val moveName: String = "Play Rough"
+  val moveType: Type = Fairy
+  accuracy_=(90)
+  basePower_=(90)
+  val effects: List[StatEffect] = List(
+    AttackEffect(-2, Some(30))
+  )
+  val targetSelf: Boolean = false
+}
+
+object MudSlap extends SpecialMove {
+  val moveName: String = "Mud Slap"
+  val moveType: Type = Ground
+  accuracy_=(95)
+  basePower_=(40)
+  val effects: List[StatEffect] = List(
+    AccuracyEffect(-1)
+  )
+  val targetSelf: Boolean = false
+}
+
+object Bulldoze extends SpecialMove {
+  val moveName: String = "Bulldoze"
+  val moveType: Type = Ground
+  accuracy_=(90)
+  basePower_=(60)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-1, Some(30))
+  )
+  val targetSelf: Boolean = false
 }
