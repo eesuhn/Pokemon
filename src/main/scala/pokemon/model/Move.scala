@@ -129,7 +129,7 @@ abstract class Move {
     case _: AttackEffect => 1.0
     case _: DefenseEffect => 0.8
     case _: AccuracyEffect => 0.8
-    case _: SpeedEffect => 0.6
+    case _: SpeedEffect => 0.8
     case _: CriticalEffect => 0.8
     case _ => 0.0
   }
@@ -920,7 +920,7 @@ object FlameWheel extends SpecialMove {
 object VCreate extends SpecialMove {
   val moveName: String = "V Create"
   val moveType: Type = Fire
-  basePower_=(160)
+  basePower_=(200)
   accuracy_=(95)
   val effects: List[StatEffect] = List(
     AttackEffect(-1),
@@ -974,9 +974,9 @@ object Eruption extends SpecialMove {
 object Explosion extends SpecialMove {
   val moveName: String = "Explosion"
   val moveType: Type = Normal
-  basePower_=(300)
+  basePower_=(250)
   val effects: List[StatEffect] = List(
-    DefenseEffect(-6)
+    DefenseEffect(-4)
   )
   val targetSelf: Boolean = true
 }

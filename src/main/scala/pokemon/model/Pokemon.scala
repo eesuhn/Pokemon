@@ -534,9 +534,9 @@ class Garchomp extends Pokemon {
   val pName: String = "Garchomp"
   val rarity: Rarity = SuperRare
   val health: Health = Health(102)
-  val attack: Attack = Attack(126)
+  val attack: Attack = Attack(114)
   val defense: Defense = Defense(96)
-  val speed: Speed = Speed(100)
+  val speed: Speed = Speed(94)
 
   pTypes_=(List(
     Dragon,
@@ -653,7 +653,7 @@ class Geodude extends Pokemon {
   val rarity: Rarity = Common
   val health: Health = Health(40)
   val attack: Attack = Attack(65)
-  val defense: Defense = Defense(70)
+  val defense: Defense = Defense(65)
   val speed: Speed = Speed(22)
 
   pTypes_=(List(
@@ -804,9 +804,9 @@ class Psyduck extends Pokemon {
   val pName: String = "Psyduck"
   val rarity: Rarity = Common
   val health: Health = Health(50)
-  val attack: Attack = Attack(46)
+  val attack: Attack = Attack(40)
   val defense: Defense = Defense(44)
-  val speed: Speed = Speed(56)
+  val speed: Speed = Speed(50)
 
   pTypes_=(List(
     Water
@@ -819,10 +819,10 @@ class Psyduck extends Pokemon {
 class Voltorb extends Pokemon {
   val pName: String = "Voltorb"
   val rarity: Rarity = Common
-  val health: Health = Health(40)
+  val health: Health = Health(30)
   val attack: Attack = Attack(50)
-  val defense: Defense = Defense(50)
-  val speed: Speed = Speed(100)
+  val defense: Defense = Defense(32)
+  val speed: Speed = Speed(80)
 
   pTypes_=(List(
     Electric
@@ -857,9 +857,9 @@ class Shuppet extends Pokemon {
   val pName: String = "Shuppet"
   val rarity: Rarity = Common
   val health: Health = Health(45)
-  val attack: Attack = Attack(75)
+  val attack: Attack = Attack(70)
   val defense: Defense = Defense(30)
-  val speed: Speed = Speed(42)
+  val speed: Speed = Speed(40)
 
   pTypes_=(List(
     Ghost
@@ -893,10 +893,10 @@ class Spiritomb extends Pokemon {
 class Froslass extends Pokemon {
   val pName: String = "Froslass"
   val rarity: Rarity = Rare
-  val health: Health = Health(70)
-  val attack: Attack = Attack(80)
+  val health: Health = Health(66)
+  val attack: Attack = Attack(70)
   val defense: Defense = Defense(70)
-  val speed: Speed = Speed(110)
+  val speed: Speed = Speed(100)
 
   pTypes_=(List(
     Ice,
@@ -1049,7 +1049,7 @@ class Abomasnow extends Pokemon {
   val pName: String = "Abomasnow"
   val rarity: Rarity = Rare
   val health: Health = Health(90)
-  val attack: Attack = Attack(92)
+  val attack: Attack = Attack(86)
   val defense: Defense = Defense(75)
   val speed: Speed = Speed(60)
 
@@ -1109,7 +1109,7 @@ class Chikorita extends Pokemon {
   val rarity: Rarity = Common
   val health: Health = Health(45)
   val attack: Attack = Attack(50)
-  val defense: Defense = Defense(50)
+  val defense: Defense = Defense(40)
   val speed: Speed = Speed(45)
 
   pTypes_=(List(
@@ -1182,7 +1182,7 @@ class Breloom extends Pokemon {
   val pName: String = "Breloom"
   val rarity: Rarity = Rare
   val health: Health = Health(60)
-  val attack: Attack = Attack(130)
+  val attack: Attack = Attack(120)
   val defense: Defense = Defense(80)
   val speed: Speed = Speed(70)
 
@@ -1240,9 +1240,9 @@ class Carvanha extends Pokemon {
   val pName: String = "Carvanha"
   val rarity: Rarity = Common
   val health: Health = Health(35)
-  val attack: Attack = Attack(70)
+  val attack: Attack = Attack(60)
   val defense: Defense = Defense(25)
-  val speed: Speed = Speed(65)
+  val speed: Speed = Speed(60)
 
   pTypes_=(List(
     Water,
@@ -1277,7 +1277,7 @@ class Pawniard extends Pokemon {
   val pName: String = "Pawniard"
   val rarity: Rarity = Uncommon
   val health: Health = Health(45)
-  val attack: Attack = Attack(85)
+  val attack: Attack = Attack(75)
   val defense: Defense = Defense(70)
   val speed: Speed = Speed(60)
 
@@ -1315,8 +1315,8 @@ class Onix extends Pokemon {
   val pName: String = "Onix"
   val rarity: Rarity = Uncommon
   val health: Health = Health(35)
-  val attack: Attack = Attack(45)
-  val defense: Defense = Defense(140)
+  val attack: Attack = Attack(42)
+  val defense: Defense = Defense(130)
   val speed: Speed = Speed(60)
 
   pTypes_=(List(
@@ -1335,7 +1335,7 @@ class Lairon extends Pokemon {
   val rarity: Rarity = Uncommon
   val health: Health = Health(60)
   val attack: Attack = Attack(60)
-  val defense: Defense = Defense(110)
+  val defense: Defense = Defense(100)
   val speed: Speed = Speed(45)
 
   pTypes_=(List(
@@ -1426,9 +1426,9 @@ class Mankey extends Pokemon {
   val pName: String = "Mankey"
   val rarity: Rarity = Common
   val health: Health = Health(40)
-  val attack: Attack = Attack(70)
+  val attack: Attack = Attack(65)
   val defense: Defense = Defense(35)
-  val speed: Speed = Speed(60)
+  val speed: Speed = Speed(50)
 
   pTypes_=(List(
     Fighting
@@ -1522,9 +1522,9 @@ class Nidoran extends Pokemon {
   val pName: String = "Nidoran"
   val rarity: Rarity = Common
   val health: Health = Health(55)
-  val attack: Attack = Attack(47)
+  val attack: Attack = Attack(42)
   val defense: Defense = Defense(52)
-  val speed: Speed = Speed(41)
+  val speed: Speed = Speed(40)
 
   pTypes_=(List(
     Poison
@@ -1577,7 +1577,7 @@ class Weezing extends Pokemon {
   val rarity: Rarity = Rare
   val health: Health = Health(65)
   val attack: Attack = Attack(90)
-  val defense: Defense = Defense(120)
+  val defense: Defense = Defense(100)
   val speed: Speed = Speed(60)
 
   pTypes_=(List(
@@ -1846,7 +1846,7 @@ class Meowth extends Pokemon {
   val health: Health = Health(40)
   val attack: Attack = Attack(45)
   val defense: Defense = Defense(35)
-  val speed: Speed = Speed(90)
+  val speed: Speed = Speed(70)
 
   pTypes_=(List(
     Normal

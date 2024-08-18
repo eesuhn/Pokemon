@@ -53,7 +53,7 @@ abstract class Stat {
     case _: Health => 0.8
     case _: Attack => 1.0
     case _: Defense => 0.8
-    case _: Speed => 0.6
+    case _: Speed => 0.8
     case _ => 0.0
   }
 }

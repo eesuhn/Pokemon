@@ -73,7 +73,7 @@ class EffTest extends AnyFunSuite {
             f"""
               |${status}$pokemonName${Colors.NC} ($totalWeightage%.2f):
               |${moves.zipWithIndex.map { case ((moveName, score), index) =>
-                val scoreColor = if (score <= 0.0) Colors.RED else Colors.NC
+                val scoreColor = if (score <= 0.1) Colors.RED else Colors.NC
                 f"  ${index + 1}. $moveName%-20s(${scoreColor}$score%.2f${Colors.NC})"
               }.mkString("\n")}""".stripMargin
           }.mkString("\n")}""".stripMargin

@@ -26,6 +26,6 @@ object SuperRare extends Rarity {
 }
 
 object UltraRare extends Rarity {
-  override def weightageUpperBound: Double = 600.0
+  override def weightageUpperBound: Double = 650.0
   override def weightageLowerBound: Double = SuperRare.weightageUpperBound
 }
