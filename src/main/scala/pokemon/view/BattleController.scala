@@ -85,7 +85,7 @@ class BattleController(
   // Handle key press delay
   private var _isKeyReleased: Boolean = true
   private var _lastKeyPressTime: Long = 0
-  private val _keyPressDelay: Long = 120
+  private val _keyPressDelay: Long = 160
 
   def initialize(): Unit = {
     ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
@@ -272,6 +272,7 @@ class BattleController(
         _battleComponent.setStateDialog(result)
 
         hookSuccessMove(result)
+        hookSuccessStatEffect(result)
         hookSwitchFaint(result)
 
         setupKeyHandlers(currentIndex)
@@ -313,6 +314,11 @@ class BattleController(
       playMoveSound(result)
       deductHpIfSuccessMove()
     }
+  }
+
+  private def hookSuccessStatEffect(result: String): Unit = {
+    if (result.contains("rose")) ResourceUtil.playSound("misc/stat-rose.mp3")
+    if (result.contains("fell")) ResourceUtil.playSound("misc/stat-fell.mp3")
   }
 
   /**
