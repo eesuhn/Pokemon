@@ -51,6 +51,11 @@ abstract class Move {
     efficiency * (_accuracy / 100.0)
   }
 
+  def moveEfficiencyByTarget(defender: Pokemon): Double = this match {
+    case _: SpecialMove | _: PhysicalMove => moveEfficiency() * this.calculateModifier(defender)
+    case _ => moveEfficiency()
+  }
+
   protected def targetMoveEfficiency(): Double
 
   /**
@@ -133,6 +138,29 @@ abstract class Move {
     case _: CriticalEffect => 0.8
     case _ => 0.0
   }
+
+  /**
+    * Calculate modifier for the move based on target's type
+    *
+    * - multiply by 2 if move is strong against target type
+    * - multiply by 0.5 if move is weak against target type
+    * - multiply by 0 if move has no effect against target type
+    *
+    * @param target
+    * @return
+    */
+  protected def calculateModifier(target: Pokemon): Double = {
+    target
+      .pTypes
+      .foldLeft(1.0) { (modifier, t) =>
+        modifier * (
+          if (moveType.strongAgainst.contains(t)) 2.0
+          else if (moveType.weakAgainst.contains(t)) 0.5
+          else if (moveType.noEffectAgainst.contains(t)) 0.0
+          else 1.0
+        )
+      }
+  }
 }
 
 /**
@@ -192,29 +220,6 @@ trait PhysicalMove extends Move {
   protected def basePower_=(value: Int): Unit = {
     if (value < 0 || value > _maxBasePower) throw new Exception(f"Invalid base power value: $value")
     _basePower = value
-  }
-
-  /**
-    * Calculate modifier for the move based on target's type
-    *
-    * - multiply by 2 if move is strong against target type
-    * - multiply by 0.5 if move is weak against target type
-    * - multiply by 0 if move has no effect against target type
-    *
-    * @param target
-    * @return
-    */
-  private def calculateModifier(target: Pokemon): Double = {
-    target
-      .pTypes
-      .foldLeft(1.0) { (modifier, t) =>
-        modifier * (
-          if (moveType.strongAgainst.contains(t)) 2.0
-          else if (moveType.weakAgainst.contains(t)) 0.5
-          else if (moveType.noEffectAgainst.contains(t)) 0.0
-          else 1.0
-        )
-      }
   }
 
   /**

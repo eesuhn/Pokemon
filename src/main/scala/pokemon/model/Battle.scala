@@ -53,7 +53,7 @@ class Battle() {
     _botJustSwitched = false
     _playerJustFaintSwitched = false
 
-    val botMove = _bot.chooseMove()
+    val botMove = _bot.chooseMove(_player.activePokemon)
     val botPokemonBeforeTurn = _bot.activePokemon
     val playerPokemonBeforeTurn = _player.activePokemon
 

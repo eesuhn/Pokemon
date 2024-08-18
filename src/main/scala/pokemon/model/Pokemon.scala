@@ -159,6 +159,21 @@ abstract class Pokemon {
     _score > rarity.weightageUpperBound - boundRange ||
       _score < rarity.weightageLowerBound + boundRange
   }
+
+  /**
+    * Calculate the efficiency of each move, round up to 2 decimal places
+    *
+    * - Consider the target's type and the move's type (modifier)
+    *
+    * @return
+    */
+  def moveEffMap(target: Pokemon): Map[Move, Double] = {
+    moves.map(move =>
+      move -> BigDecimal(move.moveEfficiencyByTarget(target))
+        .setScale(2, BigDecimal.RoundingMode.HALF_UP)
+        .toDouble
+    ).toMap
+  }
 }
 
 class Pikachu extends Pokemon {
