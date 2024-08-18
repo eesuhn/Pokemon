@@ -1,20 +1,26 @@
 package pokemon.model
 
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable.{ArrayBuffer, ListBuffer, Queue}
 
 class Battle() {
   private var _player: Player = _
   private var _bot: Bot = _
+  private var _playerJustSwitched: Boolean = false
   private var _botJustSwitched: Boolean = false
-  private var _playerJustSwitchedAfterFaint: Boolean = false
+  private var _playerJustFaintSwitched: Boolean = false
+  private val _trainerQueueBasedOnMove: Queue[Trainer] = Queue.empty
+  private var _playerPrevPokemonHp: Double = 0
 
   def player: Player = _player
   def bot: Bot = _bot
-  def opponentJustSwitched: Boolean = _botJustSwitched
-  def playerJustSwitchedAfterFaint: Boolean = _playerJustSwitchedAfterFaint
+  def playerJustSwitched: Boolean = _playerJustSwitched
+  def botJustSwitched: Boolean = _botJustSwitched
+  def playerJustFaintSwitched: Boolean = _playerJustFaintSwitched
+  def playerPrevPokemonHp: Double = _playerPrevPokemonHp
 
-  def opponentJustSwitched(flag: Boolean): Unit = _botJustSwitched = flag
-  def playerJustSwitchedAfterFaint(flag: Boolean): Unit = _playerJustSwitchedAfterFaint = flag
+  def playerJustSwitched(flag: Boolean): Unit = _playerJustSwitched = flag
+  def botJustSwitched(flag: Boolean): Unit = _botJustSwitched = flag
+  def playerJustFaintSwitched(flag: Boolean): Unit = _playerJustFaintSwitched = flag
 
   def start(): Unit = {
     _player = new Player()
@@ -43,8 +49,9 @@ class Battle() {
     */
   def performTurn(playerAction: Either[Move, Pokemon]): List[String] = {
     val results = ListBuffer[String]()
+    _playerJustSwitched = false
     _botJustSwitched = false
-    _playerJustSwitchedAfterFaint = false
+    _playerJustFaintSwitched = false
 
     val botMove = _bot.chooseMove()
     val botPokemonBeforeTurn = _bot.activePokemon
@@ -70,8 +77,9 @@ class Battle() {
 
     results ++= handleFaintSwitch(_bot)
 
+    _playerJustSwitched = _player.activePokemon != playerPokemonBeforeTurn
     _botJustSwitched = _bot.activePokemon != botPokemonBeforeTurn
-    _playerJustSwitchedAfterFaint = !_player.isActivePokemonAlive && _player.activePokemon != playerPokemonBeforeTurn
+    _playerJustFaintSwitched = !_player.isActivePokemonAlive && _player.activePokemon != playerPokemonBeforeTurn
 
     results.toList
   }
@@ -112,6 +120,7 @@ class Battle() {
     val attackMessage = if (!attackResult) {
       s"${attackerPokemon.pName} used ${move.moveName}! But it missed!"
     } else {
+      _trainerQueueBasedOnMove.enqueue(attacker)
       s"${attackerPokemon.pName} used ${move.moveName}!"
     }
 
@@ -134,6 +143,10 @@ class Battle() {
     messages += s"${trainer.name} withdrew ${trainer.activePokemon.pName}!"
     trainer.switchActivePokemon(pokemon)
     messages += s"${trainer.name} sent out ${pokemon.pName}!"
+
+    // Save the previous Pokemon's HP for the player if switch is done
+    _playerPrevPokemonHp = pokemon.pokemonHpPercentage
+
     messages.toList
   }
 
@@ -153,4 +166,21 @@ class Battle() {
       List()
     }
   }
+
+  /**
+    * Get the next trainer in the queue based on the move sequence
+    *
+    * - Forward the queue if there are more than 1 trainers
+    * - Clear the queue if there is only 1 trainer
+    *
+    * @return
+    */
+  def headTrainerQueue(): Trainer = {
+    val current = _trainerQueueBasedOnMove.head
+    if (_trainerQueueBasedOnMove.size > 1) _trainerQueueBasedOnMove.dequeue()
+    else _trainerQueueBasedOnMove.clear()
+    current
+  }
+
+  def isPlayer(trainer: Trainer): Boolean = trainer == _player
 }
