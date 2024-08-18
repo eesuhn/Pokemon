@@ -51,6 +51,11 @@ abstract class Move {
     efficiency * (_accuracy / 100.0)
   }
 
+  def moveEfficiencyByTarget(defender: Pokemon): Double = this match {
+    case _: SpecialMove | _: PhysicalMove => moveEfficiency() * this.calculateModifier(defender)
+    case _ => moveEfficiency()
+  }
+
   protected def targetMoveEfficiency(): Double
 
   /**
@@ -129,9 +134,32 @@ abstract class Move {
     case _: AttackEffect => 1.0
     case _: DefenseEffect => 0.8
     case _: AccuracyEffect => 0.8
-    case _: SpeedEffect => 0.6
+    case _: SpeedEffect => 0.8
     case _: CriticalEffect => 0.8
     case _ => 0.0
+  }
+
+  /**
+    * Calculate modifier for the move based on target's type
+    *
+    * - multiply by 2 if move is strong against target type
+    * - multiply by 0.5 if move is weak against target type
+    * - multiply by 0 if move has no effect against target type
+    *
+    * @param target
+    * @return
+    */
+  protected def calculateModifier(target: Pokemon): Double = {
+    target
+      .pTypes
+      .foldLeft(1.0) { (modifier, t) =>
+        modifier * (
+          if (moveType.strongAgainst.contains(t)) 2.0
+          else if (moveType.weakAgainst.contains(t)) 0.5
+          else if (moveType.noEffectAgainst.contains(t)) 0.0
+          else 1.0
+        )
+      }
   }
 }
 
@@ -180,7 +208,7 @@ trait StatusMove extends Move {
   */
 trait PhysicalMove extends Move {
   private var _basePower: Int = 0
-  private val _controlDamage: Int = 12
+  private val _controlDamage: Int = 10
 
   def basePower: Int = _basePower
 
@@ -192,29 +220,6 @@ trait PhysicalMove extends Move {
   protected def basePower_=(value: Int): Unit = {
     if (value < 0 || value > _maxBasePower) throw new Exception(f"Invalid base power value: $value")
     _basePower = value
-  }
-
-  /**
-    * Calculate modifier for the move based on target's type
-    *
-    * - multiply by 2 if move is strong against target type
-    * - multiply by 0.5 if move is weak against target type
-    * - multiply by 0 if move has no effect against target type
-    *
-    * @param target
-    * @return
-    */
-  private def calculateModifier(target: Pokemon): Double = {
-    target
-      .pTypes
-      .foldLeft(1.0) { (modifier, t) =>
-        modifier * (
-          if (moveType.strongAgainst.contains(t)) 2.0
-          else if (moveType.weakAgainst.contains(t)) 0.5
-          else if (moveType.noEffectAgainst.contains(t)) 0.0
-          else 1.0
-        )
-      }
   }
 
   /**
@@ -920,7 +925,7 @@ object FlameWheel extends SpecialMove {
 object VCreate extends SpecialMove {
   val moveName: String = "V Create"
   val moveType: Type = Fire
-  basePower_=(160)
+  basePower_=(200)
   accuracy_=(95)
   val effects: List[StatEffect] = List(
     AttackEffect(-1),
@@ -974,9 +979,9 @@ object Eruption extends SpecialMove {
 object Explosion extends SpecialMove {
   val moveName: String = "Explosion"
   val moveType: Type = Normal
-  basePower_=(300)
+  basePower_=(250)
   val effects: List[StatEffect] = List(
-    DefenseEffect(-6)
+    DefenseEffect(-4)
   )
   val targetSelf: Boolean = true
 }
@@ -1435,4 +1440,49 @@ object LeafBlade extends SpecialMove {
     CriticalEffect(2)
   )
   val targetSelf: Boolean = true
+}
+
+object FairyWind extends SpecialMove {
+  val moveName: String = "Fairy Wind"
+  val moveType: Type = Fairy
+  accuracy_=(95)
+  basePower_=(40)
+  val effects: List[StatEffect] = List(
+    AttackEffect(-1, Some(10)),
+    CriticalEffect(-1, Some(10))
+  )
+  val targetSelf: Boolean = false
+}
+
+object PlayRough extends SpecialMove {
+  val moveName: String = "Play Rough"
+  val moveType: Type = Fairy
+  accuracy_=(90)
+  basePower_=(90)
+  val effects: List[StatEffect] = List(
+    AttackEffect(-2, Some(30))
+  )
+  val targetSelf: Boolean = false
+}
+
+object MudSlap extends SpecialMove {
+  val moveName: String = "Mud Slap"
+  val moveType: Type = Ground
+  accuracy_=(95)
+  basePower_=(40)
+  val effects: List[StatEffect] = List(
+    AccuracyEffect(-1)
+  )
+  val targetSelf: Boolean = false
+}
+
+object Bulldoze extends SpecialMove {
+  val moveName: String = "Bulldoze"
+  val moveType: Type = Ground
+  accuracy_=(90)
+  basePower_=(60)
+  val effects: List[StatEffect] = List(
+    SpeedEffect(-1, Some(30))
+  )
+  val targetSelf: Boolean = false
 }

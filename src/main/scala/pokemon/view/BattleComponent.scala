@@ -1,5 +1,6 @@
 package pokemon.view
 
+import pokemon.model.Pokemon
 import pokemon.util.ResourceUtil
 import scalafx.application.Platform
 import scalafx.scene.control.{Label, ProgressBar}
@@ -26,19 +27,25 @@ class BattleComponent(
   val pokemonCurrentStats: PokemonStatsView
 ) {
 
-  def pokemonViews(leftPokemon: String, rightPokemon: String): Unit = {
-    pokemonLeft.setup(s"${leftPokemon}-back")
-    pokemonRight.setup(s"${rightPokemon}-front")
+  def playerPokemonViews(pokemon: Pokemon): Unit = {
+    pokemonLeft.setup(s"${pokemon.pName}-back")
+
+    val type1 = pokemon.pTypeNames.head
+    val type2 = if (pokemon.pTypeNames.length > 1) pokemon.pTypeNames(1) else ""
+    pokemonLeft.pokemonTypeImgs(type1, type2)
   }
 
-  def pokemonHpBars(leftHp: Double, rightHp: Double): Unit = {
-    pokemonLeft.pokemonHpBar(leftHp)
-    pokemonRight.pokemonHpBar(rightHp)
+  def playerPokemonHpBar(hp: Double): Unit = pokemonLeft.pokemonHpBar(hp)
+
+  def botPokemonViews(pokemon: Pokemon): Unit = {
+    pokemonRight.setup(s"${pokemon.pName}-front")
+
+    val type1 = pokemon.pTypeNames.head
+    val type2 = if (pokemon.pTypeNames.length > 1) pokemon.pTypeNames(1) else ""
+    pokemonRight.pokemonTypeImgs(type1, type2)
   }
 
-  def leftPokemonTypes(type1: String, type2: String): Unit = pokemonLeft.pokemonTypeImgs(type1, type2)
-
-  def rightPokemonTypes(type1: String, type2: String): Unit = pokemonRight.pokemonTypeImgs(type1, type2)
+  def botPokemonHpBar(hp: Double): Unit = pokemonRight.pokemonHpBar(hp)
 
   def setStateDialog(text: String): Unit = stateDialogTxt.text = text
 

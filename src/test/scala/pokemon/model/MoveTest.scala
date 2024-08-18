@@ -87,4 +87,23 @@ class MoveTest extends AnyFunSuite {
       println(msg)
     }
   }
+
+  test("Count of moves based on type") {
+    val moves = MoveRegistry.moves
+    val moveTypeUsage = MutableMap[Type, Int]().withDefaultValue(0)
+
+    moves.foreach { move =>
+      moveTypeUsage(move.moveType) += 1
+    }
+
+    val groupedMoves = moveTypeUsage.toSeq.sortBy(_._2).reverse
+
+    println(s"${Colors.PURPLE}Move count based on type:${Colors.NC}")
+    val msg = f"""
+      |${groupedMoves.map { case (moveType, count) =>
+        f"${moveType.name}%-10s$count"
+      }.mkString("\n")}
+      |""".stripMargin
+    println(msg)
+  }
 }
