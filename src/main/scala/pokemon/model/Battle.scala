@@ -18,9 +18,7 @@ class Battle() {
   def playerJustFaintSwitched: Boolean = _playerJustFaintSwitched
   def playerPrevPokemonHp: Double = _playerPrevPokemonHp
 
-  def playerJustSwitched(flag: Boolean): Unit = _playerJustSwitched = flag
-  def botJustSwitched(flag: Boolean): Unit = _botJustSwitched = flag
-  def playerJustFaintSwitched(flag: Boolean): Unit = _playerJustFaintSwitched = flag
+  def botJustSwitched_=(flag: Boolean): Unit = _botJustSwitched = flag
 
   def start(): Unit = {
     _player = new Player()
