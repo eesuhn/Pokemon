@@ -352,7 +352,7 @@ class BattleController(
 
     // Check if Player just switched Pokemon after fainted
     else if (_battle.playerJustFaintSwitched) {
-      _battle.botJustSwitched(false)
+      _battle.botJustSwitched_=(false)
       handleMainMenu()
     }
 
@@ -361,7 +361,7 @@ class BattleController(
       && _battle.player.moreThanOnePokemonAlive
     ) {
       promptPlayerSwitch()
-      _battle.botJustSwitched(false)
+      _battle.botJustSwitched_=(false)
     }
 
     // Just go back to main menu
