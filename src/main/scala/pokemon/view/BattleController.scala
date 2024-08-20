@@ -416,10 +416,10 @@ class BattleController(
 
     Platform.runLater {
       _scene.onKeyPressed = (event: KeyEvent) => {
-        _battleComponent.setStateDialog("Press any key to exit game...")
+        _battleComponent.setStateDialog("Press any key to return to main menu...")
         _scene.onKeyPressed = (_: KeyEvent) => {
           ResourceUtil.disposeAllSounds()
-          Platform.exit()
+          Layout.landingLayout()
         }
       }
     }
@@ -497,7 +497,7 @@ class BattleController(
     _battleComponent.setStateDialog("Do you want to run away?")
     val switchPromptBtns = Array(
       DialogBtn("Yes", () => {
-        ResourceUtil.disposeSound("misc/battle-theme.mp3")
+        ResourceUtil.disposeAllSounds()
         Layout.landingLayout()
       }),
       DialogBtn("No", () => handleMainMenu())
