@@ -87,7 +87,7 @@ class BattleController(
   private var _lastKeyPressTime: Long = 0
   private val _keyPressDelay: Long = 160
 
-  def initialize(): Unit = {
+  private def initialize(): Unit = {
     ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
 
     _battle.start()
