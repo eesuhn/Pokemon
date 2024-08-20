@@ -1,5 +1,6 @@
 package pokemon.view
 
+import pokemon.model.Layout
 import pokemon.util.ResourceUtil
 import scalafx.Includes._
 import scalafx.application.Platform
@@ -8,7 +9,6 @@ import scalafx.scene.image.ImageView
 import scalafx.scene.input.{KeyCode, KeyEvent}
 import scalafx.scene.layout.Pane
 import scalafxml.core.macros.sfxml
-import pokemon.model.Layout
 
 @sfxml
 class LandingController(
@@ -21,6 +21,7 @@ class LandingController(
 
   private def initialize(): Unit = {
     landingBg.image = ResourceUtil.resouceImage("misc/landing-bg.gif")
+    ResourceUtil.playSound("misc/landing-theme.mp3", loop = true)
 
     Platform.runLater {
       _scene = inputPane.scene.value
@@ -39,7 +40,11 @@ class LandingController(
       _isKeyReleased = false
 
       event.code match {
-        case KeyCode.Enter | KeyCode.Space => Layout.battleLayout()
+        case KeyCode.Enter | KeyCode.Space => {
+          ResourceUtil.playSound("misc/button-a.mp3")
+          ResourceUtil.disposeSound("misc/landing-theme.mp3")
+          Layout.battleLayout()
+        }
         case _ =>
       }
     }
