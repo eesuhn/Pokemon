@@ -97,13 +97,24 @@ case class PokemonView(
     Option(pokemonImg.image.value).foreach { newImage =>
       val imageWidth = newImage.getWidth()
       val imageHeight = newImage.getHeight()
-      val paneWidth = anchorPane.width.value
 
       pokemonImg.fitWidth = imageWidth
       pokemonImg.fitHeight = imageHeight
 
-      val leftAnchor = (paneWidth - pokemonImg.fitWidth.value) / 2
-      AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
+      anchorPane.width.onChange { (_, oldWidth, newWidth) =>
+        if (newWidth != oldWidth) {
+          val widthValue = getWidthValue(newWidth)
+          if (widthValue != 0) {
+            val leftAnchor = (widthValue - pokemonImg.fitWidth.value) / 2
+            AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
+          }
+        }
+      }
+
+      def getWidthValue(w: Any): Double = w match {
+        case n: Number => n.doubleValue()
+        case _ => 0.0
+      }
     }
   }
 

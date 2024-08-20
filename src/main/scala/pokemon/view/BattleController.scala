@@ -1,6 +1,6 @@
 package pokemon.view
 
-import pokemon.model.Battle
+import pokemon.model.{Battle, Layout}
 import pokemon.util.ResourceUtil
 import scalafx.Includes._
 import scalafx.application.Platform
@@ -87,7 +87,7 @@ class BattleController(
   private var _lastKeyPressTime: Long = 0
   private val _keyPressDelay: Long = 160
 
-  def initialize(): Unit = {
+  private def initialize(): Unit = {
     ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
 
     _battle.start()
@@ -493,8 +493,19 @@ class BattleController(
   }
 
   private def handleRunBtn(): Unit = {
-    _dialogManager.clearAll()
-    showResultsInDialog(Seq("You couldn't get away!"))
+    _dialogManager.clearAll(clearFlags = true)
+    _battleComponent.setStateDialog("Do you want to run away?")
+    val switchPromptBtns = Array(
+      DialogBtn("Yes", () => {
+        ResourceUtil.disposeSound("misc/battle-theme.mp3")
+        Layout.landingLayout()
+      }),
+      DialogBtn("No", () => handleMainMenu())
+    )
+
+    _dialogManager.setRightDialogBtns(switchPromptBtns)
+    _dialogManager.updateBtnsView()
+    focusInputPane()
   }
 
   initialize()

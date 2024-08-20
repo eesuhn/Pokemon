@@ -16,4 +16,10 @@ object Layout {
     val gameLayout = loader.getRoot[jfxs.layout.AnchorPane]
     MainApp.rootLayout.setCenter(gameLayout)
   }
+
+  def landingLayout(): Unit = {
+    val loader = ResourceUtil.resourceLayout("LandingLayout")
+    val landingLayout = loader.getRoot[jfxs.layout.AnchorPane]
+    MainApp.rootLayout.setCenter(landingLayout)
+  }
 }
