@@ -42,7 +42,7 @@ class LandingController(
       event.code match {
         case KeyCode.Enter | KeyCode.Space => {
           ResourceUtil.playSound("misc/button-a.mp3")
-          ResourceUtil.disposeAllSounds()
+          ResourceUtil.disposeSound("misc/landing-theme.mp3")
           Layout.battleLayout()
         }
         case _ =>
