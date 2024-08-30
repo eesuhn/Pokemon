@@ -117,12 +117,7 @@ object ResourceUtil {
     val targetPath = s"misc/$target"
     if (_currentBgm.isEmpty || _currentBgm.get != targetPath) {
       stopBgm()
-      playSound(
-        targetPath,
-        loop = true,
-        dispose = false,
-        volume = volume
-      )
+      playSound(targetPath, loop = true, dispose = false, volume = volume)
       _currentBgm = Some(targetPath)
     }
   }
