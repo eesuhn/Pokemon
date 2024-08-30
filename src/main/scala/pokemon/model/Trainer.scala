@@ -8,20 +8,28 @@ abstract class Trainer {
   var deck: ArrayBuffer[Pokemon] = ArrayBuffer.empty[Pokemon]
   var activePokemon: Pokemon = _
 
-  private val _deckSize: Int = 5
-
   def generateDeck(): Unit = {
+    val sortedPokemons = pokemonsByRarity()
+    addPokemons(sortedPokemons)
+  }
+
+  /**
+    * Generates a list of Pokemon based on rarity
+    *
+    * - Sorted by score in ascending order
+    *
+    * @param size 5 by default
+    * @return
+    */
+  protected def pokemonsByRarity(size: Int = 5): List[Pokemon] = {
     val pokemons = PokemonRegistry.pokemons
       .map(pokemon => pokemon.getDeclaredConstructor().newInstance())
       .toList
-
     val weightedPokemons = weightPokemonsByRarity(pokemons)
-    val deckSize = Math.min(_deckSize, weightedPokemons.length)
-    val selectedPokemons = selectPokemonsWeighted(weightedPokemons, deckSize)
+    val deckSize = Math.min(size, weightedPokemons.length)
 
     // Sort selected Pokemons by score in ascending order
-    val sortedPokemons = selectedPokemons.sortBy(_.score)
-    addPokemons(sortedPokemons)
+    selectPokemonsWeighted(weightedPokemons, deckSize).sortBy(_.score)
   }
 
   /**

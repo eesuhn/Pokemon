@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane maxHeight="680.0" maxWidth="960.0" minHeight="680.0" minWidth="960.0" prefHeight="680.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pokemon.view.TutorialController">
+  <Pane fx:id="inputPane" prefHeight="680.0" prefWidth="960.0">
+    <ImageView fx:id="landingBg" fitHeight="680.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true" />
+  </Pane>
+</AnchorPane>

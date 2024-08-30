@@ -11,7 +11,7 @@ import scalafx.scene.layout.Pane
 import scalafxml.core.macros.sfxml
 
 @sfxml
-class LandingController(
+class TutorialController(
   val landingBg: ImageView,
   val inputPane: Pane
 ) {
@@ -20,8 +20,7 @@ class LandingController(
   private var _isKeyReleased: Boolean = true
 
   private def initialize(): Unit = {
-    landingBg.image = ResourceUtil.resouceImage("misc/landing-bg.gif")
-    ResourceUtil.playBgm("landing-theme.mp3")
+    landingBg.image = ResourceUtil.resouceImage("misc/tutorial-bg.png")
 
     Platform.runLater {
       _scene = inputPane.scene.value
@@ -40,19 +39,12 @@ class LandingController(
       _isKeyReleased = false
 
       event.code match {
-        case KeyCode.Enter
-          | KeyCode.Space
-          | KeyCode.Escape => {
-            _scene.onKeyPressed = null
-            _scene.onKeyReleased = null
-            ResourceUtil.playSound("misc/button-a.mp3")
-          }
-        case _ =>
-      }
-
-      event.code match {
-        case KeyCode.Enter | KeyCode.Space => Layout.battleLayout()
-        case KeyCode.Escape => Layout.tutorialLayout()
+        case KeyCode.Escape => {
+          _scene.onKeyPressed = null
+          _scene.onKeyReleased = null
+          ResourceUtil.playSound("misc/button-a.mp3")
+          Layout.landingLayout()
+        }
         case _ =>
       }
     }

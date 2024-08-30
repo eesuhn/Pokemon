@@ -88,7 +88,7 @@ class BattleController(
   private val _keyPressDelay: Long = 160
 
   private def initialize(): Unit = {
-    ResourceUtil.playSound("misc/battle-theme.mp3", loop = true)
+    ResourceUtil.playBgm("battle-theme.mp3")
 
     _battle.start()
     updatePokemonViews()
@@ -411,13 +411,15 @@ class BattleController(
     _scene.onKeyPressed = null
     _scene.onKeyReleased = null
 
-    ResourceUtil.disposeSound("misc/battle-theme.mp3")
+    ResourceUtil.stopBgm()
     ResourceUtil.playSound("misc/ending-theme.mp3")
 
     Platform.runLater {
       _scene.onKeyPressed = (event: KeyEvent) => {
         _battleComponent.setStateDialog("Press any key to return to main menu...")
         _scene.onKeyPressed = (_: KeyEvent) => {
+          _scene.onKeyPressed = null
+          _scene.onKeyReleased = null
           ResourceUtil.playSound("misc/button-a.mp3")
           ResourceUtil.disposeSound("misc/ending-theme.mp3")
           Layout.landingLayout()
@@ -498,7 +500,8 @@ class BattleController(
     _battleComponent.setStateDialog("Do you want to run away?")
     val switchPromptBtns = Array(
       DialogBtn("Yes", () => {
-        ResourceUtil.disposeSound("misc/battle-theme.mp3")
+        _scene.onKeyPressed = null
+        _scene.onKeyReleased = null
         Layout.landingLayout()
       }),
       DialogBtn("No", () => handleMainMenu())

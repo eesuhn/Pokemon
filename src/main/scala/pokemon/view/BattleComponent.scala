@@ -67,7 +67,7 @@ case class PokemonView(
 ) {
 
   /**
-    * Source from `pokes` directory with `.gif` extension
+    * - Image from `pokes` directory with `.gif` extension
     *
     * @param target
     */
@@ -80,8 +80,10 @@ case class PokemonView(
     pokemonImg.preserveRatio = true
     pokemonImg.smooth = true
 
-    Platform.runLater(position())
+    // Initial positioning
+    anchorPane.width.onChange(position())
 
+    // Position whenever image changes
     pokemonImg.image.onChange { (_, _, newImage) =>
       if (newImage != null) position()
     }
@@ -94,26 +96,14 @@ case class PokemonView(
     * - Anchor to bottom
     */
   private def position(): Unit = {
-    Option(pokemonImg.image.value).foreach { newImage =>
-      val imageWidth = newImage.getWidth()
-      val imageHeight = newImage.getHeight()
+    Platform.runLater {
+      Option(pokemonImg.image.value).foreach { newImage =>
+        pokemonImg.fitWidth = newImage.getWidth()
+        pokemonImg.fitHeight = newImage.getHeight()
 
-      pokemonImg.fitWidth = imageWidth
-      pokemonImg.fitHeight = imageHeight
-
-      anchorPane.width.onChange { (_, oldWidth, newWidth) =>
-        if (newWidth != oldWidth) {
-          val widthValue = getWidthValue(newWidth)
-          if (widthValue != 0) {
-            val leftAnchor = (widthValue - pokemonImg.fitWidth.value) / 2
-            AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
-          }
-        }
-      }
-
-      def getWidthValue(w: Any): Double = w match {
-        case n: Number => n.doubleValue()
-        case _ => 0.0
+        val leftAnchor = (anchorPane.getWidth() - pokemonImg.fitWidth.value) / 2
+        AnchorPane.setLeftAnchor(pokemonImg, leftAnchor)
+        AnchorPane.setBottomAnchor(pokemonImg, 0.0)
       }
     }
   }

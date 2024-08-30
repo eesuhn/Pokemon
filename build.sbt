@@ -1,3 +1,5 @@
+import sbtassembly.AssemblyPlugin.autoImport._
+
 name := "Pokemon"
 
 version := "0.1"
@@ -29,7 +31,21 @@ lazy val root = (project in file("."))
       "org.scalatest" %% "scalatest" % "3.2.9" % Test,
       "org.reflections" % "reflections" % "0.10.2"
     ),
-    Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "resources"
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "resources",
+    assembly / mainClass := Some("pokemon.MainApp"),
+    assembly / assemblyJarName := "Pokemon.jar",
+    assembly / assemblyMergeStrategy := {
+      case PathList("META-INF", xs @ _*) =>
+        (xs map {_.toLowerCase}) match {
+          case ("manifest.mf" :: Nil) | ("index.list" :: Nil) | ("dependencies" :: Nil) =>
+            MergeStrategy.discard
+          case _ => MergeStrategy.first
+        }
+      case "module-info.class" => MergeStrategy.discard
+      case x if x.endsWith(".json") => MergeStrategy.first
+      case "reference.conf" => MergeStrategy.concat
+      case _ => MergeStrategy.first
+    }
   )
   .dependsOn(macros)
 
