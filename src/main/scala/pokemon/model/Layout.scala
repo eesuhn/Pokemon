@@ -22,4 +22,10 @@ object Layout {
     val landingLayout = loader.getRoot[jfxs.layout.AnchorPane]
     MainApp.rootLayout.setCenter(landingLayout)
   }
+
+  def tutorialLayout(): Unit = {
+    val loader = ResourceUtil.resourceLayout("TutorialLayout")
+    val tutorialLayout = loader.getRoot[jfxs.layout.AnchorPane]
+    MainApp.rootLayout.setCenter(tutorialLayout)
+  }
 }

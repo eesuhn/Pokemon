@@ -12,6 +12,7 @@ object ResourceUtil {
 
   private val _soundPlayers = Map[String, List[MediaPlayer]]()
   private var _masterVolume: Double = 1.0
+  private var _currentBgm: Option[String] = None
 
   def masterVolume(volume: Double): Unit = {
     _masterVolume = volume
@@ -67,7 +68,7 @@ object ResourceUtil {
   /**
     * Load a resource sound from "sfx" folder
     *
-    * - Dispose first if the target sound player exists
+    * - Dispose first if the target sound player exists, by default
     * - `loop = true` requires manual disposal
     *
     * @param target
@@ -75,11 +76,11 @@ object ResourceUtil {
     *
     * @throws Exception if resource is not found or media is not loaded
     */
-  def playSound(target: String, loop: Boolean = false, volume: Double = _masterVolume): Unit = {
+  def playSound(target: String, loop: Boolean = false, dispose: Boolean = true, volume: Double = _masterVolume): Unit = {
     val resource = MainApp.getClass.getResource(s"sfx/$target")
     if (resource == null) throw new Exception(s"Resource: Cannot load sound: $target")
 
-    disposeSound(target)
+    if (dispose) disposeSound(target)
 
     val media: Media = new Media(resource.toURI.toString)
     if (media == null) throw new Exception(s"Media: Cannot load sound: $target")
@@ -109,18 +110,25 @@ object ResourceUtil {
   }
 
   /**
-    * @deprecated Cause memory exhaustion
-    *
-    * @param target
+    * - Continue BGM if already playing
+    * - If new BGM, dispose current and play the new one
     */
-  def stopSound(target: String): Unit = {
-    _soundPlayers.get(target).foreach(_.foreach(_.stop()))
+  def playBgm(target: String, volume: Double = _masterVolume): Unit = {
+    val targetPath = s"misc/$target"
+    if (_currentBgm.isEmpty || _currentBgm.get != targetPath) {
+      stopBgm()
+      playSound(
+        targetPath,
+        loop = true,
+        dispose = false,
+        volume = volume
+      )
+      _currentBgm = Some(targetPath)
+    }
   }
 
-  /**
-    * @deprecated Cause memory exhaustion
-    */
-  def stopAllSounds(): Unit = {
-    _soundPlayers.values.foreach(_.foreach(_.stop()))
+  def stopBgm(): Unit = {
+    _currentBgm.foreach(disposeSound)
+    _currentBgm = None
   }
 }
