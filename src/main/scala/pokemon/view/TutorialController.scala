@@ -40,6 +40,8 @@ class TutorialController(
 
       event.code match {
         case KeyCode.Escape => {
+          _scene.onKeyPressed = null
+          _scene.onKeyReleased = null
           ResourceUtil.playSound("misc/button-a.mp3")
           Layout.landingLayout()
         }

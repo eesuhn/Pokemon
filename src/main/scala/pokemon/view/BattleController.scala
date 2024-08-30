@@ -418,6 +418,8 @@ class BattleController(
       _scene.onKeyPressed = (event: KeyEvent) => {
         _battleComponent.setStateDialog("Press any key to return to main menu...")
         _scene.onKeyPressed = (_: KeyEvent) => {
+          _scene.onKeyPressed = null
+          _scene.onKeyReleased = null
           ResourceUtil.playSound("misc/button-a.mp3")
           ResourceUtil.disposeSound("misc/ending-theme.mp3")
           Layout.landingLayout()
@@ -497,7 +499,11 @@ class BattleController(
     _dialogManager.clearAll(clearFlags = true)
     _battleComponent.setStateDialog("Do you want to run away?")
     val switchPromptBtns = Array(
-      DialogBtn("Yes", () => Layout.landingLayout()),
+      DialogBtn("Yes", () => {
+        _scene.onKeyPressed = null
+        _scene.onKeyReleased = null
+        Layout.landingLayout()
+      }),
       DialogBtn("No", () => handleMainMenu())
     )
 

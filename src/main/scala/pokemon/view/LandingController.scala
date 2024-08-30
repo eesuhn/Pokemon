@@ -42,8 +42,11 @@ class LandingController(
       event.code match {
         case KeyCode.Enter
           | KeyCode.Space
-          | KeyCode.Escape
-          => ResourceUtil.playSound("misc/button-a.mp3")
+          | KeyCode.Escape => {
+            _scene.onKeyPressed = null
+            _scene.onKeyReleased = null
+            ResourceUtil.playSound("misc/button-a.mp3")
+          }
         case _ =>
       }
 
