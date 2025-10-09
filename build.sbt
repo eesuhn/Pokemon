@@ -22,14 +22,30 @@ lazy val macros = (project in file("macros"))
     libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
   )
 
+lazy val osName = System.getProperty("os.name") match {
+  case n if n.startsWith("Mac") => 
+    System.getProperty("os.arch") match {
+      case "aarch64" | "arm64" => "mac-aarch64"
+      case _ => "mac"
+    }
+  case n if n.startsWith("Win") => "win"
+  case _ => "linux"
+}
+
 lazy val root = (project in file("."))
   .settings(
     commonSettings,
     libraryDependencies ++= Seq(
-      "org.scalafx" %% "scalafx" % "16.0.0-R25",
+      "org.scalafx" %% "scalafx" % "18.0.1-R27",
       "org.scalafx" %% "scalafxml-core-sfx8" % "0.5",
       "org.scalatest" %% "scalatest" % "3.2.9" % Test,
-      "org.reflections" % "reflections" % "0.10.2"
+      "org.reflections" % "reflections" % "0.10.2",
+
+      "org.openjfx" % "javafx-base" % "18.0.2" classifier osName,
+      "org.openjfx" % "javafx-controls" % "18.0.2" classifier osName,
+      "org.openjfx" % "javafx-fxml" % "18.0.2" classifier osName,
+      "org.openjfx" % "javafx-graphics" % "18.0.2" classifier osName,
+      "org.openjfx" % "javafx-media" % "18.0.2" classifier osName
     ),
     Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "resources",
     assembly / mainClass := Some("pokemon.MainApp"),
